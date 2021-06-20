@@ -16,7 +16,16 @@ defined('ABSPATH') || exit;
 
 function include_all()
 {
-    require_once plugin_dir_path( __FILE__ ) . 'includes/api.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/api.php';
+}
+
+function include_admin()
+{
+    require_once plugin_dir_path(__FILE__) . 'includes/admin/settings.php';
 }
 
 include_all();
+
+if (is_admin()) { // admin actions
+    include_admin();
+}
