@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://codesport.info/
  * Description: Extension for Course Booking System
- * Version: 0.0.2
+ * Version: 0.0.3
  * Author: CodeSport
  * Author URI: https://codesport.info/
  * Text Domain: course-booking-system
@@ -20,6 +20,7 @@ function include_all()
     require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
 
     // WordPress parts
+    require_once plugin_dir_path(__FILE__) . 'includes/ajax.php';
     require_once plugin_dir_path(__FILE__) . 'includes/api.php';
     require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';
 }

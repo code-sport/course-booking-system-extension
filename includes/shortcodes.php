@@ -50,7 +50,7 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             }
             $o .= '</ol>';
             $o .= '</p>';
-            $o .= '<p>(' . $timeslot->bookings . ' | ' . $timeslot->waitings . ' | ' . $event_meta->attendance . ')</p>';
+            $o .= '<p>(' . $timeslot->bookings . ' | ' . $timeslot->waitings . ' | ' . $event_meta->attendance . ') <button type="button" class="cbse cbse_participants_via_email" data-button=\''. json_encode(array("course_id" => $timeslot->course_id, "date" =>$timeslot->date)) .'\'>' . __('Participants via email') . '</button></p>';
             $o .= '</li>';
         }
         $o .= '</ul>';
