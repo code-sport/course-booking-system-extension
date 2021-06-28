@@ -21,3 +21,6 @@ node_modules/
 *.log
 *.sql
 *.sqlite
+
+# Dependencies which will be loaded on installation or update
+/dependencies/

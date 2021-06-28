@@ -34,3 +34,7 @@ include_all();
 if (is_admin()) { // admin actions
     include_admin();
 }
+
+// Install and update
+add_action( 'upgrader_process_complete', 'cbse_install_and_update', 10, 2 );
+register_activation_hook( __FILE__, 'cbse_install_and_update' );

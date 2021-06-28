@@ -39,3 +39,36 @@ function cbse_course_date_bookings($courseId, $date)
 
     return $bookings;
 }
+
+function cbse_install_and_update()
+{
+    $dir = plugin_dir_path(__FILE__);
+    if (!is_dir($dir . '../dependencies/fpdf')) {
+        mkdir($dir . '../dependencies/fpdf', 0777, true);
+    }
+
+    if (!is_file($dir . '../dependencies/fpdf/fpdf.php')) {
+        $url = 'http://www.fpdf.org/en/dl.php?v=183&f=zip';
+
+        // Download
+        $zip_filename = 'fpdf.zip';
+        $fh = fopen($zip_filename, 'w');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FILE, $fh);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // this will follow redirects
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fh);
+
+        // Extract
+        $zip = new ZipArchive;
+        if ($zip->open($zip_filename) === TRUE) {
+            $zip->extractTo($dir . '../dependencies/fpdf');
+            $zip->close();
+        }
+
+        // Delete download
+        unlink($zip_filename);
+    }
+}
