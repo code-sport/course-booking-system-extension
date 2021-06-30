@@ -9,8 +9,8 @@ jQuery(document).ready(function ($) {       //wrapper
             date: data_button.date              //data
         }, function (data) {                //callback
             console.log(JSON.stringify(data));
-            if (data.send) {
-                alert(data.send_message);
+            if (data.sent) {
+                alert(data.sent_message);
             }
         });
     });

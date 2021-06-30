@@ -35,13 +35,12 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         $timeslots = cbse_courses_for_head(get_current_user_id());
         foreach ($timeslots as $timeslot) {
             //var_dump($timeslot);
-            $event = get_post($timeslot->event_id);
-            $event_meta = get_post($timeslot->event_id);
-            $column = get_post($timeslot->column_id);
-            $column_meta = get_post($timeslot->column_id);
+            $courseInfo = cbse_course_info($timeslot->course_id);
             $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
 
-            $o .= '<li><p>' . $column->post_title . ', ' . $timeslot->date . ' ' . $event->post_title . ' ' . $timeslot->event_start . ' - ' . $timeslot->event_end . ' #' . $timeslot->course_id . '</p>';
+            //var_dump($courseInfo->event_categories);
+
+            $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . $timeslot->date . ' ' . $courseInfo->event->post_title . ' ' . $timeslot->event_start . ' - ' . $timeslot->event_end . ' #' . $timeslot->course_id . '</p>';
             $o .= '<p>' . __('Bookings');
 
             $o .= '<ol>';
@@ -50,7 +49,7 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             }
             $o .= '</ol>';
             $o .= '</p>';
-            $o .= '<p>(' . $timeslot->bookings . ' | ' . $timeslot->waitings . ' | ' . $event_meta->attendance . ') <button type="button" class="cbse cbse_participants_via_email" data-button=\''. json_encode(array("course_id" => $timeslot->course_id, "date" =>$timeslot->date)) .'\'>' . __('Participants via email') . '</button></p>';
+            $o .= '<p>(' . $timeslot->bookings . ' | ' . $timeslot->waitings . ' | ' . $courseInfo->event_meta->attendance . ') <button type="button" class="cbse cbse_participants_via_email" data-button=\'' . json_encode(array("course_id" => $timeslot->course_id, "date" => $timeslot->date)) . '\'>' . __('Participants via email') . '</button></p>';
             $o .= '</li>';
         }
         $o .= '</ul>';

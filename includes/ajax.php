@@ -31,11 +31,14 @@ add_action('wp_ajax_nopriv_cbse_participants_via_mail', 'cbse_participants_via_m
 function cbse_participants_via_mail()
 {
     check_ajax_referer('cbse_event_head_courses');
+    $courseId = $_POST['course_id'];
+    $date = $_POST['date'];
+    $sent = cbse_sent_mail_with_course_date_bookings($courseId, $date, get_current_user_id());
     $args = array(
-        'course_id' => $_POST['course_id'],
-        'date' => $_POST['date'],
-        'send' => false,
-        'send_message' => __('Please check your mails')
+        'course_id' => $courseId,
+        'date' => $date,
+        'sent' => $sent ,
+        'sent_message' => __('Please check your mails')
     );
     wp_send_json($args);
     wp_die(); // all ajax handlers should die when finished
