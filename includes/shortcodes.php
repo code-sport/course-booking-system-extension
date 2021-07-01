@@ -19,7 +19,8 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
     $cbse_atts = shortcode_atts(
         array(
             'title' => __('My Events as Coach'),
-            'pastdays' => 7
+            'pastdays' => 7,
+            'futuredays' => 7
         ), $atts, $tag
     );
 
@@ -36,7 +37,7 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         foreach ($timeslots as $timeslot) {
             //var_dump($timeslot);
             $courseInfo = cbse_course_info($timeslot->course_id);
-            $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
+            $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
 
             //var_dump($courseInfo->event_categories);
 

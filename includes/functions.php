@@ -35,9 +35,10 @@ function cbse_course_info($courseId)
     return $courseInfo;
 }
 
-function cbse_course_date_bookings($courseId, $date)
+function cbse_course_date_bookings($courseId, $date, $pastdays = null, $futuredays = null)
 {
     global $wpdb;
+    //TODO past and future days
     $bookings_raw = $wpdb->get_results($wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_bookings` WHERE `course_id` =  %d AND `date` = %s;", $courseId, $date));
     $bookings = array();
     foreach ($bookings_raw as $booking) {
@@ -158,6 +159,7 @@ EOD;
     <p class="signature">Unterschrift Trainer:</p>
 EOD;
 
+    //TODO Move into own class that a footer can be added
     // create new PDF document
     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
