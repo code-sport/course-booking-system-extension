@@ -23,10 +23,10 @@ This plugin for WordPress is an extension for the [Course Booking System](https:
 ### API
 You need the `id` from an event `wp-json/wp/v2/mp-event`.
 With this event-`id` you can load the overview of the courses: `/wp-json/wp/v2/course-booking-system-extension/event/<ID>/courses`.
-On this you select the couse-`id` and can load the info about the course `wp-json/wp/v2/course-booking-system-extension/course/<ID>`.
+On this you select the course-`id` and can load the info about the course `wp-json/wp/v2/course-booking-system-extension/course/<ID>`.
 The participants you will get on `wp-json/wp/v2/course-booking-system-extension/course/<ID>/date/<DATE:yyyy-mm-dd>`.
 
 ### Shortcode
 
-#### Bokings overview for head of event
+#### Bookings overview for head of event
 Add the shortcode `[cbse_event_head_courses]` to a page or post and in this the overview for the head of event will be shown.
