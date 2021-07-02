@@ -118,17 +118,18 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $courseInfo_categories = implode(", ", array_column($courseInfo->event_categories, 'name'));
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date("d.m.Y", strtotime($date));
+    $image_id = get_option('cbse_options')['header_image_attachment_id'];
 
     // Set some content to print
     $html = <<<EOD
     <style>    
-    h1 {
+    h1 {s
         text-align: center;
         font-size: 28pt;
     }
     </style>
 EOD;
-    $html .= wp_get_attachment_image( /*get_the_ID()*/ 24, array('700', '600'), "", array("class" => "img-responsive"));
+    $html .= wp_get_attachment_image($image_id, array('700', '600'), "", array("class" => "img-responsive"));
     $html .= <<<EOD
     <h1>Dokumentation Sportbetrieb</h1>
 
@@ -136,7 +137,7 @@ EOD;
         <dt>Sportart:</dt>
         <dd>{$courseInfo_categories}</dd>
         <dt>Datum:</dt>
-        <dd>{$date_string}</dd>
+        <dd>{$date_string} {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end}</dd>
         <dt>Gruppe:</dt>
         <dd>{$courseInfo->event->post_title}</dd>
         <dt>Ort:</dt>
@@ -257,7 +258,7 @@ EOD;
 
     $user_info = get_userdata(get_current_user_id());
     $to = $user_info->user_email;
-    $subject = "Dokumentation Sportbetrieb - {$date_string} - {$courseInfo_categories} - {$courseInfo->event->post_title}";
+    $subject = "Dokumentation Sportbetrieb - {$date_string} - {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end} - {$courseInfo_categories} - {$courseInfo->event->post_title}";
     $message = "Hi {$user_meta->first_name}\n\nbitte die Datei in der Anlage beachten\n\nSportliche Grüße\nDeine IT.";
     $headers = "";
     $attachments = array($pdf_file);
