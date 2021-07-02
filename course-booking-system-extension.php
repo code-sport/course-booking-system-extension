@@ -5,10 +5,11 @@
  * Description: Extension for Course Booking System
  * Version: 0.0.3
  * Author: CodeSport
- * Author URI: https://codesport.info/
- * Text Domain: course-booking-system
+ * Author URI: https://wp.codesport.info/
+ * Text Domain: cbse
  * WC requires at least: 5.7.2
  * WC tested up to: 5.7.2
+ * Requires PHP: 7.4
  */
 
 defined('ABSPATH') || exit;
