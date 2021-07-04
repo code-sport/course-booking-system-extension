@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Course Booking System Extension
- * Plugin URI: https://codesport.info/
+ * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.0.3
- * Author: CodeSport
- * Author URI: https://wp.codesport.info/
+ * Version: 0.0.4
+ * Author: Code.Sport
+ * Author URI: https://github.com/code-sport/
  * Text Domain: cbse
  * WC requires at least: 5.7.2
  * WC tested up to: 5.7.2
