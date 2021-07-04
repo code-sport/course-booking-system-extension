@@ -129,10 +129,9 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     }
     </style>
 EOD;
-    $html .= wp_get_attachment_image($image_id, array('700', '600'), "", array("class" => "img-responsive"));
-    $html .= <<<EOD
-    <h1>Dokumentation Sportbetrieb</h1>
-
+    $html .= wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
+    $html .= "<h1>" .get_option('cbse_options')['header_title'] . "</h1>";
+$html .= <<<EOD
     <dl>
         <dt>Sportart:</dt>
         <dd>{$courseInfo_categories}</dd>
