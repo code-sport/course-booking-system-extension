@@ -1,5 +1,15 @@
 <?php
 
+function cbse_add_action_links($actions)
+{
+    $mylinks = array(
+        '<a href="' . admin_url('options-general.php?page=course_booking_system_extension') . '">' . __('Settings') . '</a>',
+    );
+    $actions = array_merge($mylinks, $actions);
+    return $actions;
+}
+
+
 function cbse_add_settings_page()
 {
     add_options_page('Course Booking System Extension', 'Course Booking System Extension', 'manage_options', 'course_booking_system_extension', 'cbse_render_settings_page');

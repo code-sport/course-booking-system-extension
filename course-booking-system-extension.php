@@ -19,8 +19,8 @@ defined('ABSPATH') || exit;
 
 function include_all()
 {
-    require_once plugin_dir_path( __FILE__ ) . '../course-booking-system/includes/functions.php';
-    require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
+    require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 
     // WordPress parts
     require_once plugin_dir_path(__FILE__) . 'includes/ajax.php';
@@ -39,6 +39,9 @@ if (is_admin()) { // admin actions
     include_admin();
 }
 
+// Plugin overview Page
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'cbse_add_action_links');
+
 // Install and update
-add_action( 'upgrader_process_complete', 'cbse_install_and_update', 10, 2 );
-register_activation_hook( __FILE__, 'cbse_install_and_update' );
+add_action('upgrader_process_complete', 'cbse_install_and_update', 10, 2);
+register_activation_hook(__FILE__, 'cbse_install_and_update');
