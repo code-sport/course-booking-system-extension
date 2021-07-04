@@ -106,11 +106,12 @@ function cbse_install_and_update()
 
 function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 {
-    $fpdf_file = cbse_get_tcpdf();
-    if (!is_file($fpdf_file)) {
+    $pcpdf_file = cbse_get_tcpdf();
+    if (!is_file($pcpdf_file)) {
         cbse_install_and_update();
     }
-    require_once $fpdf_file;
+    require_once $pcpdf_file;
+    require_once 'CBSE_PDF.php';
 
     $pdf_file = plugin_dir_path(__FILE__) . $courseId . '_' . $date . '.pdf';
     $user_meta = get_userdata($userId);
@@ -161,7 +162,7 @@ EOD;
 
     //TODO Move into own class that a footer can be added
     // create new PDF document
-    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+    $pdf = new CBSE_PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
