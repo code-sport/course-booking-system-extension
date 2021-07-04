@@ -41,6 +41,8 @@ function cbse_render_settings_page()
 {
     ?>
     <div class="wrap">
+        <div id="icon-options-general" class="icon32"></div>
+        <?php settings_errors(); ?>
         <h2><?php _e('Course Booking System Extension'); ?></h2>
         <form action="options.php" method="post">
             <?php
