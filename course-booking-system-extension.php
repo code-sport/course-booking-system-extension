@@ -10,6 +10,8 @@
  * WC requires at least: 5.7.2
  * WC tested up to: 5.7.2
  * Requires PHP: 7.4
+ * License: GPL v3
+ * License URI: https://github.com/code-sport/course-booking-system-extension/blob/main/license.txt
  */
 
 defined('ABSPATH') || exit;
