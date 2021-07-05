@@ -2,11 +2,10 @@
 
 function cbse_add_action_links($actions)
 {
-    $mylinks = array(
+    $cbseLinks = array(
         '<a href="' . admin_url('options-general.php?page=course_booking_system_extension') . '">' . __('Settings') . '</a>',
     );
-    $actions = array_merge($mylinks, $actions);
-    return $actions;
+    return array_merge($cbseLinks, $actions);
 }
 
 
