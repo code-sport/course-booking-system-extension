@@ -12,3 +12,11 @@ Extension for Course Booking System
 
 == Description ==
 Brings support for the trainers.
+
+== Installation ==
+See [GitHub](https://github.com/code-sport/course-booking-system-extension/)
+
+== Frequently Asked Questions ==
+
+= What plugins are necessary for use? =
+The [Course Booking System](https://de.wordpress.org/plugins/course-booking-system/) is necessary to use this extension.
