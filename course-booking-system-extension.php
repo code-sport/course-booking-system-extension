@@ -17,7 +17,7 @@
 defined('ABSPATH') || exit;
 
 
-function include_all()
+function cbse_include_all()
 {
     require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
     require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
@@ -28,15 +28,15 @@ function include_all()
     require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';
 }
 
-function include_admin()
+function cbse_include_admin()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/admin/settings.php';
 }
 
-include_all();
+cbse_include_all();
 
 if (is_admin()) { // admin actions
-    include_admin();
+    cbse_include_admin();
 }
 
 // Plugin overview Page
