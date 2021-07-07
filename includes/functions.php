@@ -63,7 +63,7 @@ function cbse_get_tcpdf()
 
     $scan = scandir($tcpdf_folder);
     foreach ($scan as $scan_file) {
-        if (substr($scan_file, 0, 6) === "TCPDF-") { //TODO Check if is a directornary
+        if (substr($scan_file, 0, 6) === "TCPDF-") { //TODO Check if is a dictionary
             $tcpdf_folder .= '/' . $scan_file;
             break;
         }
@@ -81,27 +81,26 @@ function cbse_install_and_update()
 
     $fpdf_file = cbse_get_tcpdf();
     if (!is_file($fpdf_file)) {
-        echo $fpdf_file . PHP_EOL;
+        do_action('qm/debug', 'PDF Libary is not availabe unter : {path}', ['path' => $fpdf_file]);
         $url = 'https://github.com/tecnickcom/TCPDF/archive/refs/tags/6.4.1.zip';
-
-        // Download
         $zip_filename = 'TCPDF.zip';
-        $fh = fopen($zip_filename, 'w');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_FILE, $fh);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // this will follow redirects
-        curl_exec($ch);
-        curl_close($ch);
-        fclose($fh);
+
+        // WordPress Download
+        $response = wp_remote_get($url, array(
+            'timeout' => 120,
+        ));
+        do_action('qm/debug', 'wp_remote_get: {response}', ['response' => $response]);
+        $body = wp_remote_retrieve_body($response);
+        // Write the file using put_contents instead of fopen(), etc.
+        $wp_filesystem = filesystem();
+
+        $wp_filesystem->put_contents($zip_filename, $body);
 
         // Extract
-        $zip = new ZipArchive;
-        if ($zip->open($zip_filename) === TRUE) {
-            $zip->extractTo($tcpdf_Folder);
-            $zip->close();
+        $result = unzip_file($zip_filename, $tcpdf_Folder);
+        if (is_wp_error($result)) {
+            do_action('qm/error', 'Could not extract TCPDF');
         }
-
         // Delete download
         unlink($zip_filename);
     }
@@ -273,4 +272,16 @@ EOD;
 
     return $mail_sent;
 
+}
+
+function filesystem()
+{
+    global $wp_filesystem;
+
+    if (is_null($wp_filesystem)) {
+        require_once ABSPATH . '/wp-admin/includes/file.php';
+        WP_Filesystem();
+    }
+
+    return $wp_filesystem;
 }
