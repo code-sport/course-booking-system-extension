@@ -135,20 +135,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 EOD;
     $html .= wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
     $html .= "<h1>" . get_option('cbse_options')['header_title'] . "</h1>";
-    $html .= <<<EOD
-    <dl>
-        <dt>Sportart:</dt>
-        <dd>{$courseInfo_categories}</dd>
-        <dt>Datum:</dt>
-        <dd>{$date_string} {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end}</dd>
-        <dt>Gruppe:</dt>
-        <dd>{$courseInfo->event->post_title}</dd>
-        <dt>Ort:</dt>
-        <dd>>&nbsp;</dd>
-        <dt>Verantwortlicher Trainer:</dt>
-        <dd>{$user_meta->last_name}, {$user_meta->first_name}</dd>
-    </dl>
-
+    $html_teilnehmer = <<<EOD
     <h2 class="tableheader">TeilnehmerInnen:</h2>
 EOD;
 
@@ -209,6 +196,25 @@ EOD;
 
     // Print text using writeHTML()
     $pdf->writeHTML($html, true, false, true, false, '');
+
+    $w = array(60, 140);
+    $pdf->Cell($w[0], 6, "Sportart:", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, "Datum und Zeit:", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "{$date_string} {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end}", 0, 0, 'L', false);
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, "Gruppe:", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, "Ort:", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "", 0, 0, 'L', false);
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, "Verantwortlicher TrainerIn:", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "{$user_meta->last_name}, {$user_meta->first_name}", 0, 0, 'L', false);
+    $pdf->Ln();
+
+    $pdf->writeHTML($html_teilnehmer, true, false, true, false, 'L');
 
     // Table header
     $w = array(10, 80, 35, 55);
