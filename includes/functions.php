@@ -119,7 +119,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $pdf_file = plugin_dir_path(__FILE__) . $courseId . '_' . $date . '.pdf';
     $user_meta = get_userdata($userId);
     $courseInfo = cbse_course_info($courseId);
-    $courseInfo_categories = implode(", ", array_column($courseInfo->event_categories, 'name'));
+    $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", array_column($courseInfo->event_categories, 'name')) : '';
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date("d.m.Y", strtotime($date));
     $image_id = get_option('cbse_options')['header_image_attachment_id'];
