@@ -31,8 +31,8 @@ add_action('wp_ajax_nopriv_cbse_participants_via_mail', 'cbse_participants_via_m
 function cbse_participants_via_mail()
 {
     check_ajax_referer('cbse_event_head_courses');
-    $courseId = intval($_POST['course_id']);
-    $date = $_POST['date'];
+    $courseId = intval(sanitize_key($_POST['course_id']));
+    $date = sanitize_key($_POST['date']);
     $sent = cbse_sent_mail_with_course_date_bookings($courseId, $date, get_current_user_id());
     $args = array(
         'course_id' => $courseId,
