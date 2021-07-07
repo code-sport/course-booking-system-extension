@@ -21,8 +21,12 @@ function cbse_courses_for_head($userId)
     return $timeslots;
 }
 
-function cbse_course_info($courseId)
+function cbse_course_info($courseId): stdClass
 {
+    if (!is_int($courseId)) {
+        $courseId = intval($courseId);
+    }
+
     global $wpdb;
     $courseInfo = new stdClass();
     $courseInfo->timeslot = $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $courseId));
@@ -35,7 +39,7 @@ function cbse_course_info($courseId)
     return $courseInfo;
 }
 
-function cbse_course_date_bookings($courseId, $date, $pastdays = null, $futuredays = null)
+function cbse_course_date_bookings($courseId, $date, $pastdays = null, $futuredays = null): array
 {
     global $wpdb;
     //TODO past and future days
@@ -131,8 +135,8 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     </style>
 EOD;
     $html .= wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
-    $html .= "<h1>" .get_option('cbse_options')['header_title'] . "</h1>";
-$html .= <<<EOD
+    $html .= "<h1>" . get_option('cbse_options')['header_title'] . "</h1>";
+    $html .= <<<EOD
     <dl>
         <dt>Sportart:</dt>
         <dd>{$courseInfo_categories}</dd>
@@ -256,7 +260,7 @@ EOD;
     // This method has several options, check the source code documentation for more information.
     $pdf->Output($pdf_file, 'F');
 
-    $user_info = get_userdata(get_current_user_id());
+    $user_info = get_userdata($userId);
     $to = $user_info->user_email;
     $subject = "Dokumentation Sportbetrieb - {$date_string} - {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end} - {$courseInfo_categories} - {$courseInfo->event->post_title}";
     $message = "Hi {$user_meta->first_name}\n\nbitte die Datei in der Anlage beachten\n\nSportliche Grüße\nDeine IT.";
