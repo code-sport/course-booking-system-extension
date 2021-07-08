@@ -50,6 +50,8 @@ function cbse_course_date_bookings($courseId, $date, $pastdays = null, $futureda
         $booking->first_name = $user_meta->first_name;
         $booking->last_name = $user_meta->last_name;
         $booking->nickname = $user_meta->nickname;
+        $booking->covid19_status = __(get_the_author_meta('covid-19-status', $booking->user_id));
+        // TODO Validate status with date
         $bookings[] = $booking;
     }
     usort($bookings, fn($a, $b) => strcmp($a->last_name, $b->last_name));
@@ -242,7 +244,7 @@ EOD;
     foreach ($bookings as $booking) {
         $pdf->Cell($w[0], 12, $bookingNumber, 1, 0, 'R', $fill);
         $pdf->Cell($w[1], 12, $booking->last_name . ", " . $booking->first_name, 1, 0, 'L', $fill);
-        $pdf->Cell($w[2], 12, "", 1, 0, 'C', $fill);
+        $pdf->Cell($w[2], 12, $booking->covid19_status, 1, 0, 'C', $fill);
         $pdf->Cell($w[3], 12, "", 1, 0, 'C', $fill);
         $pdf->Ln();
         $fill = !$fill;
