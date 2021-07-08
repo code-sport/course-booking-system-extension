@@ -33,9 +33,12 @@ function cbse_course_info($courseId): stdClass
     $courseInfo->event = get_post($courseInfo->timeslot->event_id);
     $courseInfo->event_meta = get_post($courseInfo->timeslot->event_id);
     $courseInfo->event_categories = get_the_terms($courseInfo->timeslot->event_id, 'mp-event_category');
+    $courseInfo->event_tags = get_the_terms($courseInfo->timeslot->event_id, 'mp-event_tag');
     $courseInfo->column = get_post($courseInfo->timeslot->column_id);
     $courseInfo->column_meta = get_post($courseInfo->timeslot->column_id);
 
+
+    do_action( 'qm/debug', $courseInfo );
     return $courseInfo;
 }
 
@@ -122,8 +125,12 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $user_meta = get_userdata($userId);
     $courseInfo = cbse_course_info($courseId);
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", array_column($courseInfo->event_categories, 'name')) : '';
+    $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", array_column($courseInfo->event_tags, 'name')) : '';
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date("d.m.Y", strtotime($date));
+    $time_start_string = date("H:i", strtotime($courseInfo->timeslot->event_start));
+    $time_end_string = date("H:i", strtotime($courseInfo->timeslot->event_end));
+    $courseInfo_DateTime = "{$date_string} {$time_start_string} - {$time_end_string}";
     $image_id = get_option('cbse_options')['header_image_attachment_id'];
 
     // Set some content to print
@@ -137,20 +144,10 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 EOD;
     $html .= wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
     $html .= "<h1>" . get_option('cbse_options')['header_title'] . "</h1>";
-    $html_teilnehmer = <<<EOD
-    <h2 class="tableheader">TeilnehmerInnen:</h2>
+    $html_attendees = <<<EOD
+    <h2>TeilnehmerInnen:</h2>
 EOD;
 
-    $html_end = <<<EOD
-     <style>    
-        .signature {
-            padding-top: 40px;
-            border-bottom: 1px solid black;
-            padding-bottom: 5px;
-        }
-    </style>
-    <p class="signature">Unterschrift Trainer:</p>
-EOD;
 
     //TODO Move into own class that a footer can be added
     // create new PDF document
@@ -160,11 +157,12 @@ EOD;
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor('Code.Sport');
     $pdf->SetTitle("{$date_string} Dokumentation Sportbetrieb");
-    $pdf->SetSubject("{$courseInfo_categories} - {$courseInfo->event->post_title}");
+    $pdf->SetSubject("{$courseInfo_categories} | {$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set default header data
     $pdf->setPrintHeader(false);
-    $pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
+    $pdf->setFooterData(array(0, 0, 0), array(0, 0, 0));
+    $pdf->setFooterText("{$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set header and footer fonts
     $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
@@ -199,24 +197,31 @@ EOD;
     // Print text using writeHTML()
     $pdf->writeHTML($html, true, false, true, false, '');
 
-    $w = array(60, 140);
+
+
+    $w = array(55, 145);
     $pdf->Cell($w[0], 6, "Sportart:", 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, "Datum und Zeit:", 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, "{$date_string} {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end}", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "$courseInfo_DateTime", 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, "Gruppe:", 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, "Ort:", 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, "", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, "Verantwortlicher TrainerIn:", 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "{$user_meta->last_name}, {$user_meta->first_name}", 0, 0, 'L', false);
     $pdf->Ln();
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, "Unterschrift Trainer:", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "", 'B', 0, 'L', false);
 
-    $pdf->writeHTML($html_teilnehmer, true, false, true, false, 'L');
+    $pdf->Ln();
+    $pdf->Ln();
+    $pdf->writeHTML($html_attendees, true, false, true, false, 'L');
 
     // Table header
     $w = array(10, 80, 35, 55);
@@ -259,17 +264,13 @@ EOD;
         $fill = !$fill;
     }
 
-    $pdf->Ln(10);
-
-    $pdf->writeHTML($html_end, true, false, true, false, '');
-
     // Close and output PDF document
     // This method has several options, check the source code documentation for more information.
     $pdf->Output($pdf_file, 'F');
 
     $user_info = get_userdata($userId);
     $to = $user_info->user_email;
-    $subject = "Dokumentation Sportbetrieb - {$date_string} - {$courseInfo->timeslot->event_start} - {$courseInfo->timeslot->event_end} - {$courseInfo_categories} - {$courseInfo->event->post_title}";
+    $subject = "Dokumentation Sportbetrieb | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
     $message = "Hi {$user_meta->first_name}\n\nbitte die Datei in der Anlage beachten\n\nSportliche Grüße\nDeine IT.";
     $headers = "";
     $attachments = array($pdf_file);

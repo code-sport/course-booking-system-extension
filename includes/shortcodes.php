@@ -35,13 +35,12 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         $o .= '<ul>';
         $timeslots = cbse_courses_for_head(get_current_user_id());
         foreach ($timeslots as $timeslot) {
-            //var_dump($timeslot);
+            do_action( 'qm/debug', $timeslot );
             $courseInfo = cbse_course_info($timeslot->course_id);
             $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
 
             //var_dump($courseInfo->event_categories);
-
-            $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . $timeslot->date . ' ' . $courseInfo->event->post_title . ' ' . $timeslot->event_start . ' - ' . $timeslot->event_end . ' #' . $timeslot->course_id . '</p>';
+            $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . $timeslot->date . ' ' . $courseInfo->event->post_title . ' ' . date("H:i", strtotime($timeslot->event_start)) . ' - ' . date("H:i", strtotime($timeslot->event_end)) . ' #' . $timeslot->course_id . '</p>';
             $o .= '<p>' . __('Bookings');
 
             $o .= '<ol>';
