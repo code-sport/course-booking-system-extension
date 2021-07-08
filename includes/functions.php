@@ -156,7 +156,7 @@ EOD;
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor('Code.Sport');
-    $pdf->SetTitle("{$date_string} Dokumentation Sportbetrieb");
+    $pdf->SetTitle("$date_string Dokumentation Sportbetrieb");
     $pdf->SetSubject("{$courseInfo_categories} | {$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set default header data
@@ -165,14 +165,15 @@ EOD;
     $pdf->setFooterText("{$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set header and footer fonts
+    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
     $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
     // set default monospaced font
     $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
     // set margins
-    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_LEFT );
+    $pdf->SetHeaderMargin(0);
     $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
     // set auto page breaks
@@ -199,11 +200,13 @@ EOD;
 
 
 
-    $w = array(55, 145);
+    $w = array(55, 125);
+    $pdf->Ln();
+    $pdf->Ln();
     $pdf->Cell($w[0], 6, "Sportart:", 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Datum und Zeit:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, "Datum und Uhrzeit:", 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "$courseInfo_DateTime", 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, "Gruppe:", 0, 0, 'L', false);
