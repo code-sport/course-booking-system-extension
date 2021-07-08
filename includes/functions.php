@@ -92,7 +92,7 @@ function cbse_install_and_update()
         do_action('qm/debug', 'wp_remote_get: {response}', ['response' => $response]);
         $body = wp_remote_retrieve_body($response);
         // Write the file using put_contents instead of fopen(), etc.
-        $wp_filesystem = filesystem();
+        $wp_filesystem = cbse_get_wp_filesystem();
 
         $wp_filesystem->put_contents($zip_filename, $body);
 
@@ -280,7 +280,7 @@ EOD;
 
 }
 
-function filesystem()
+function cbse_get_wp_filesystem()
 {
     global $wp_filesystem;
 

@@ -37,7 +37,7 @@ function cbse_participants_via_mail()
     $args = array(
         'course_id' => $courseId,
         'date' => $date,
-        'sent' => $sent ,
+        'sent' => $sent,
         'sent_message' => __('Please check your mails')
     );
     wp_send_json($args);
