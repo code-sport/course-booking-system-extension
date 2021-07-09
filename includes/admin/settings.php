@@ -41,7 +41,8 @@ function cbse_initialize_setting()
 {
     $settings = [
         'header_image_attachment_id' => '',
-        'header_title' => __('Dokumentation Sportbetrieb'),
+        'header_title' => __('Sports operation documentation'),
+        'mail_coach_message' => __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT."),
     ];
     add_option('cbse_options', $settings);
 }
