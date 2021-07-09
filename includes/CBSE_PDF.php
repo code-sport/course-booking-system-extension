@@ -4,10 +4,12 @@
 class CBSE_PDF extends TCPDF
 {
     protected string $footer_text = '';
+    protected string $footer_status = '';
 
     public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = true, $encoding = 'UTF-8', $diskcache = false, $pdfa = false)
     {
         parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache, $pdfa);
+        $this->footer_status = date("d.m.Y H:i:s");
     }
 
     // Page footer
@@ -39,9 +41,9 @@ class CBSE_PDF extends TCPDF
         }
         $w_page = isset($this->l['w_page']) ? $this->l['w_page'].' ' : '';
         if (empty($this->pagegroups)) {
-            $pagenumtxt = $w_page.$this->getAliasNumPage().' / '.$this->getAliasNbPages();
+            $pagenumtxt = $w_page.$this->getAliasNumPage().' / '.$this->getAliasNbPages() . ' - ' . $this->footer_status;
         } else {
-            $pagenumtxt = $w_page.$this->getPageNumGroupAlias().' / '.$this->getPageGroupAlias();
+            $pagenumtxt = $w_page.$this->getPageNumGroupAlias().' / '.$this->getPageGroupAlias() . ' - ' . $this->footer_status;
         }
         $this->SetY($cur_y);
         //Print page number
