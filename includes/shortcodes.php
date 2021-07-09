@@ -24,6 +24,8 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         ), $atts, $tag
     );
 
+    do_action( 'qm/debug', $cbse_atts );
+
     // start box
     $o = '<div class="cbse-box">';
 
@@ -33,11 +35,11 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
     if (is_user_logged_in()) {
         //list with trainings
         $o .= '<ul>';
-        $timeslots = cbse_courses_for_head(get_current_user_id());
+        $timeslots = cbse_courses_for_head(get_current_user_id(), $cbse_atts['pastdays'], $cbse_atts['futuredays']);
         foreach ($timeslots as $timeslot) {
             do_action( 'qm/debug', $timeslot );
             $courseInfo = cbse_course_info($timeslot->course_id);
-            $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
+            $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
 
             //var_dump($courseInfo->event_categories);
             $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . $timeslot->date . ' ' . $courseInfo->event->post_title . ' ' . date("H:i", strtotime($timeslot->event_start)) . ' - ' . date("H:i", strtotime($timeslot->event_end)) . ' #' . $timeslot->course_id . '</p>';
