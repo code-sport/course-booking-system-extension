@@ -31,6 +31,7 @@ function cbse_course_info($courseId): stdClass
 
     global $wpdb;
     $courseInfo = new stdClass();
+    // TODO extract in extra method to avoid duplicated calling
     $courseInfo->timeslot = $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $courseId));
     $courseInfo->event = get_post($courseInfo->timeslot->event_id);
     $courseInfo->event_meta = get_post($courseInfo->timeslot->event_id);
@@ -214,7 +215,10 @@ EOD;
     $pdf->Cell($w[0], 6, "Gruppe:", 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Ort:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Description') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, __('Place') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, "Verantwortlicher TrainerIn:", 0, 0, 'L', false);
@@ -254,7 +258,7 @@ EOD;
     foreach ($bookings as $booking) {
         $pdf->Cell($w[0], 12, $bookingNumber, 1, 0, 'R', $fill);
         $pdf->Cell($w[1], 12, $booking->last_name . ", " . $booking->first_name, 1, 0, 'L', $fill);
-        $pdf->Cell($w[2], 12, $booking->covid19_status, 1, 0, 'C', $fill);
+        $pdf->Cell($w[2], 12, __($booking->covid19_status), 1, 0, 'C', $fill);
         $pdf->Cell($w[3], 12, "", 1, 0, 'C', $fill);
         $pdf->Ln();
         $fill = !$fill;
