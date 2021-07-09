@@ -2,9 +2,18 @@
 
 function cbse_courses_for_head($userId, $pastdays = 7, $futuredays = 7)
 {
-    if (!is_int($userId) && $userId > 0) {
+    if (!is_int($userId) || $userId < 0) {
         throw new Exception("userID must be a positive int.");
     }
+
+    /* if (!is_int($pastdays) || $pastdays < 0) {
+         throw new Exception("pastdays ($pastdays) must be a positive int.");
+     }
+
+     if (!is_int($futuredays)  || $futuredays < 0) {
+         throw new Exception("futuredays ($futuredays) must be a positive int.");
+     }
+    */
 
     global $wpdb;
     $query = "SELECT `id` AS `course_id`, `column_id`, `event_id`, `event_start`, `event_end`, `description`, `" . $wpdb->prefix . "mp_timetable_bookings`.`date` as date, COUNT(`" . $wpdb->prefix . "mp_timetable_bookings`.`booking_id`) AS bookings, COUNT(`" . $wpdb->prefix . "mp_timetable_waitlists`.`waitlist_id`) AS waitings, `" . $wpdb->prefix . "mp_timetable_substitutes`.`user_id` AS substitutes_user_id, `note`";
@@ -41,7 +50,7 @@ function cbse_course_info($courseId): stdClass
     $courseInfo->column_meta = get_post($courseInfo->timeslot->column_id);
 
 
-    do_action( 'qm/debug', $courseInfo );
+    do_action('qm/debug', $courseInfo);
     return $courseInfo;
 }
 
@@ -89,7 +98,7 @@ function cbse_install_and_update()
 
     $fpdf_file = cbse_get_tcpdf();
     if (!is_file($fpdf_file)) {
-        do_action('qm/debug', 'PDF Libary is not availabe unter : {path}', ['path' => $fpdf_file]);
+        do_action('qm/debug', 'PDF library is not available under : {path}', ['path' => $fpdf_file]);
         $url = 'https://github.com/tecnickcom/TCPDF/archive/refs/tags/6.4.1.zip';
         $zip_filename = 'TCPDF.zip';
 
@@ -159,7 +168,7 @@ EOD;
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor('Code.Sport');
-    $pdf->SetTitle("$date_string Dokumentation Sportbetrieb");
+    $pdf->SetTitle("$date_string ". get_option('cbse_options')['header_title']);
     $pdf->SetSubject("{$courseInfo_categories} | {$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set default header data
@@ -168,14 +177,14 @@ EOD;
     $pdf->setFooterText("{$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set header and footer fonts
-    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
     $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
     // set default monospaced font
     $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
     // set margins
-    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_LEFT );
+    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_LEFT);
     $pdf->SetHeaderMargin(0);
     $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -202,30 +211,29 @@ EOD;
     $pdf->writeHTML($html, true, false, true, false, '');
 
 
-
     $w = array(55, 125);
     $pdf->Ln();
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Sportart:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Categories') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Datum und Uhrzeit:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Date and Time') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "$courseInfo_DateTime", 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Gruppe:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Title') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, __('Description') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Place') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Tags') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Verantwortlicher TrainerIn:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Responsible coach') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "{$user_meta->last_name}, {$user_meta->first_name}", 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, "Unterschrift Trainer:", 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Signature coach') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "", 'B', 0, 'L', false);
 
     $pdf->Ln();
@@ -242,9 +250,9 @@ EOD;
     $pdf->SetFont('', 'B');
 
     $pdf->Cell($w[0], 14, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[1], 14, "Name, Vorname (gut leserlich!)", 1, 0, 'C', 1);
+    $pdf->Cell($w[1], 14, __('Surname, Firstname (legible!)'), 1, 0, 'C', 1);
     $pdf->Cell($w[2], 14, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[3], 14, "Unterschrift", 1, 0, 'C', 1);
+    $pdf->Cell($w[3], 14, __('Signature'), 1, 0, 'C', 1);
     $pdf->Ln();
 
     //Table body
@@ -279,7 +287,7 @@ EOD;
 
     $user_info = get_userdata($userId);
     $to = $user_info->user_email;
-    $subject = "Dokumentation Sportbetrieb | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
+    $subject = get_option('cbse_options')['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
     $message = "Hi {$user_meta->first_name}\n\nbitte die Datei in der Anlage beachten\n\nSportliche Grüße\nDeine IT.";
     $headers = "";
     $attachments = array($pdf_file);
