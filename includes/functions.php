@@ -133,6 +133,8 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     require_once $pcpdf_file;
     require_once 'CBSE_PDF.php';
 
+    $cbse_options = get_option('cbse_options');
+
     $pdf_file = plugin_dir_path(__FILE__) . $courseId . '_' . $date . '.pdf';
     $user_meta = get_userdata($userId);
     $courseInfo = cbse_course_info($courseId);
@@ -168,7 +170,7 @@ EOD;
     // set document information
     $pdf->SetCreator(PDF_CREATOR);
     $pdf->SetAuthor('Code.Sport');
-    $pdf->SetTitle("$date_string ". get_option('cbse_options')['header_title']);
+    $pdf->SetTitle("$date_string " . get_option('cbse_options')['header_title']);
     $pdf->SetSubject("{$courseInfo_categories} | {$courseInfo->event->post_title} | {$courseInfo_DateTime}");
 
     // set default header data
@@ -214,9 +216,6 @@ EOD;
     $w = array(55, 125);
     $pdf->Ln();
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Categories') . ':', 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
-    $pdf->Ln();
     $pdf->Cell($w[0], 6, __('Date and Time') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "$courseInfo_DateTime", 0, 0, 'L', false);
     $pdf->Ln();
@@ -225,6 +224,9 @@ EOD;
     $pdf->Ln();
     $pdf->Cell($w[0], 6, __('Description') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
+    $pdf->Ln();
+    $pdf->Cell($w[0], 6, __('Categories') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Cell($w[0], 6, __('Tags') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
@@ -287,8 +289,9 @@ EOD;
 
     $user_info = get_userdata($userId);
     $to = $user_info->user_email;
-    $subject = get_option('cbse_options')['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
-    $message = "Hi {$user_meta->first_name}\n\nbitte die Datei in der Anlage beachten\n\nSportliche Grüße\nDeine IT.";
+    $subject = $cbse_options['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
+    $message = $cbse_options['mail_coach_message'] ??  __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
+    $message = str_replace('%first_name%', $user_meta->first_name, $message);
     $headers = "";
     $attachments = array($pdf_file);
 
