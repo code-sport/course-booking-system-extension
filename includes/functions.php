@@ -123,6 +123,17 @@ function cbse_install_and_update()
     }
 }
 
+function cbse_helper_array_exclude_and_column($array, $exclude, $filter)
+{
+    $excludes = explode(',', $exclude);
+    $array_filtered = array_filter($array, function ($val) use ($excludes) {
+        // Fatal error: Uncaught Error: Cannot use object of type WP_Term as array
+        $values = $val->to_array();
+        $id = $values['term_id'];
+        return (!in_array($id, $excludes));
+    });
+    return array_column($array_filtered, $filter);
+}
 
 function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 {
@@ -138,8 +149,8 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $pdf_file = plugin_dir_path(__FILE__) . $courseId . '_' . $date . '.pdf';
     $user_meta = get_userdata($userId);
     $courseInfo = cbse_course_info($courseId);
-    $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", array_column($courseInfo->event_categories, 'name')) : '';
-    $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", array_column($courseInfo->event_tags, 'name')) : '';
+    $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
+    $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date("d.m.Y", strtotime($date));
     $time_start_string = date("H:i", strtotime($courseInfo->timeslot->event_start));
@@ -150,7 +161,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     // Set some content to print
     $html = <<<EOD
     <style>    
-    h1 {s
+    h1 {
         text-align: center;
         font-size: 28pt;
     }
@@ -222,15 +233,21 @@ EOD;
     $pdf->Cell($w[0], 6, __('Title') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Description') . ':', 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
-    $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Categories') . ':', 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
-    $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Tags') . ':', 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
-    $pdf->Ln();
+    if (!empty($courseInfo->timeslot->description)) {
+        $pdf->Cell($w[0], 6, __('Description') . ':', 0, 0, 'L', false);
+        $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
+        $pdf->Ln();
+    }
+    if ($cbse_options['mail_categories_exclude'] != '0') {
+        $pdf->Cell($w[0], 6, ($cbse_options['mail_categories_title'] ?? __('Categories')) . ':', 0, 0, 'L', false);
+        $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
+        $pdf->Ln();
+    }
+    if ($cbse_options['mail_tags_exclude'] != '0') {
+        $pdf->Cell($w[0], 6, ($cbse_options['mail_tags_title'] ?? __('Tags')) . ':', 0, 0, 'L', false);
+        $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
+        $pdf->Ln();
+    }
     $pdf->Cell($w[0], 6, __('Responsible coach') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "{$user_meta->last_name}, {$user_meta->first_name}", 0, 0, 'L', false);
     $pdf->Ln();
@@ -290,7 +307,7 @@ EOD;
     $user_info = get_userdata($userId);
     $to = $user_info->user_email;
     $subject = $cbse_options['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
-    $message = $cbse_options['mail_coach_message'] ??  __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
+    $message = $cbse_options['mail_coach_message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
     $message = str_replace('%first_name%', $user_meta->first_name, $message);
     $headers = "";
     $attachments = array($pdf_file);

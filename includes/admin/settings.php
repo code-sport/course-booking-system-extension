@@ -30,6 +30,10 @@ function cbse_register_settings()
     add_settings_field('header_image_attachment_id', 'Image Attachment ID', 'cbse_header_image_attachment_id', 'course_booking_system_extension', 'cbse_header');
     add_settings_field('header_title', 'Title', 'cbse_header_title', 'course_booking_system_extension', 'cbse_header');
     add_settings_field('mail_coach_message', 'Coach Mail Message', 'cbse_mail_coach_message', 'course_booking_system_extension', 'cbse_header');
+    add_settings_field('mail_categories_title', 'Title for Categories', 'cbse_mail_categories_title', 'course_booking_system_extension', 'cbse_header');
+    add_settings_field('mail_categories_exclude', 'Exclude Categories', 'cbse_mail_categories_exclude', 'course_booking_system_extension', 'cbse_header');
+    add_settings_field('mail_tags_title', 'Title for Tags', 'cbse_mail_tags_title', 'course_booking_system_extension', 'cbse_header');
+    add_settings_field('mail_tags_exclude', 'Exclude Tags', 'cbse_mail_tags_exclude', 'course_booking_system_extension', 'cbse_header');
 
     //section name, form element name, callback for sanitization
     register_setting('cbse_header', 'cbse_options', 'cbse_header_validate');
@@ -43,6 +47,10 @@ function cbse_initialize_setting()
         'header_image_attachment_id' => '',
         'header_title' => __('Sports operation documentation'),
         'mail_coach_message' => __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT."),
+        'mail_categories_title' => __('Categories'),
+        'mail_categories_exclude' => '',
+        'mail_tags_title' => __('Tags'),
+        'mail_tags_exclude' => '',
     ];
     add_option('cbse_options', $settings);
 }
@@ -92,7 +100,35 @@ function cbse_mail_coach_message()
 {
     $options = get_option('cbse_options');
     echo "<textarea  id='mail_coach_message' name='cbse_options[mail_coach_message]' type='text' row='6' cols='50'>" . esc_attr($options['mail_coach_message'] ?? "") . "</textarea>";
-    echo "<p class='description'>%first_name% will be replaced with the first name of the coach.</p>";
+    echo "<p class='description'>" . __('%first_name% will be replaced with the first name of the coach.') . "</p>";
+}
+
+/* Categoeries */
+function cbse_mail_categories_title()
+{
+    $options = get_option('cbse_options');
+    echo "<input id='mail_categories_title' name='cbse_options[mail_categories_title]' type='text' value='" . esc_attr($options['mail_categories_title'] ?? "") . "' />";
+}
+
+function cbse_mail_categories_exclude()
+{
+    $options = get_option('cbse_options');
+    echo "<input id='mail_categories_exclude' name='cbse_options[mail_categories_exclude]' type='text' value='" . esc_attr($options['mail_categories_exclude'] ?? "") . "' />";
+    echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.') . "</p>";
+}
+
+/* Categoeries */
+function cbse_mail_tags_title()
+{
+    $options = get_option('cbse_options');
+    echo "<input id='mail_tags_title' name='cbse_options[mail_tags_title]' type='text' value='" . esc_attr($options['mail_tags_title'] ?? "") . "' />";
+}
+
+function cbse_mail_tags_exclude()
+{
+    $options = get_option('cbse_options');
+    echo "<input id='mail_tags_exclude' name='cbse_options[mail_tags_exclude]' type='text' value='" . esc_attr($options['mail_tags_exclude'] ?? "") . "' />";
+    echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.') . "</p>";
 }
 
 /**
@@ -110,6 +146,10 @@ function cbse_header_validate($input)
 
     $newinput['header_title'] = trim($input['header_title']);
     $newinput['mail_coach_message'] = trim($input['mail_coach_message']);
+    $newinput['mail_categories_title'] = trim($input['mail_categories_title']);
+    $newinput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
+    $newinput['mail_tags_title'] = trim($input['mail_tags_title']);
+    $newinput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
 
     return $newinput;
 }
