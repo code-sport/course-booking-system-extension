@@ -42,9 +42,9 @@ class CBSE_PDF extends TCPDF
         }
         $w_page = isset($this->l['w_page']) ? $this->l['w_page'] . ' ' : '';
         if (empty($this->pagegroups)) {
-            $pagenumtxt = $w_page . $this->getAliasNumPage() . ' / ' . $this->getAliasNbPages() . ' - ' . $this->footer_status;
+            $pagenumtxt = $w_page . $this->getAliasNumPage() . ' / ' . $this->getAliasNbPages() . ' | ' . $this->footer_status;
         } else {
-            $pagenumtxt = $w_page . $this->getPageNumGroupAlias() . ' / ' . $this->getPageGroupAlias() . ' - ' . $this->footer_status;
+            $pagenumtxt = $w_page . $this->getPageNumGroupAlias() . ' / ' . $this->getPageGroupAlias() . ' | ' . $this->footer_status;
         }
         $this->SetY($cur_y);
         //Print page number
