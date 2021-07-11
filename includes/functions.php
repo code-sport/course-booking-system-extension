@@ -152,9 +152,9 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
     $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
     $bookings = cbse_course_date_bookings($courseId, $date);
-    $date_string = date("d.m.Y", strtotime($date));
-    $time_start_string = date("H:i", strtotime($courseInfo->timeslot->event_start));
-    $time_end_string = date("H:i", strtotime($courseInfo->timeslot->event_end));
+    $date_string = wp_date(get_option('date_format'), strtotime($date));
+    $time_start_string = wp_date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
+    $time_end_string = wp_date(get_option('time_format'), strtotime($courseInfo->timeslot->event_end));
     $courseInfo_DateTime = "{$date_string} {$time_start_string} - {$time_end_string}";
     $image_id = get_option('cbse_options')['header_image_attachment_id'];
 
