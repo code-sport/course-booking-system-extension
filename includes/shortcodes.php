@@ -43,7 +43,7 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             $courseInfo = cbse_course_info($timeslot->course_id);
             $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
 
-            $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . wp_date(get_option('date_format'), strtotime($timeslot->date)) . ' ' . $courseInfo->event->post_title . ' ' . wp_date(get_option('time_format'), strtotime($timeslot->event_start)) . ' - ' . wp_date(get_option('time_format'), strtotime($timeslot->event_end)) . ' #' . $timeslot->course_id . '</p>';
+            $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . date(get_option('date_format'), strtotime($timeslot->date)) . ' ' . $courseInfo->event->post_title . ' ' . date(get_option('time_format'), strtotime($timeslot->event_start)) . ' - ' . date(get_option('time_format'), strtotime($timeslot->event_end)) . ' #' . $timeslot->course_id . '</p>';
             $o .= '<p>' . __('Bookings');
 
             $o .= '<ol>';

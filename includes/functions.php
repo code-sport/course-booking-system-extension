@@ -135,6 +135,33 @@ function cbse_helper_array_exclude_and_column($array, $exclude, $filter)
     return array_column($array_filtered, $filter);
 }
 
+/**
+ * Selects the courses on a specific date in a specific time.
+ *
+ * @param DateTime $date
+ * @param DateTime $timeFrom
+ * @param DateTime $timeTo
+ * @return array|object|null
+ */
+function cbse_courses_in_time(DateTime $date, DateTime $timeFrom, DateTime $timeTo)
+{
+    global $wpdb;
+
+    $query = "SELECT `id` AS `course_id`, `column_id`, `event_id`, `event_start`, `event_end`, `" . $wpdb->prefix . "mp_timetable_bookings`.`date` as date, `" . $wpdb->prefix . "mp_timetable_substitutes`.`user_id` AS substitutes_user_id, `" . $wpdb->prefix . "mp_timetable_data`.user_id";
+    $query .= " FROM `" . $wpdb->prefix . "mp_timetable_data`";
+    $query .= " JOIN `" . $wpdb->prefix . "mp_timetable_bookings`";
+    $query .= 'ON `' . $wpdb->prefix . 'mp_timetable_data`.`id` = `wp_mp_timetable_bookings`.`course_id`';
+    $query .= " LEFT JOIN `" . $wpdb->prefix . "mp_timetable_substitutes`";
+    $query .= " ON `" . $wpdb->prefix . "mp_timetable_data`.`id` = `" . $wpdb->prefix . "mp_timetable_substitutes`.`course_id`";
+    $query .= " AND `" . $wpdb->prefix . "mp_timetable_bookings`.`date` = `" . $wpdb->prefix . "mp_timetable_substitutes`.`date`";
+    $query .= " WHERE DATE(`" . $wpdb->prefix . "mp_timetable_bookings`.`date`) = '%s'";
+    $query .= " AND TIME(`" . $wpdb->prefix . "mp_timetable_data`.`event_start`) > '%s'";
+    $query .= " AND TIME(`" . $wpdb->prefix . "mp_timetable_data`.`event_start`) < '%s'";
+    $query .= " GROUP BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date`, `" . $wpdb->prefix . "mp_timetable_bookings`.`course_id`";
+    $query .= " ORDER BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date` ASC, `" . $wpdb->prefix . "mp_timetable_data`.`event_start` ASC;";
+    return $wpdb->get_results($wpdb->prepare($query, $date->format('Y-m-d'), $timeFrom->format('H:i:s'), $timeTo->format('H:i:s ')));
+}
+
 function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 {
     $pcpdf_file = cbse_get_tcpdf();
@@ -152,9 +179,9 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
     $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
     $bookings = cbse_course_date_bookings($courseId, $date);
-    $date_string = wp_date(get_option('date_format'), strtotime($date));
-    $time_start_string = wp_date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
-    $time_end_string = wp_date(get_option('time_format'), strtotime($courseInfo->timeslot->event_end));
+    $date_string = date(get_option('date_format'), strtotime($date));
+    $time_start_string = date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
+    $time_end_string = date(get_option('time_format'), strtotime($courseInfo->timeslot->event_end));
     $courseInfo_DateTime = "{$date_string} {$time_start_string} - {$time_end_string}";
     $image_id = get_option('cbse_options')['header_image_attachment_id'];
 
