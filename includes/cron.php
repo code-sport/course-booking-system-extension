@@ -50,7 +50,8 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
     $courses = cbse_courses_in_time($dateFrom, $dateTo);
 
     foreach ($courses as $course) {
-        cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, ($course->substitutes_user_id ?? $course->user_id));
+        $sent = cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, ($course->substitutes_user_id ?? $course->user_id));
+        $message .= 'cbse_sent_mail_with_course_date_bookings(' . $course->course_id . ', ' . $course->date . ', ' . ($course->substitutes_user_id ?? $course->user_id) . ') => ' . $sent;
     }
     $message .= print_r((array)$courses, 1);
     wp_mail($to, $subject, $message);
