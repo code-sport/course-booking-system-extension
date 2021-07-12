@@ -159,7 +159,7 @@ function cbse_courses_in_time(DateTime $date, DateTime $timeFrom, DateTime $time
     $query .= " AND TIME(`" . $wpdb->prefix . "mp_timetable_data`.`event_start`) < '%s'";
     $query .= " GROUP BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date`, `" . $wpdb->prefix . "mp_timetable_bookings`.`course_id`";
     $query .= " ORDER BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date` ASC, `" . $wpdb->prefix . "mp_timetable_data`.`event_start` ASC;";
-    return $wpdb->get_results($wpdb->prepare($query, $date->format('Y-m-d'), $timeFrom->format('H:i:s'), $timeTo->format('H:i:s ')));
+    return $wpdb->get_results($wpdb->prepare($query, $date->format('Y-m-d'), $timeFrom->format('H:i:s'), $timeTo->format('H:i:s')));
 }
 
 function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
