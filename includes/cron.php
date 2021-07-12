@@ -78,6 +78,7 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
 }
 
 register_activation_hook(__FILE__, 'cbse_cron_activation');
+add_action('upgrader_process_complete', 'cbse_cron_activation', 10, 2);
 function cbse_cron_activation()
 {
     $hook = 'cbse_cron_quarterly_hook';
