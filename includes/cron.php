@@ -39,20 +39,11 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
     $dateTo = clone $dateNow;
     $dateTo->add($interval);
 
-    $to = 'wordpress@codesport.info';
-    $subject = 'cbse_cron_quarterly_last_run';
-    $message = 'Last run: ' . $dateLastRun->format(get_option('date_format') . ' ' . get_option('time_format')) . PHP_EOL;
-    $message .= 'Now run: ' . $dateNow->format(get_option('date_format') . ' ' . get_option('time_format')) . PHP_EOL;
-    $message .= 'Work on: ' . $dateFrom->format(get_option('date_format') . ' ' . get_option('time_format')) . ' - ' . $dateTo->format(get_option('date_format') . ' ' . get_option('time_format')) . PHP_EOL;
-
     $courses = cbse_courses_in_time($dateFrom, $dateTo);
 
     foreach ($courses as $course) {
-        $sent = cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, ($course->substitutes_user_id ?? $course->user_id));
-        $message .= 'cbse_sent_mail_with_course_date_bookings(' . $course->course_id . ', ' . $course->date . ', ' . ($course->substitutes_user_id ?? $course->user_id) . ') => ' . $sent . PHP_EOL;
+        cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, ($course->substitutes_user_id ?? $course->user_id));
     }
-    $message .= print_r((array)$courses, 1);
-    //wp_mail($to, $subject, $message);
 }
 
 function cbse_cron_activation()
