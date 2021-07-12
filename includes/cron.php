@@ -81,8 +81,8 @@ register_activation_hook(__FILE__, 'cbse_cron_activation');
 function cbse_cron_activation()
 {
     $hook = 'cbse_cron_quarterly_hook';
-    if (wp_next_scheduled($hook) === false) {
-        wp_schedule_event(time(), $hook);
+    if (!wp_next_scheduled($hook)) {
+        wp_schedule_event(time(), 'quarterly', $hook);
     }
 }
 
