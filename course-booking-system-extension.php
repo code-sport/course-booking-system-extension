@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.0.8
+ * Version: 0.0.9
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: cbse

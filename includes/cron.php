@@ -22,7 +22,6 @@ function cbse_cron_quarterly_exec()
     $dateLastRun->setTimestamp($lastRun);
     $dateLastRun->setTimezone(wp_timezone());
 
-
     if ($lastRun === false) {
         add_option('cbse_cron_quarterly_last_run', $timeNow);
     } else {
