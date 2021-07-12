@@ -138,28 +138,26 @@ function cbse_helper_array_exclude_and_column($array, $exclude, $filter)
 /**
  * Selects the courses on a specific date in a specific time.
  *
- * @param DateTime $date
  * @param DateTime $timeFrom
  * @param DateTime $timeTo
  * @return array|object|null
  */
-function cbse_courses_in_time(DateTime $date, DateTime $timeFrom, DateTime $timeTo)
+function cbse_courses_in_time(DateTime $timeFrom, DateTime $timeTo)
 {
     global $wpdb;
 
-    $query = "SELECT `id` AS `course_id`, `column_id`, `event_id`, `event_start`, `event_end`, `" . $wpdb->prefix . "mp_timetable_bookings`.`date` as date, `" . $wpdb->prefix . "mp_timetable_substitutes`.`user_id` AS substitutes_user_id, `" . $wpdb->prefix . "mp_timetable_data`.user_id";
+    $query = "SELECT `id` AS `course_id`, `column_id`, `event_id`, `event_start`, `event_end`, `" . $wpdb->prefix . "mp_timetable_bookings`.`date` as date, `" . $wpdb->prefix . "mp_timetable_substitutes`.`user_id` AS substitutes_user_id, `" . $wpdb->prefix . "mp_timetable_data`.user_id, TIMESTAMP(`" . $wpdb->prefix . "mp_timetable_bookings`.`date`,`event_start`) as event_start_timestamp";
     $query .= " FROM `" . $wpdb->prefix . "mp_timetable_data`";
     $query .= " JOIN `" . $wpdb->prefix . "mp_timetable_bookings`";
     $query .= 'ON `' . $wpdb->prefix . 'mp_timetable_data`.`id` = `wp_mp_timetable_bookings`.`course_id`';
     $query .= " LEFT JOIN `" . $wpdb->prefix . "mp_timetable_substitutes`";
     $query .= " ON `" . $wpdb->prefix . "mp_timetable_data`.`id` = `" . $wpdb->prefix . "mp_timetable_substitutes`.`course_id`";
     $query .= " AND `" . $wpdb->prefix . "mp_timetable_bookings`.`date` = `" . $wpdb->prefix . "mp_timetable_substitutes`.`date`";
-    $query .= " WHERE DATE(`" . $wpdb->prefix . "mp_timetable_bookings`.`date`) = '%s'";
-    $query .= " AND TIME(`" . $wpdb->prefix . "mp_timetable_data`.`event_start`) > '%s'";
-    $query .= " AND TIME(`" . $wpdb->prefix . "mp_timetable_data`.`event_start`) < '%s'";
-    $query .= " GROUP BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date`, `" . $wpdb->prefix . "mp_timetable_bookings`.`course_id`";
+    $query .= "WHERE TIMESTAMP(`" . $wpdb->prefix . "mp_timetable_bookings`.`date`,`event_start`) >= '%s'";
+    $query .= "AND  TIMESTAMP(`" . $wpdb->prefix . "mp_timetable_bookings`.`date`,`event_start`) < '%s'";
+   // $query .= " GROUP BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date`, `" . $wpdb->prefix . "mp_timetable_bookings`.`course_id`";
     $query .= " ORDER BY `" . $wpdb->prefix . "mp_timetable_bookings`.`date` ASC, `" . $wpdb->prefix . "mp_timetable_data`.`event_start` ASC;";
-    return $wpdb->get_results($wpdb->prepare($query, $date->format('Y-m-d'), $timeFrom->format('H:i:s'), $timeTo->format('H:i:s')));
+    return $wpdb->get_results($wpdb->prepare($query, $timeFrom->format('Y-m-d H:i:s'), $timeTo->format('Y-m-d H:i:s')));
 }
 
 function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
