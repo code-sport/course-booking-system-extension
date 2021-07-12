@@ -47,3 +47,9 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'cbse_add_action_
 // Install and update
 add_action('upgrader_process_complete', 'cbse_install_and_update', 10, 2);
 register_activation_hook(__FILE__, 'cbse_install_and_update');
+
+register_activation_hook(__FILE__, 'cbse_cron_activation');
+add_action('upgrader_process_complete', 'cbse_cron_activation', 10, 2);
+
+// Uninstall
+register_deactivation_hook(__FILE__, 'cbse_cron_deactivate');

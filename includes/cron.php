@@ -71,14 +71,12 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
     }
 
     foreach ($courses as $course) {
-        cbse_sent_mail_with_course_date_bookings($course->course_id, $dateLastRun->format('Y-m-d'), ($course->substitutes_user_id ?? $course->user_id));
+        cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, ($course->substitutes_user_id ?? $course->user_id));
     }
     $message .= print_r((array)$courses, 1);
     wp_mail($to, $subject, $message);
 }
 
-register_activation_hook(__FILE__, 'cbse_cron_activation');
-add_action('upgrader_process_complete', 'cbse_cron_activation', 10, 2);
 function cbse_cron_activation()
 {
     $hook = 'cbse_cron_quarterly_hook';
@@ -87,7 +85,6 @@ function cbse_cron_activation()
     }
 }
 
-register_deactivation_hook(__FILE__, 'cbse_cron_deactivate');
 function cbse_cron_deactivate()
 {
     $timestamp = wp_next_scheduled('cbse_cron_quarterly_hook');
