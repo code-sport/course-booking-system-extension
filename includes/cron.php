@@ -38,7 +38,7 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
 
     try {
         $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
-    } catch (Exception) {
+    } catch (Exception $e) {
         $interval = new DateInterval('PT2H');
     }
     $dateFrom = clone $dateLastRun;

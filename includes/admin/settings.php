@@ -194,27 +194,27 @@ function cbse_cron_before_time()
  * @param $input
  * @return array
  */
-function cbse_header_validate($input)
+function cbse_header_validate($input): array
 {
     // Header Image
-    $newinput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
-    if (!is_numeric($newinput['header_image_attachment_id'])) {
-        $newinput['header_image_attachment_id'] = '';
+    $validatedInput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
+    if (!is_numeric($validatedInput['header_image_attachment_id'])) {
+        $validatedInput['header_image_attachment_id'] = '';
     }
 
-    $newinput['header_title'] = trim($input['header_title']);
-    $newinput['mail_coach_message'] = trim($input['mail_coach_message']);
-    $newinput['mail_categories_title'] = trim($input['mail_categories_title']);
-    $newinput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
-    $newinput['mail_tags_title'] = trim($input['mail_tags_title']);
-    $newinput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
-    $newinput['cron_enable'] = is_numeric($input['cron_enable']) ? $input['cron_enable'] : 1;
-    $newinput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
-    $newinput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
+    $validatedInput['header_title'] = trim($input['header_title']);
+    $validatedInput['mail_coach_message'] = trim($input['mail_coach_message']);
+    $validatedInput['mail_categories_title'] = trim($input['mail_categories_title']);
+    $validatedInput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
+    $validatedInput['mail_tags_title'] = trim($input['mail_tags_title']);
+    $validatedInput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
+    $validatedInput['cron_enable'] = is_numeric($input['cron_enable']) ? $input['cron_enable'] : 1;
+    $validatedInput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
+    $validatedInput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
 
-    cbse_switch_cron(boolval($newinput['cron_enable']));
+    cbse_switch_cron(boolval($validatedInput['cron_enable']));
 
-    return $newinput;
+    return $validatedInput;
 }
 
 function cbse_switch_cron(bool $cronEnabled)
