@@ -1,5 +1,5 @@
 # Course Booking System Extension
-This plugin for WordPress is an extension for the [Course Booking System](https://de.wordpress.org/plugins/course-booking-system/) from [ComMotion](https://commotion.online/).
+[This plugin for WordPress](https://wordpress.org/plugins/course-booking-system-extension/) is an extension for the [Course Booking System](https://de.wordpress.org/plugins/course-booking-system/) from [ComMotion](https://commotion.online/).
 
 ## Requirements
 - [Course Booking System](https://de.wordpress.org/plugins/course-booking-system/)
