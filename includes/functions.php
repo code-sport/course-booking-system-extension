@@ -176,6 +176,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 
     $courseInfo = cbse_course_info($courseId, $date);
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
+    $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
     $user_meta_course = get_userdata($courseInfo->substitutes->user_id ?? $courseInfo->user_id);
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date(get_option('date_format'), strtotime($date));
