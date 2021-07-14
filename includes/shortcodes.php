@@ -24,20 +24,48 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         ), $atts, $tag
     );
 
+    $userId = get_current_user_id();
+    $isManager = false;
+
+    if (is_user_logged_in() && (current_user_can('administrator') || current_user_can('shop_manager'))) {
+        $isManager = true;
+        if (isset($_GET['user_id']) && is_numeric($_GET['user_id'])  /*&& user_id_exists($_GET['user_id'])*/) {
+            $userId = (int)$_GET['user_id'];
+        }
+    }
+
     do_action('qm/debug', $cbse_atts);
 
     // start box
     $o = '<div class="cbse-box">';
 
-    if (!empty($cbse_atts['title'])) {
-        // title
-        $o .= '<h2>' . esc_html__($cbse_atts['title'], 'cbse') . '</h2>';
-    }
-
     if (is_user_logged_in()) {
+        if (!empty($cbse_atts['title'])) {
+            // title
+            $o .= '<h2>' . esc_html__($cbse_atts['title'], 'cbse') . '</h2>';
+        }
+
+        if ($isManager) {
+            $o .= '<div class="cbse-manager">';
+            $o .= '<label for="cbse_switch_coach">' . __('Switch coach') . ' </label>';
+            $o .= '<select name="cbse_switch_coach" id="cbse_switch_coach">';
+            foreach (cbse_get_coaches() as $coach) {
+                $user_info = get_userdata($coach->ID);
+                if (!empty($user_info->display_name)) {
+                    $display_name = esc_html($user_info->display_name);
+                } else {
+                    $display_name = __('Without name', 'course-booking-system');
+                }
+                $o .= '<option value="' . esc_html($coach->ID) . '" ' . (($coach->ID == $userId) ? ' selected="selected"' : '') . '">' . $display_name . '</option>';
+            }
+            $o .= '</select>';
+            $o .= '</div>';
+        }
+
         //list with trainings
+        $o .= '<div class="cbse-courses">';
         $o .= '<ul>';
-        $timeslots = cbse_courses_for_head(get_current_user_id(), $cbse_atts['pastdays'], $cbse_atts['futuredays']);
+        $timeslots = cbse_courses_for_head($userId, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
         foreach ($timeslots as $timeslot) {
             do_action('qm/debug', $timeslot);
             $courseInfo = cbse_course_info($timeslot->course_id, $timeslot->date);
@@ -60,6 +88,8 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             $o .= '</li>';
         }
         $o .= '</ul>';
+        $o .= '</div>';
+
     }
 
     // enclosing tags
@@ -76,6 +106,11 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
 
     // return output
     return $o;
+}
+
+function cbse_get_coaches(): array
+{
+    return get_users(['role__in' => ['administrator', 'editor', 'author', 'contributor']]);
 }
 
 add_shortcode('cbse_event_head_courses', 'cbse_event_head_courses_shortcode');
