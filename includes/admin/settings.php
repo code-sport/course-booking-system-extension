@@ -20,6 +20,8 @@ function cbse_register_settings()
 {
     if (false === get_option('cbse_options')) {
         cbse_initialize_setting();
+    } else {
+        cbse_missing_setting();
     }
 
     //section name, display name, callback to print description of section, page to which section is attached.
@@ -34,6 +36,8 @@ function cbse_register_settings()
     add_settings_field('mail_categories_exclude', 'Exclude Categories', 'cbse_mail_categories_exclude', 'course_booking_system_extension', 'cbse_header');
     add_settings_field('mail_tags_title', 'Title for Tags', 'cbse_mail_tags_title', 'course_booking_system_extension', 'cbse_header');
     add_settings_field('mail_tags_exclude', 'Exclude Tags', 'cbse_mail_tags_exclude', 'course_booking_system_extension', 'cbse_header');
+    add_settings_field('cron_enable', 'Cron Enable', 'cbse_cron_enable', 'course_booking_system_extension', 'cbse_header');
+    add_settings_field('cron_before_time', 'Cron Sent before course', 'cbse_cron_before_time', 'course_booking_system_extension', 'cbse_header');
 
     //section name, form element name, callback for sanitization
     register_setting('cbse_header', 'cbse_options', 'cbse_header_validate');
@@ -51,8 +55,46 @@ function cbse_initialize_setting()
         'mail_categories_exclude' => '',
         'mail_tags_title' => __('Tags'),
         'mail_tags_exclude' => '',
+        'cron_enable' => 'true',
+        'cron_before_time_hour' => 2,
+        'cron_before_time_minute' => 0
     ];
     add_option('cbse_options', $settings);
+}
+
+function cbse_missing_setting()
+{
+    $options = get_option('cbse_options');
+
+    if (!array_key_exists('header_title', $options)) {
+        $options['header_title'] = __('Sports operation documentation');
+    }
+
+    if (!array_key_exists('mail_coach_message', $options)) {
+        $options['mail_coach_message'] = __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
+    }
+
+    if (!array_key_exists('mail_categories_title', $options)) {
+        $options['mail_categories_title'] = __('Categories');
+    }
+
+    if (!array_key_exists('mail_tags_title', $options)) {
+        $options['mail_tags_title'] = __('Tags');
+    }
+
+    if (!array_key_exists('cron_enable', $options)) {
+        $options['cron_enable'] = 1;
+    }
+
+    if (!array_key_exists('cron_before_time_hour', $options)) {
+        $options['cron_before_time_hour'] = 2;
+    }
+
+    if (!array_key_exists('cron_before_time_minute', $options)) {
+        $options['cron_before_time_minute'] = 0;
+    }
+
+    update_option('cbse_options', $options);
 }
 
 function cbse_render_settings_page()
@@ -131,6 +173,22 @@ function cbse_mail_tags_exclude()
     echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.') . "</p>";
 }
 
+function cbse_cron_enable()
+{
+    $options = get_option('cbse_options');
+    $html = '<input type="checkbox" id="cron_enable" name="cbse_options[cron_enable]" value="1"' . checked(1, $options['cron_enable'], false) . ' disabled="disabled"/>';
+    $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.') . '</label>';
+
+    echo $html;
+}
+
+function cbse_cron_before_time()
+{
+    $options = get_option('cbse_options');
+    echo "<input id='cron_before_time_hour' name='cbse_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . esc_attr($options['cron_before_time_hour'] ?? "") . "' />" . __('Hour');
+    echo "<input id='cron_before_time_minute' name='cbse_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . esc_attr($options['cron_before_time_minute'] ?? "") . "' />" . __('Minute');
+}
+
 /**
  * Validate the input for the header data
  * @param $input
@@ -150,8 +208,26 @@ function cbse_header_validate($input)
     $newinput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
     $newinput['mail_tags_title'] = trim($input['mail_tags_title']);
     $newinput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
+    $newinput['cron_enable'] = is_numeric($input['cron_enable']) ? $input['cron_enable'] : 1;
+    $newinput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
+    $newinput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
+
+    cbse_switch_cron(boolval($newinput['cron_enable']));
 
     return $newinput;
 }
 
+function cbse_switch_cron(bool $cronEnabled)
+{
+    $hook = 'cbse_cron_quarterly_hook';
+
+    if ($cronEnabled) {
+        if (!wp_next_scheduled($hook)) {
+            wp_schedule_event(time(), 'quarterly', $hook);
+        }
+    } else {
+        $timestamp = wp_next_scheduled($hook);
+        wp_unschedule_event($timestamp, $hook);
+    }
+}
 

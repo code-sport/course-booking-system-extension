@@ -32,7 +32,11 @@ function cbse_cron_quarterly_exec()
 
 function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
 {
-    $interval = new DateInterval('PT1H');
+    $options = get_option('cbse_options');
+    $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)$options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 2;
+    $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 && (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 0;
+
+    $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
     $dateFrom = clone $dateLastRun;
     $dateFrom->add($interval);
     $dateTo = clone $dateNow;
@@ -55,8 +59,9 @@ function cbse_cron_activation()
 
 function cbse_cron_deactivate()
 {
-    $timestamp = wp_next_scheduled('cbse_cron_quarterly_hook');
-    wp_unschedule_event($timestamp, 'cbse_cron_quarterly_hook');
+    $hook = 'cbse_cron_quarterly_hook';
+    $timestamp = wp_next_scheduled($hook);
+    wp_unschedule_event($timestamp, $hook);
 }
 
 
