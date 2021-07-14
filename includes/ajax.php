@@ -11,7 +11,7 @@ function cbse_event_head_courses_enqueue($hook)
         'ajax-script',
         plugins_url('../assets/js/cbse_event_head_courses.js', __FILE__),
         array('jquery'),
-        '1.0.0',
+        get_plugin_data( __FILE__ )['Version'],
         true
     );
     $title_nonce = wp_create_nonce('cbse_event_head_courses');

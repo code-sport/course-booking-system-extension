@@ -24,6 +24,8 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         ), $atts, $tag
     );
 
+    wp_enqueue_style( 'cbse_event_head_courses_style' );
+
     $userId = get_current_user_id();
     $isManager = false;
 
@@ -108,9 +110,14 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
     return $o;
 }
 
+function cbse_event_head_courses_shortcode_styles(){
+    wp_register_style( 'cbse_event_head_courses_style', plugins_url( '../assets/css/cbse_event_head_courses.css', __FILE__) );
+}
+
 function cbse_get_coaches(): array
 {
     return get_users(['role__in' => ['administrator', 'editor', 'author', 'contributor']]);
 }
 
 add_shortcode('cbse_event_head_courses', 'cbse_event_head_courses_shortcode');
+add_action( 'wp_enqueue_scripts', 'cbse_event_head_courses_shortcode_styles' );
