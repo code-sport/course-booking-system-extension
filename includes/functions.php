@@ -50,8 +50,6 @@ function cbse_course_info($courseId, $date): stdClass
     $courseInfo->column_meta = get_post($courseInfo->timeslot->column_id);
     $courseInfo->substitutes = $wpdb->get_row($wpdb->prepare("SELECT `user_id` FROM `" . $wpdb->prefix . "mp_timetable_substitutes` WHERE `course_id` = %d AND `date` = '%s';", $courseId, $date));
 
-
-    do_action('qm/debug', $courseInfo);
     return $courseInfo;
 }
 
@@ -177,7 +175,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $courseInfo = cbse_course_info($courseId, $date);
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
     $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
-    $user_meta_course = get_userdata($courseInfo->substitutes->user_id ?? $courseInfo->user_id);
+    $user_meta_course = get_userdata($courseInfo->substitutes->user_id ?? $courseInfo->timeslot->user_id);
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date(get_option('date_format'), strtotime($date));
     $time_start_string = date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
@@ -332,10 +330,11 @@ EOD;
     $pdf->Output($pdf_file, 'F');
 
     $user_info = get_userdata($userId);
+
     $to = $user_info->user_email;
     $subject = $cbse_options['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
     $message = $cbse_options['mail_coach_message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
-    $message = str_replace('%first_name%', $user_meta_course->first_name, $message);
+    $message = str_replace('%first_name%', $user_info->first_name, $message);
     $headers = "";
     $attachments = array($pdf_file);
 

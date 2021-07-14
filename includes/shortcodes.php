@@ -69,8 +69,11 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         $o .= '<ul>';
         $timeslots = cbse_courses_for_head($userId, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
         foreach ($timeslots as $timeslot) {
+            do_action('qm/debug', 'timeslot');
             do_action('qm/debug', $timeslot);
             $courseInfo = cbse_course_info($timeslot->course_id, $timeslot->date);
+            do_action('qm/debug', 'courseInfo');
+            do_action('qm/debug', $courseInfo);
             $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
 
             $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . date(get_option('date_format'), strtotime($timeslot->date)) . ' ' . $courseInfo->event->post_title . ' ' . date(get_option('time_format'), strtotime($timeslot->event_start)) . ' - ' . date(get_option('time_format'), strtotime($timeslot->event_end)) . ' #' . $timeslot->course_id . '</p>';
