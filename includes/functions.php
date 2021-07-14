@@ -32,7 +32,7 @@ function cbse_courses_for_head($userId, $pastdays = 7, $futuredays = 7)
     return $timeslots;
 }
 
-function cbse_course_info($courseId): stdClass
+function cbse_course_info($courseId, $date): stdClass
 {
     if (!is_int($courseId)) {
         $courseId = intval($courseId);
@@ -41,13 +41,14 @@ function cbse_course_info($courseId): stdClass
     global $wpdb;
     $courseInfo = new stdClass();
     // TODO extract in extra method to avoid duplicated calling
-    $courseInfo->timeslot = $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $courseId));
+    $courseInfo->timeslot = $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $courseId));
     $courseInfo->event = get_post($courseInfo->timeslot->event_id);
     $courseInfo->event_meta = get_post($courseInfo->timeslot->event_id);
     $courseInfo->event_categories = get_the_terms($courseInfo->timeslot->event_id, 'mp-event_category');
     $courseInfo->event_tags = get_the_terms($courseInfo->timeslot->event_id, 'mp-event_tag');
     $courseInfo->column = get_post($courseInfo->timeslot->column_id);
     $courseInfo->column_meta = get_post($courseInfo->timeslot->column_id);
+    $courseInfo->substitutes = $wpdb->get_row($wpdb->prepare("SELECT `user_id` FROM `" . $wpdb->prefix . "mp_timetable_substitutes` WHERE `course_id` = %d AND `date` = '%s';", $courseId, $date));
 
 
     do_action('qm/debug', $courseInfo);
@@ -172,10 +173,10 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $cbse_options = get_option('cbse_options');
 
     $pdf_file = plugin_dir_path(__FILE__) . $courseId . '_' . $date . '.pdf';
-    $user_meta = get_userdata($userId);
-    $courseInfo = cbse_course_info($courseId);
+
+    $courseInfo = cbse_course_info($courseId, $date);
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
-    $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
+    $user_meta_course = get_userdata($courseInfo->substitutes->user_id ?? $courseInfo->user_id);
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date(get_option('date_format'), strtotime($date));
     $time_start_string = date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
@@ -274,7 +275,7 @@ EOD;
         $pdf->Ln();
     }
     $pdf->Cell($w[0], 6, __('Responsible coach') . ':', 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, "{$user_meta->last_name}, {$user_meta->first_name}", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "{$user_meta_course->last_name}, {$user_meta_course->first_name}", 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Ln();
     $pdf->Cell($w[0], 6, __('Signature coach') . ':', 0, 0, 'L', false);
@@ -333,7 +334,7 @@ EOD;
     $to = $user_info->user_email;
     $subject = $cbse_options['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
     $message = $cbse_options['mail_coach_message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
-    $message = str_replace('%first_name%', $user_meta->first_name, $message);
+    $message = str_replace('%first_name%', $user_meta_course->first_name, $message);
     $headers = "";
     $attachments = array($pdf_file);
 
