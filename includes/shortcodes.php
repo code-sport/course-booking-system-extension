@@ -24,7 +24,7 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         ), $atts, $tag
     );
 
-    wp_enqueue_style( 'cbse_event_head_courses_style' );
+    wp_enqueue_style('cbse_event_head_courses_style');
 
     $userId = get_current_user_id();
     $isManager = false;
@@ -47,6 +47,7 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             $o .= '<h2>' . esc_html__($cbse_atts['title'], 'cbse') . '</h2>';
         }
 
+
         if ($isManager) {
             $o .= '<div class="cbse-manager">';
             $o .= '<label for="cbse_switch_coach">' . __('Switch coach') . ' </label>';
@@ -66,30 +67,20 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
 
         //list with trainings
         $o .= '<div class="cbse-courses">';
-        $o .= '<ul>';
+        $o .= '<ul class="cbse_timeslots">';
         $timeslots = cbse_courses_for_head($userId, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
         foreach ($timeslots as $timeslot) {
-            do_action('qm/debug', 'timeslot');
-            do_action('qm/debug', $timeslot);
-            $courseInfo = cbse_course_info($timeslot->course_id, $timeslot->date);
-            do_action('qm/debug', 'courseInfo');
-            do_action('qm/debug', $courseInfo);
-            $bookings = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
+            $args = array();
+            $args['timeslot'] = $timeslot;
+            $args['courseInfo'] = cbse_course_info($timeslot->course_id, $timeslot->date);
+            $args['bookings'] = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
 
-            $o .= '<li><p>' . $courseInfo->column->post_title . ', ' . date(get_option('date_format'), strtotime($timeslot->date)) . ' ' . $courseInfo->event->post_title . ' ' . date(get_option('time_format'), strtotime($timeslot->event_start)) . ' - ' . date(get_option('time_format'), strtotime($timeslot->event_end)) . ' #' . $timeslot->course_id . '</p>';
-            $o .= '<p>' . __('Bookings');
-
-            $o .= '<ol>';
-            foreach ($bookings as $booking) {
-                $o .= '<li>' . $booking->last_name . ', ' . $booking->first_name;
-                if (!empty($booking->covid19_status)) {
-                    $o .= ' (' . __($booking->covid19_status) . ')';
-                }
-                $o .= '</li>';
+            $o .= '<li class="cbse_timeslot">';
+            ob_start();
+            if (get_template_part('mp-timetable/shortcodes/cbse_event_head_courses', 'single', $args) === false) {
+                $o .= '<p>Error: Cloud not load template part</p>';
             }
-            $o .= '</ol>';
-            $o .= '</p>';
-            $o .= '<p>(' . $timeslot->bookings . ' | ' . $timeslot->waitings . ' | ' . $courseInfo->event_meta->attendance . ') <button type="button" class="cbse cbse_participants_via_email" data-button=\'' . json_encode(array("course_id" => $timeslot->course_id, "date" => $timeslot->date)) . '\'>' . __('Participants via email') . '</button></p>';
+            $o .= ob_get_clean();
             $o .= '</li>';
         }
         $o .= '</ul>';
@@ -113,8 +104,9 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
     return $o;
 }
 
-function cbse_event_head_courses_shortcode_styles(){
-    wp_register_style( 'cbse_event_head_courses_style', plugins_url( '../assets/css/cbse_event_head_courses.css', __FILE__) );
+function cbse_event_head_courses_shortcode_styles()
+{
+    wp_register_style('cbse_event_head_courses_style', plugins_url('../assets/css/cbse_event_head_courses.css', __FILE__));
 }
 
 function cbse_get_coaches(): array
@@ -123,4 +115,4 @@ function cbse_get_coaches(): array
 }
 
 add_shortcode('cbse_event_head_courses', 'cbse_event_head_courses_shortcode');
-add_action( 'wp_enqueue_scripts', 'cbse_event_head_courses_shortcode_styles' );
+add_action('wp_enqueue_scripts', 'cbse_event_head_courses_shortcode_styles');
