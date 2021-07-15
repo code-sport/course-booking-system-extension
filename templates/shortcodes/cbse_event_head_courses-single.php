@@ -17,8 +17,13 @@
 
     <p> (<?= $args['timeslot']->bookings ?> | <?= $args['timeslot']->waitings ?>
         | <?= $args['courseInfo']->event_meta->attendance ?>)
-        <button type="button" class="cbse cbse_participants_via_email"
-                data-button="<?= json_encode(array("course_id" => $args['timeslot']->course_id, "date" => $args['timeslot']->date)) ?>"><?= __('Participants via email') ?></button>
+        <button
+            type="button"
+            class="cbse cbse_participants_via_email"
+            data-button='<?= json_encode(array('course_id' => $args['timeslot']->course_id, 'date' => $args['timeslot']->date)) ?>'
+        >
+            <?= __('Participants via email') ?>
+        </button>
         #<?= $args['timeslot']->course_id ?>
     </p>
 
