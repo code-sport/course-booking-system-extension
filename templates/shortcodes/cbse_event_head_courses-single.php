@@ -1,5 +1,11 @@
 <div class="cbse-courses-single">
-    <p class="cbse-date"><?= $args['courseInfo']->column->post_title ?>
+    <?php
+    $current = strtotime(date("Y-m-d"));
+    $date = strtotime($args['timeslot']->date);
+    $difference = floor(($date - $current) / (60 * 60 * 24));
+    ?>
+    ?>
+    <p class="cbse-date <?= $difference == 0 ? 'today' : '' ?>"><?= $args['courseInfo']->column->post_title ?>
         , <?= date(get_option('date_format'), strtotime($args['timeslot']->date)) ?>
         <?= date(get_option('time_format'), strtotime($args['timeslot']->event_start)) ?>
         - <?= date(get_option('time_format'), strtotime($args['timeslot']->event_end)) ?></p>
@@ -15,8 +21,11 @@
         <?php } ?>
     </ol>
 
-    <p> (<?= $args['timeslot']->bookings ?> | <?= $args['timeslot']->waitings ?>
+    <p>
+        <span class="cbse-course-summary">
+        (<?= $args['timeslot']->bookings ?> | <?= $args['timeslot']->waitings ?>
         | <?= $args['courseInfo']->event_meta->attendance ?>)
+        </span>
         <button
             type="button"
             class="cbse cbse_participants_via_email"
