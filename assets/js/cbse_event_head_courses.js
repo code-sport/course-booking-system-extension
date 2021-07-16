@@ -27,4 +27,12 @@ jQuery(document).ready(function ($) {       //wrapper
         url.search = search_params.toString();
         window.location.href = url.toString();
     });
+
+    $('.cbse-time-settings :checkbox').change(function () {
+        if ($(this).is(":checked")) {
+            $('.' + $(this).val()).parent().show();
+        } else {
+            $('.' + $(this).val()).parent().hide();
+        }
+    });
 });

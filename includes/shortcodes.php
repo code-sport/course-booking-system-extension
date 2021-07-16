@@ -65,6 +65,14 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             $o .= '</div>';
         }
 
+        // Display settings
+        $o .= '<div class="cbse-time-settings">';
+        $o .= __('show courses of') . '<br />';
+        $o .= '<input type="checkbox" id="cbse-time-past" name="cbse-time-past" value="past" checked><label for="cbse-time-past">' . __('past') . '</label><br />';
+        $o .= '<input type="checkbox" id="cbse-time-today" name="cbse-time-today" value="today" checked><label for="cbse-time-today">' . __('today') . '</label><br />';
+        $o .= '<input type="checkbox" id="cbse-time-future" name="cbse-time-future" value="future" checked><label for="cbse-time-future">' . __('future') . '</label>';
+        $o .= '</div>';
+
         //list with trainings
         $o .= '<div class="cbse-courses">';
         $o .= '<ul class="cbse_timeslots">';
