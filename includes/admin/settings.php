@@ -176,8 +176,11 @@ function cbse_mail_tags_exclude()
 function cbse_cron_enable()
 {
     $options = get_option('cbse_options');
-    $html = '<input type="checkbox" id="cron_enable" name="cbse_options[cron_enable]" value="1"' . checked(1, $options['cron_enable'], false) . ' disabled="disabled"/>';
+    $html = '<input type="checkbox" id="cron_enable" name="cbse_options[cron_enable]" value="1"' . checked(1, $options['cron_enable'], false) . '/>';
     $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.') . '</label>';
+    if (cbse_cron_enabled()) {
+        $html .= '<p>' . __('Cron is active') . '</p>';
+    }
 
     echo $html;
 }
@@ -208,7 +211,7 @@ function cbse_header_validate($input): array
     $validatedInput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
     $validatedInput['mail_tags_title'] = trim($input['mail_tags_title']);
     $validatedInput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
-    $validatedInput['cron_enable'] = is_numeric($input['cron_enable']) ? $input['cron_enable'] : 1;
+    $validatedInput['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
     $validatedInput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
     $validatedInput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
 
@@ -231,3 +234,8 @@ function cbse_switch_cron(bool $cronEnabled)
     }
 }
 
+function cbse_cron_enabled(): bool
+{
+    return (bool)wp_next_scheduled('cbse_cron_quarterly_hook');
+
+}
