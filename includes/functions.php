@@ -300,7 +300,8 @@ EOD;
     $pdf->Ln();
 
     //Table body
-    $bookingNumber = 1;
+    $bookingNumber = 1; //TODO replace with count($bookings)
+    $bookingNames = array();
     $fill = 0;
 
     $pdf->SetFillColor(237, 237, 237);
@@ -308,6 +309,8 @@ EOD;
     $pdf->SetFont('');
 
     foreach ($bookings as $booking) {
+        $bookingNames[] = $bookingNumber . '. ' . $booking->last_name . ', ' . $booking->first_name; // For mail
+
         $pdf->Cell($w[0], 12, $bookingNumber, 1, 0, 'R', $fill);
         $pdf->Cell($w[1], 12, $booking->last_name . ", " . $booking->first_name, 1, 0, 'L', $fill);
         $pdf->Cell($w[2], 12, __($booking->covid19_status), 1, 0, 'C', $fill);
@@ -333,8 +336,24 @@ EOD;
 
     $to = $user_info->user_email;
     $subject = $cbse_options['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
+
     $message = $cbse_options['mail_coach_message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
     $message = str_replace('%first_name%', $user_info->first_name, $message);
+    $message = str_replace('%last_name%', $user_info->last_name, $message);
+    $message = str_replace('%course_date%', $date_string, $message);
+    $message = str_replace('%course_start%', $time_start_string, $message);
+    $message = str_replace('%course_end%', $time_end_string, $message);
+    $message = str_replace('%number_of_bookings%', count($bookings), $message);
+    $message = str_replace('%maximum_participants%', $courseInfo->event_meta->attendance, $message);
+
+    if (strpos($message, '%booking_names%') !== false) {
+        $messageReplace = '';
+        foreach ($bookingNames as $bookingName) {
+            $messageReplace .= $bookingName . PHP_EOL;
+        }
+        $message = str_replace('%booking_names%', $messageReplace, $message);
+    }
+
     $headers = "";
     $attachments = array($pdf_file);
 
