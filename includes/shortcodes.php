@@ -94,6 +94,13 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
         $o .= '</ul>';
         $o .= '</div>';
 
+    } else {
+        $loginArgs = array(
+            'echo'            => false,
+            'redirect'        => get_permalink( get_the_ID() ),
+            'remember'        => true,
+        );
+        $o .= wp_login_form($loginArgs);
     }
 
     // enclosing tags
