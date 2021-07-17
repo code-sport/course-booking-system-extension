@@ -83,7 +83,11 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             $args['courseInfo'] = cbse_course_info($timeslot->course_id, $timeslot->date);
             $args['bookings'] = cbse_course_date_bookings($timeslot->course_id, $timeslot->date);
 
-            $o .= '<li class="cbse_timeslot">';
+            $dataDate = $timeslot->date;
+            $dataStartTime = $timeslot->date . ' ' . $args['timeslot']->event_start;
+            $dataStartDateTime = strtotime($dataStartTime);
+
+            $o .= "<li class='cbse_timeslot' data-startdate='$dataDate' data-starttime='$dataStartTime' data-startdatetime='$dataStartDateTime'>";
             ob_start();
             if (get_template_part('mp-timetable/shortcodes/cbse_event_head_courses', 'single', $args) === false) {
                 $o .= '<p>Error: Cloud not load template part</p>';
@@ -96,9 +100,9 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
 
     } else {
         $loginArgs = array(
-            'echo'            => false,
-            'redirect'        => get_permalink( get_the_ID() ),
-            'remember'        => true,
+            'echo' => false,
+            'redirect' => get_permalink(get_the_ID()),
+            'remember' => true,
         );
         $o .= wp_login_form($loginArgs);
     }
