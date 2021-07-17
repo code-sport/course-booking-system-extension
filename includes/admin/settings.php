@@ -190,7 +190,11 @@ function cbse_cron_enable()
     $html = '<input type="checkbox" id="cron_enable" name="cbse_options[cron_enable]" value="1"' . checked(1, $options['cron_enable'], false) . '/>';
     $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.') . '</label>';
     if (cbse_cron_enabled()) {
-        $html .= '<p>' . __('Cron is active') . '</p>';
+        $lastRun = get_option('cbse_cron_quarterly_last_run');
+        $dateLastRun = new DateTime();
+        $dateLastRun->setTimestamp($lastRun);
+        $dateLastRun->setTimezone(wp_timezone());
+        $html .= '<p>' . __('Cron is active.') . ' ' . sprintf(__('Last run was: %s %s'),$dateLastRun->format(get_option('date_format')), $dateLastRun->format(get_option('time_format'))) .'</p>';
     }
 
     echo $html;

@@ -29,6 +29,7 @@ jQuery(document).ready(function ($) {       //wrapper
     });
 
     $('.cbse-time-settings :checkbox').change(function () {
+        console.debug('Switch ' + $(this).val() + ' to ' + $(this).is(":checked"));
         if ($(this).is(":checked")) {
             $('.' + $(this).val()).parent().show();
         } else {
