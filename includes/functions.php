@@ -343,6 +343,7 @@ EOD;
     $message = str_replace('%course_date%', $date_string, $message);
     $message = str_replace('%course_start%', $time_start_string, $message);
     $message = str_replace('%course_end%', $time_end_string, $message);
+    $message = str_replace('%course_title%', $courseInfo->event->post_title, $message);
     $message = str_replace('%number_of_bookings%', count($bookings), $message);
     $message = str_replace('%maximum_participants%', $courseInfo->event_meta->attendance, $message);
 
