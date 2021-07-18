@@ -309,7 +309,7 @@ EOD;
     $pdf->SetFont('');
 
     foreach ($bookings as $booking) {
-        $bookingNames[] = $bookingNumber . '. ' . $booking->last_name . ', ' . $booking->first_name; // For mail
+        $bookingNames[] = $bookingNumber . '. ' . trim($booking->last_name) . ', ' . trim($booking->first_name); // For mail
 
         $pdf->Cell($w[0], 12, $bookingNumber, 1, 0, 'R', $fill);
         $pdf->Cell($w[1], 12, trim($booking->last_name) . ", " . trim($booking->first_name), 1, 0, 'L', $fill);
