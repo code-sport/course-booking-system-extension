@@ -13,7 +13,7 @@ if ($difference == 0) {
 }
 ?>
 <div
-    class="cbse-courses-single <?= $time ?> <?= date("Y-m-d", $date) ?>">
+    class="cbse-courses-single <?= $time ?> <?= date("Y-m-d", $date) ?> course-<?= $args['timeslot']->course_id ?>">
     <p class="cbse-date"><?= $args['courseInfo']->column->post_title ?>
             , <?= date(get_option('date_format'), strtotime($args['timeslot']->date)) ?>
         <?= date(get_option('time_format'), strtotime($args['timeslot']->event_start)) ?>
@@ -42,7 +42,6 @@ if ($difference == 0) {
         >
             <?= __('Participants via email') ?>
         </button>
-        #<?= $args['timeslot']->course_id ?>
     </p>
 
 </div>

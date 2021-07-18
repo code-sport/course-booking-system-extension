@@ -86,8 +86,9 @@ function cbse_event_head_courses_shortcode($atts = [], $content = null, $tag = '
             $dataDate = $timeslot->date;
             $dataStartTime = $timeslot->date . ' ' . $args['timeslot']->event_start;
             $dataStartDateTime = strtotime($dataStartTime);
+            $courseId = $timeslot->course_id;
 
-            $o .= "<li class='cbse_timeslot' data-startdate='$dataDate' data-starttime='$dataStartTime' data-startdatetime='$dataStartDateTime'>";
+            $o .= "<li class='cbse_timeslot' data-startdate='$dataDate' data-starttime='$dataStartTime' data-startdatetime='$dataStartDateTime' date-courseid='$courseId'>";
             ob_start();
             if (get_template_part('mp-timetable/shortcodes/cbse_event_head_courses', 'single', $args) === false) {
                 $o .= '<p>Error: Cloud not load template part</p>';
