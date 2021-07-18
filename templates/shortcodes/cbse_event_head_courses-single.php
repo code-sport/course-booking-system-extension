@@ -22,7 +22,7 @@ if ($difference == 0) {
     <p><?= __('Bookings') ?></p>
     <ol>
         <?php foreach ($args['bookings'] as $booking) { ?>
-        <li><?= $booking->last_name ?>, <?= $booking->first_name ?>
+        <li><?= trim($booking->last_name) ?>, <?= trim($booking->first_name) ?>
                 <?php if (!empty($booking->covid19_status)) : ?>
             (<?php __($booking->covid19_status) ?>)
             <?php endif; ?>
