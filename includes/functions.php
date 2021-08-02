@@ -194,7 +194,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 EOD;
     $html .= wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
     $html .= "<h1>" . get_option('cbse_options')['header_title'] . "</h1>";
-    $html_attendees = '<h2>' . __('Participants', 'course-booking-system-extension') ':</h2>';
+    $html_attendees = '<h2>' . __('Participants', 'course-booking-system-extension') . ':</h2>';
 
 
     //TODO Move into own class that a footer can be added
