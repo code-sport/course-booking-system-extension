@@ -5,11 +5,11 @@ add_action('edit_user_profile', 'cbse_extra_user_profile_fields');
 
 function cbse_extra_user_profile_fields($user)
 { ?>
-    <h3><?php _e("Covid-19", "blank"); ?></h3>
+    <h3><?php _e("Covid-19", 'course_booking_system_extension'); ?></h3>
 
     <table class="form-table">
         <tr>
-            <th><label for="covid-19-status"><?php _e("Status"); ?></label></th>
+            <th><label for="covid-19-status"><?php _e("Status", 'course_booking_system_extension'); ?></label></th>
             <td>
                 <?php
                 //get dropdown saved value
@@ -17,19 +17,19 @@ function cbse_extra_user_profile_fields($user)
                 ?>
                 <select name="covid-19-status" id="covid-19-status">
                     <option
-                        value="tested" <?php echo ($selected == "tested") ? 'selected="selected"' : '' ?>><?php _e('tested') ?></option>
+                        value="tested" <?php echo ($selected == "tested") ? 'selected="selected"' : '' ?>><?php _e('tested', 'course_booking_system_extension') ?></option>
                     <option
-                        value="vaccinated" <?php echo ($selected == "vaccinated") ? 'selected="selected"' : '' ?>><?php _e('vaccinated') ?></option>
+                        value="vaccinated" <?php echo ($selected == "vaccinated") ? 'selected="selected"' : '' ?>><?php _e('vaccinated', 'course_booking_system_extension') ?></option>
                     <option
-                        value="recovered" <?php echo ($selected == "recovered") ? 'selected="selected"' : '' ?>><?php _e('recovered') ?></option>
+                        value="recovered" <?php echo ($selected == "recovered") ? 'selected="selected"' : '' ?>><?php _e('recovered', 'course_booking_system_extension') ?></option>
                     <option
-                        value="unknown" <?php echo (empty($selected) || $selected == "unknown") ? 'selected="selected"' : '' ?>><?php _e('unknown') ?></option>
+                        value="unknown" <?php echo (empty($selected) || $selected == "unknown") ? 'selected="selected"' : '' ?>><?php _e('unknown', 'course_booking_system_extension') ?></option>
                 </select><br/>
-                <span class="description"><?php _e("Please select your covid-19 status."); ?></span>
+                <span class="description"><?php _e("Please select your covid-19 status.", 'course_booking_system_extension'); ?></span>
             </td>
         </tr>
         <tr>
-            <th><label for="covid-19-status_date"><?php _e("Date"); ?></label></th>
+            <th><label for="covid-19-status_date"><?php _e("Date", 'course_booking_system_extension'); ?></label></th>
             <td>
                 <?php
                 // get test saved value
@@ -37,11 +37,11 @@ function cbse_extra_user_profile_fields($user)
                 ?>
                 <input type="date" name="covid-19-status_date" id="covid-19-status_date" value="<?php echo $saved; ?>"
                        class="regular-text" placeholder="YYYY-MM-DD"/><br/>
-                <span class="description">Select the date of your covid-19-status</span>
+                <span class="description"><?php _e('Select the date of your covid-19-status', 'course_booking_system_extension')?></span>
             </td>
         </tr>
         <tr>
-            <th><label for="covid-19-status"><?php _e("Auto inform via"); ?></label></th>
+            <th><label for="covid-19-status"><?php _e("Auto inform via", 'course_booking_system_extension'); ?></label></th>
             <td>
                 <?php
                 //get dropdown saved value
@@ -49,12 +49,12 @@ function cbse_extra_user_profile_fields($user)
                 ?>
                 <select name="covid-19-status" id="covid-19-status">
                     <option
-                        value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>><?php _e('none') ?></option>
+                        value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>><?php _e('none', 'course_booking_system_extension') ?></option>
                     <option
-                        value="email" <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>><?php _e('email') ?></option>
+                        value="email" <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>><?php _e('email', 'course_booking_system_extension') ?></option>
                 </select><br/>
                 <span
-                    class="description"><?php _e("Please select how you want to be informed."); ?></span>
+                    class="description"><?php _e("Please select how you want to be informed.", 'course_booking_system_extension'); ?></span>
             </td>
         </tr>
     </table>

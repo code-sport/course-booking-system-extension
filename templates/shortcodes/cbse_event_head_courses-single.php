@@ -19,12 +19,12 @@ if ($difference == 0) {
         <?= date(get_option('time_format'), strtotime($args['timeslot']->event_start)) ?>
             - <?= date(get_option('time_format'), strtotime($args['timeslot']->event_end)) ?></p>
     <h3 class="cbse-course-title"><?= $args['courseInfo']->event->post_title ?></h3>
-    <p><?= __('Bookings') ?></p>
+    <p><?= __('Bookings', 'course-booking-system-extension') ?></p>
     <ol>
         <?php foreach ($args['bookings'] as $booking) { ?>
         <li><?= trim($booking->last_name) ?>, <?= trim($booking->first_name) ?>
                 <?php if (!empty($booking->covid19_status)) : ?>
-            (<?php __($booking->covid19_status) ?>)
+            (<?php __($booking->covid19_status, 'course-booking-system-extension') ?>)
             <?php endif; ?>
         </li>
         <?php } ?>
@@ -40,7 +40,7 @@ if ($difference == 0) {
             class="cbse cbse_participants_via_email"
             data-button='<?= json_encode(array('course_id' => $args['timeslot']->course_id, 'date' => $args['timeslot']->date)) ?>'
         >
-            <?= __('Participants via email') ?>
+            <?= __('Participants via email', 'course-booking-system-extension') ?>
         </button>
     </p>
 
