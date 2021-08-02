@@ -194,9 +194,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 EOD;
     $html .= wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
     $html .= "<h1>" . get_option('cbse_options')['header_title'] . "</h1>";
-    $html_attendees = <<<EOD
-    <h2>TeilnehmerInnen:</h2>
-EOD;
+    $html_attendees = '<h2>' . __('Participants', 'course-booking-system-extension') ':</h2>';
 
 
     //TODO Move into own class that a footer can be added
@@ -252,32 +250,32 @@ EOD;
     $w = array(55, 125);
     $pdf->Ln();
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Date and Time') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Date and Time', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "$courseInfo_DateTime", 0, 0, 'L', false);
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Title') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Title', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
     $pdf->Ln();
     if (!empty($courseInfo->timeslot->description)) {
-        $pdf->Cell($w[0], 6, __('Description') . ':', 0, 0, 'L', false);
+        $pdf->Cell($w[0], 6, __('Description', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
         $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
         $pdf->Ln();
     }
     if ($cbse_options['mail_categories_exclude'] != '0') {
-        $pdf->Cell($w[0], 6, ($cbse_options['mail_categories_title'] ?? __('Categories')) . ':', 0, 0, 'L', false);
+        $pdf->Cell($w[0], 6, ($cbse_options['mail_categories_title'] ?? __('Categories', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
         $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
         $pdf->Ln();
     }
     if ($cbse_options['mail_tags_exclude'] != '0') {
-        $pdf->Cell($w[0], 6, ($cbse_options['mail_tags_title'] ?? __('Tags')) . ':', 0, 0, 'L', false);
+        $pdf->Cell($w[0], 6, ($cbse_options['mail_tags_title'] ?? __('Tags', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
         $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
         $pdf->Ln();
     }
-    $pdf->Cell($w[0], 6, __('Responsible coach') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Responsible coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "{$user_meta_course->last_name}, {$user_meta_course->first_name}", 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Ln();
-    $pdf->Cell($w[0], 6, __('Signature coach') . ':', 0, 0, 'L', false);
+    $pdf->Cell($w[0], 6, __('Signature coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, "", 'B', 0, 'L', false);
 
     $pdf->Ln();
@@ -294,9 +292,9 @@ EOD;
     $pdf->SetFont('', 'B');
 
     $pdf->Cell($w[0], 14, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[1], 14, __('Surname, Firstname (legible!)'), 1, 0, 'C', 1);
+    $pdf->Cell($w[1], 14, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->Cell($w[2], 14, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[3], 14, __('Signature'), 1, 0, 'C', 1);
+    $pdf->Cell($w[3], 14, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->Ln();
 
     //Table body
@@ -337,7 +335,7 @@ EOD;
     $to = $user_info->user_email;
     $subject = $cbse_options['header_title'] . " | {$courseInfo_DateTime} | {$courseInfo_categories} | {$courseInfo->event->post_title}";
 
-    $message = $cbse_options['mail_coach_message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.");
+    $message = $cbse_options['mail_coach_message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension');
     $message = str_replace('%first_name%', $user_info->first_name, $message);
     $message = str_replace('%last_name%', $user_info->last_name, $message);
     $message = str_replace('%course_date%', $date_string, $message);
