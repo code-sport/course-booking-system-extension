@@ -98,7 +98,7 @@ function cbse_install_and_update()
     $fpdf_file = cbse_get_tcpdf();
     if (!is_file($fpdf_file)) {
         do_action('qm/debug', 'PDF library is not available under : {path}', ['path' => $fpdf_file]);
-        $url = 'https://github.com/tecnickcom/TCPDF/archive/refs/tags/6.4.1.zip';
+        $url = 'https://github.com/tecnickcom/TCPDF/archive/refs/tags/6.4.2.zip';
         $zip_filename = 'TCPDF.zip';
 
         // WordPress Download
@@ -291,13 +291,12 @@ EOD;
     $pdf->SetLineWidth(0.3);
     $pdf->SetFont('', 'B');
 
-    $pdf->Cell($w[0], 12, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[1], 12, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
-    $fontSize = $pdf->getFontSize();
-    $pdf->SetFont($pdf->getFontFamily(), $pdf->getFontStyle(), $fontSize - 4, $pdf->getSubsetFont(), true);
-    $pdf->Cell($w[2], 12, __('tested', 'course_booking_system_extension') . "<br />" . __('vaccinated', 'course_booking_system_extension') . "<br />" . __('recovered', 'course_booking_system_extension'), 1, 0, 'C', 1);
-    $pdf->SetFont($pdf->getFontFamily(), $pdf->getFontStyle(), $fontSize, $pdf->getSubsetFont(), true);
-    $pdf->Cell($w[3], 12, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
+    $pdf->Cell($w[0], 10, "", 1, 0, 'C', 1);
+    $pdf->Cell($w[1], 10, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
+    $pdf->SetFont('', 'B', 4, '', true);
+    $pdf->Cell($w[2], 10, __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" . __('recovered', 'course_booking_system_extension'), 1, 0, 'C', 1);
+    $pdf->SetFont('', 'B', 10, '', true);
+    $pdf->Cell($w[3], 10, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->Ln();
 
     //Table body
