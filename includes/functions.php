@@ -291,10 +291,13 @@ EOD;
     $pdf->SetLineWidth(0.3);
     $pdf->SetFont('', 'B');
 
-    $pdf->Cell($w[0], 14, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[1], 14, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
-    $pdf->Cell($w[2], 14, "", 1, 0, 'C', 1);
-    $pdf->Cell($w[3], 14, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
+    $pdf->Cell($w[0], 12, "", 1, 0, 'C', 1);
+    $pdf->Cell($w[1], 12, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
+    $fontSize = $pdf->getFontSize();
+    $pdf->SetFont($pdf->getFontFamily(), $pdf->getFontStyle(), $fontSize - 4, $pdf->getSubsetFont(), true);
+    $pdf->Cell($w[2], 12, __('tested', 'course_booking_system_extension') . "<br />" . __('vaccinated', 'course_booking_system_extension') . "<br />" . __('recovered', 'course_booking_system_extension'), 1, 0, 'C', 1);
+    $pdf->SetFont($pdf->getFontFamily(), $pdf->getFontStyle(), $fontSize, $pdf->getSubsetFont(), true);
+    $pdf->Cell($w[3], 12, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->Ln();
 
     //Table body
@@ -309,19 +312,19 @@ EOD;
     foreach ($bookings as $booking) {
         $bookingNames[] = $bookingNumber . '. ' . trim($booking->last_name) . ', ' . trim($booking->first_name); // For mail
 
-        $pdf->Cell($w[0], 12, $bookingNumber, 1, 0, 'R', $fill);
-        $pdf->Cell($w[1], 12, trim($booking->last_name) . ", " . trim($booking->first_name), 1, 0, 'L', $fill);
-        $pdf->Cell($w[2], 12, __($booking->covid19_status), 1, 0, 'C', $fill);
-        $pdf->Cell($w[3], 12, "", 1, 0, 'C', $fill);
+        $pdf->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
+        $pdf->Cell($w[1], 10, trim($booking->last_name) . ", " . trim($booking->first_name), 1, 0, 'L', $fill);
+        $pdf->Cell($w[2], 10, __($booking->covid19_status, 'course-booking-system-extension'), 1, 0, 'C', $fill);
+        $pdf->Cell($w[3], 10, "", 1, 0, 'C', $fill);
         $pdf->Ln();
         $fill = !$fill;
         $bookingNumber++;
     }
     for ($i = $bookingNumber; $i <= $courseInfo->event_meta->attendance; $i++) {
-        $pdf->Cell($w[0], 12, $i, 1, 0, 'R', $fill);
-        $pdf->Cell($w[1], 12, "", 1, 0, 'L', $fill);
-        $pdf->Cell($w[2], 12, "", 1, 0, 'C', $fill);
-        $pdf->Cell($w[3], 12, "", 1, 0, 'C', $fill);
+        $pdf->Cell($w[0], 10, $i, 1, 0, 'R', $fill);
+        $pdf->Cell($w[1], 10, "", 1, 0, 'L', $fill);
+        $pdf->Cell($w[2], 10, "", 1, 0, 'C', $fill);
+        $pdf->Cell($w[3], 10, "", 1, 0, 'C', $fill);
         $pdf->Ln();
         $fill = !$fill;
     }
