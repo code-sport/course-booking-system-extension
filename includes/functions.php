@@ -294,11 +294,7 @@ EOD;
     $pdf->Cell($w[0], 10, "", 1, 0, 'C', 1);
     $pdf->Cell($w[1], 10, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->SetFont('', 'B', 4, '', true);
-    $pdf->Cell($w[2], 10,
-        __('tested', 'course_booking_system_extension') . "/" .
-        __('vaccinated', 'course_booking_system_extension') . "/" .
-        __('recovered', 'course_booking_system_extension'),
-        1, 0, 'C', 1);
+    $pdf->Cell($w[2], 10, __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" .         __('recovered', 'course_booking_system_extension'), 1, 0, 'C', 1);
     $pdf->SetFont('', 'B', 10, '', true);
     $pdf->Cell($w[3], 10, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->Ln();
