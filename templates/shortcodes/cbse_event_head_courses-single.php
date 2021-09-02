@@ -24,7 +24,7 @@ if ($difference == 0) {
         <?php foreach ($args['bookings'] as $booking) { ?>
         <li><?= trim($booking->last_name) ?>, <?= trim($booking->first_name) ?>
                 <?php if (!empty($booking->covid19_status)) : ?>
-            (<?php __($booking->covid19_status, 'course-booking-system-extension') ?>)
+            (<?php _e($booking->covid19_status, 'course-booking-system-extension') ?>)
             <?php endif; ?>
         </li>
         <?php } ?>

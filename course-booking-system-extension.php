@@ -3,12 +3,12 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.0.15
+ * Version: 0.0.16
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
  * WC requires at least: 5.7.2
- * WC tested up to: 5.7.2
+ * WC tested up to: 5.8
  * Requires PHP: 7.4
  * License: GPL v3
  * License URI: https://github.com/code-sport/course-booking-system-extension/blob/main/license.txt
