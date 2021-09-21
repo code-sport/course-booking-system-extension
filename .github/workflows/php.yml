@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - 'feat/**'
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
