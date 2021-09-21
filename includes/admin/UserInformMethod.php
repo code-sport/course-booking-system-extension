@@ -4,7 +4,7 @@ namespace CBSE;
 
 class UserInformMethod
 {
-    function __construct()
+    public function __construct()
     {
         add_action('show_user_profile', [$this, 'show_edit_user_profile']);
         add_action('edit_user_profile', [$this, 'show_edit_user_profile']);
@@ -13,7 +13,7 @@ class UserInformMethod
         add_action('edit_user_profile_update', 'save_user_profile');
     }
 
-    function show_edit_user_profile($user)
+    public function show_edit_user_profile($user)
     {
         ?>
 
@@ -45,7 +45,7 @@ class UserInformMethod
 
     }
 
-    function save_user_profile($user_id)
+    public function save_user_profile($user_id)
     {
         if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $user_id)) {
             return false;
