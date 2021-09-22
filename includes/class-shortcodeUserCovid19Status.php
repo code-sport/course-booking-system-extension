@@ -21,13 +21,13 @@ class ShortcodeUserCovid19Status
      *
      * @return Shortcode
      */
-    public static function get_instance()
+    public static function get_instance(): Shortcode
     {
-        if (null === self::$instance) {
-            self::$instance = new self();
+        if (null === ShortcodeUserCovid19Status::$instance) {
+            ShortcodeUserCovid19Status::$instance = new ShortcodeUserCovid19Status();
         }
 
-        return self::$instance;
+        return ShortcodeUserCovid19Status::$instance;
     }
 
     /**
