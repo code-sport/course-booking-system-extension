@@ -28,11 +28,11 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . 'includes/api.php';
     require_once plugin_dir_path(__FILE__) . 'includes/cron.php';
     require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/class-shortcodeUserCovid19Status.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/ShortcodeUserCovid19Status.php';
 
     // User
-    require_once plugin_dir_path(__FILE__) . 'includes/admin/class-UserCovid19Status.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/admin/class-UserInformMethod.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/admin/UserCovid19Status.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/admin/UserInformMethod.php';
 
 }
 
