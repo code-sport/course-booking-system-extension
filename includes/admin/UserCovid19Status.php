@@ -31,27 +31,27 @@ class UserCovid19Status
                     <?php
                     //get dropdown saved value
                     $selected = get_the_author_meta('covid-19-status', $user->ID);
+                    $selectedHtml = 'selected="selected"';
                     ?>
                     <select name="covid-19-status" id="covid-19-status" <?= $disabled ?>>
-                        <option
-                            value="tested" <?php echo ($selected == "tested") ? 'selected="selected"' : '' ?>>
+                        <option value="tested"
+                            <?php echo ($selected == "tested") ? $selectedHtml : '' ?>>
                             <?php _e('tested', 'course_booking_system_extension') ?>
                         </option>
-                        <option
-                            value="vaccinated" <?php echo ($selected == "vaccinated") ? 'selected="selected"' : '' ?>>
+                        <option value="vaccinated"
+                            <?php echo ($selected == "vaccinated") ? $selectedHtml : '' ?>>
                             <?php _e('vaccinated', 'course_booking_system_extension') ?>
                         </option>
-                        <option
-                            value="recovered" <?php echo ($selected == "recovered") ? 'selected="selected"' : '' ?>>
+                        <option value="recovered"
+                            <?php echo ($selected == "recovered") ? $selectedHtml : '' ?>>
                             <?php _e('recovered', 'course_booking_system_extension') ?>
                         </option>
-                        <option
-                            value="unknown" <?php echo (empty($selected) || $selected == "unknown") ? 'selected="selected"' : '' ?>>
+                        <option value="unknown"
+                            <?php echo (empty($selected) || $selected == "unknown") ? $selectedHtml : '' ?>>
                             <?php _e('unknown', 'course_booking_system_extension') ?>
                         </option>
                     </select><br/>
-                    <span
-                        class="description">
+                    <span class="description">
                         <?php _e("Please select your covid-19 status.", 'course_booking_system_extension'); ?>
                     </span>
                 </td>

@@ -56,7 +56,7 @@ class ShortcodeUserCovid19Status
             $userId = get_current_user_id();
             $covid19Status = esc_attr(get_the_author_meta('covid-19-status', $userId));
             $covid19StatusDate = esc_attr(get_the_author_meta('covid-19-status_date', $userId));
-            $date_string = date(get_option('date_format'), strtotime($covid19StatusDate));
+            $dateString = date(get_option('date_format'), strtotime($covid19StatusDate));
 
             if (empty($covid19Status)) {
                 $covid19Status = 'unknown';
@@ -71,7 +71,7 @@ class ShortcodeUserCovid19Status
                     break;
                 default:
                     $massage = __('Your deposited Covid-19-Status is %s from %s.', 'course_booking_system_extension');
-                    $o .= wp_sprintf($massage, $covid19Status, $date_string);
+                    $o .= wp_sprintf($massage, $covid19Status, $dateString);
             }
 
             $o .= '</p>';

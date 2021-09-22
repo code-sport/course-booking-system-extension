@@ -35,8 +35,8 @@ class UserInformMethod
                         <option value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>>
                             <?php _e('none', 'course_booking_system_extension') ?>
                         </option>
-                        <option
-                            value="email" <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>>
+                        <option value="email"
+                            <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>>
                             <?php _e('email', 'course_booking_system_extension') ?>
                         </option>
                     </select><br/>
