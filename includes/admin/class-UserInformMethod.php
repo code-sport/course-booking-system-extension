@@ -6,14 +6,14 @@ class UserInformMethod
 {
     public function __construct()
     {
-        add_action('show_user_profile', [$this, 'show_edit_user_profile']);
-        add_action('edit_user_profile', [$this, 'show_edit_user_profile']);
+        add_action('show_user_profile', [$this, 'showEditUserProfile']);
+        add_action('edit_user_profile', [$this, 'showEditUserProfile']);
 
-        add_action('personal_options_update', 'save_user_profile');
-        add_action('edit_user_profile_update', 'save_user_profile');
+        add_action('personal_options_update', [$this, 'saveUserProfile']);
+        add_action('edit_user_profile_update', [$this, 'saveUserProfile']);
     }
 
-    public function show_edit_user_profile($user)
+    public function showEditUserProfile($user)
     {
         ?>
 
@@ -45,16 +45,16 @@ class UserInformMethod
 
     }
 
-    public function save_user_profile($user_id)
+    public function saveUserProfile($userId)
     {
-        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $user_id)) {
+        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $userId)) {
             return false;
         }
 
-        if (!current_user_can('edit_user', $user_id)) {
+        if (!current_user_can('edit_user', $userId)) {
             return false;
         }
-        update_user_meta($user_id, 'cbse-auto-inform', $_POST['cbse-auto-inform']);
+        update_user_meta($userId, 'cbse-auto-inform', $_POST['cbse-auto-inform']);
     }
 
 

@@ -6,14 +6,14 @@ class UserCovid19Status
 {
     public function __construct()
     {
-        add_action('show_user_profile', [$this, 'show_edit_user_profile']);
-        add_action('edit_user_profile', [$this, 'show_edit_user_profile']);
+        add_action('show_user_profile', [$this, 'showEditUserProfile']);
+        add_action('edit_user_profile', [$this, 'showEditUserProfile']);
 
-        add_action('personal_options_update', [$this, 'save_user_profile']);
-        add_action('edit_user_profile_update', [$this, 'save_user_profile']);
+        add_action('personal_options_update', [$this, 'saveUserProfile']);
+        add_action('edit_user_profile_update', [$this, 'saveUserProfile']);
     }
 
-    public function show_edit_user_profile($user)
+    public function showEditUserProfile($user)
     {
         $disabled = '';
         if (!$this->isManager()) {
@@ -69,17 +69,17 @@ class UserCovid19Status
 
     }
 
-    public function save_user_profile($user_id)
+    public function saveUserProfile($userId)
     {
-        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $user_id)) {
+        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $userId)) {
             return false;
         }
 
-        if (!current_user_can('edit_user', $user_id) && !$this->isManager()) {
+        if (!current_user_can('edit_user', $userId) && !$this->isManager()) {
             return false;
         }
-        update_user_meta($user_id, 'covid-19-status', $_POST['covid-19-status']);
-        update_user_meta($user_id, 'covid-19-status_date', $_POST['covid-19-status_date']);
+        update_user_meta($userId, 'covid-19-status', $_POST['covid-19-status']);
+        update_user_meta($userId, 'covid-19-status_date', $_POST['covid-19-status_date']);
     }
 
 

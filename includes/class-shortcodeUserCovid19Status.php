@@ -21,7 +21,7 @@ class ShortcodeUserCovid19Status
      *
      * @return Shortcode
      */
-    public static function get_instance(): Shortcode
+    public static function getInstance(): Shortcode
     {
         if (null === ShortcodeUserCovid19Status::$instance) {
             ShortcodeUserCovid19Status::$instance = new ShortcodeUserCovid19Status();
@@ -35,7 +35,7 @@ class ShortcodeUserCovid19Status
      */
     private function init()
     {
-        add_shortcode('cbse_user_covid19_status', array($this, "show_shortcode"));
+        add_shortcode('cbse_user_covid19_status', array($this, "showShortcode"));
     }
 
     /**
@@ -46,7 +46,7 @@ class ShortcodeUserCovid19Status
      * @param string $tag Shortcode tag (name). Default empty.
      * @return string Shortcode output.
      */
-    public function show_shortcode($atts = [], $content = null, $tag = '')
+    public function showShortcode($atts = [], $content = null, $tag = '')
     {
 
         // start box
@@ -94,4 +94,4 @@ class ShortcodeUserCovid19Status
     }
 }
 
-ShortcodeUserCovid19Status::get_instance();
+ShortcodeUserCovid19Status::getInstance();
