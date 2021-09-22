@@ -34,21 +34,33 @@ class UserCovid19Status
                     ?>
                     <select name="covid-19-status" id="covid-19-status" <?= $disabled ?>>
                         <option
-                            value="tested" <?php echo ($selected == "tested") ? 'selected="selected"' : '' ?>><?php _e('tested', 'course_booking_system_extension') ?></option>
+                            value="tested" <?php echo ($selected == "tested") ? 'selected="selected"' : '' ?>>
+                            <?php _e('tested', 'course_booking_system_extension') ?>
+                        </option>
                         <option
-                            value="vaccinated" <?php echo ($selected == "vaccinated") ? 'selected="selected"' : '' ?>><?php _e('vaccinated', 'course_booking_system_extension') ?></option>
+                            value="vaccinated" <?php echo ($selected == "vaccinated") ? 'selected="selected"' : '' ?>>
+                            <?php _e('vaccinated', 'course_booking_system_extension') ?>
+                        </option>
                         <option
-                            value="recovered" <?php echo ($selected == "recovered") ? 'selected="selected"' : '' ?>><?php _e('recovered', 'course_booking_system_extension') ?></option>
+                            value="recovered" <?php echo ($selected == "recovered") ? 'selected="selected"' : '' ?>>
+                            <?php _e('recovered', 'course_booking_system_extension') ?>
+                        </option>
                         <option
-                            value="unknown" <?php echo (empty($selected) || $selected == "unknown") ? 'selected="selected"' : '' ?>><?php _e('unknown', 'course_booking_system_extension') ?></option>
+                            value="unknown" <?php echo (empty($selected) || $selected == "unknown") ? 'selected="selected"' : '' ?>>
+                            <?php _e('unknown', 'course_booking_system_extension') ?>
+                        </option>
                     </select><br/>
                     <span
-                        class="description"><?php _e("Please select your covid-19 status.", 'course_booking_system_extension'); ?></span>
+                        class="description">
+                        <?php _e("Please select your covid-19 status.", 'course_booking_system_extension'); ?>
+                    </span>
                 </td>
             </tr>
             <tr>
-                <th scope="row"><label
-                        for="covid-19-status_date"><?php _e("Date", 'course_booking_system_extension'); ?></label>
+                <th scope="row">
+                    <label for="covid-19-status_date">
+                        <?php _e("Date", 'course_booking_system_extension'); ?>
+                    </label>
                 </th>
                 <td>
                     <?php
@@ -60,7 +72,9 @@ class UserCovid19Status
                            class="regular-text" placeholder="YYYY-MM-DD"
                         <?= $disabled ?>/><br/>
                     <span
-                        class="description"><?php _e('Select the date of your covid-19-status', 'course_booking_system_extension') ?></span>
+                        class="description">
+                        <?php _e('Select the date of your covid-19-status', 'course_booking_system_extension') ?>
+                    </span>
                 </td>
             </tr>
         </table>

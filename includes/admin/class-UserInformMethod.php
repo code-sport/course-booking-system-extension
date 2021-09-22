@@ -21,8 +21,10 @@ class UserInformMethod
 
         <table class="form-table">
             <tr>
-                <th scope="row"><label
-                        for="cbse_inform_method"><?php _e("Auto inform via", 'course_booking_system_extension'); ?></label>
+                <th scope="row">
+                    <label for="cbse_inform_method">
+                        <?php _e("Auto inform via", 'course_booking_system_extension'); ?>
+                    </label>
                 </th>
                 <td>
                     <?php
@@ -30,13 +32,18 @@ class UserInformMethod
                     $selected = get_the_author_meta('cbse-auto-inform', $user->ID);
                     ?>
                     <select name="cbse-auto-inform" id="cbse_inform_method">
+                        <option value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>>
+                            <?php _e('none', 'course_booking_system_extension') ?>
+                        </option>
                         <option
-                            value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>><?php _e('none', 'course_booking_system_extension') ?></option>
-                        <option
-                            value="email" <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>><?php _e('email', 'course_booking_system_extension') ?></option>
+                            value="email" <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>>
+                            <?php _e('email', 'course_booking_system_extension') ?>
+                        </option>
                     </select><br/>
                     <span
-                        class="description"><?php _e("Please select how you want to be informed.", 'course_booking_system_extension'); ?></span>
+                        class="description">
+                        <?php _e("Please select how you want to be informed.", 'course_booking_system_extension'); ?>
+                    </span>
                 </td>
             </tr>
         </table>
