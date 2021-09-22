@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.0.16
+ * Version: 0.0.17
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
@@ -28,13 +28,17 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . 'includes/api.php';
     require_once plugin_dir_path(__FILE__) . 'includes/cron.php';
     require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/ShortcodeUserCovid19Status.php';
+
+    // User
+    require_once plugin_dir_path(__FILE__) . 'includes/admin/UserCovid19Status.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/admin/UserInformMethod.php';
 
 }
 
 function cbse_include_admin()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/admin/settings.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/admin/user.php';
 }
 
 cbse_include_all();
