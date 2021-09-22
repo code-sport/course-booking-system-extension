@@ -9,8 +9,8 @@ class UserCovid19Status
         add_action('show_user_profile', [$this, 'show_edit_user_profile']);
         add_action('edit_user_profile', [$this, 'show_edit_user_profile']);
 
-        add_action('personal_options_update', 'save_user_profile');
-        add_action('edit_user_profile_update', 'save_user_profile');
+        add_action('personal_options_update', [$this, 'save_user_profile']);
+        add_action('edit_user_profile_update', [$this, 'save_user_profile']);
     }
 
     public function show_edit_user_profile($user)
@@ -75,7 +75,7 @@ class UserCovid19Status
             return false;
         }
 
-        if (!current_user_can('edit_user', $user_id && !$this->isManager())) {
+        if (!current_user_can('edit_user', $user_id) && !$this->isManager()) {
             return false;
         }
         update_user_meta($user_id, 'covid-19-status', $_POST['covid-19-status']);
