@@ -2,8 +2,6 @@
 
 namespace CBSE;
 
-use mp_timetable\plugin_core\classes\Shortcode;
-
 class ShortcodeUserCovid19Status
 {
     protected static $instance;
@@ -21,7 +19,7 @@ class ShortcodeUserCovid19Status
      *
      * @return Shortcode
      */
-    public static function getInstance(): Shortcode
+    public static function getInstance(): ShortcodeUserCovid19Status
     {
         if (null === ShortcodeUserCovid19Status::$instance) {
             ShortcodeUserCovid19Status::$instance = new ShortcodeUserCovid19Status();
