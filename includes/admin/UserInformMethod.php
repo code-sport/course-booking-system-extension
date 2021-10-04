@@ -57,7 +57,13 @@ class UserInformMethod
                     //get dropdown saved value
                     $selected = get_the_author_meta('cbse-auto-print', $user->ID);
                     ?>
-                    <input type="checkbox" id="cbse_auto_print" name="cbse-auto-print" <?= ($selected == "none") ? 'checked="checked"' : '' ?> >
+                    <input
+                        type="checkbox"
+                        id="cbse_auto_print"
+                        name="cbse-auto-print"
+                        value="1"
+                        <?= ($selected == "1") ? 'checked="checked"' : '' ?>
+                    >
                    <br/>
                     <span
                         class="description">
@@ -81,8 +87,6 @@ class UserInformMethod
             return false;
         }
         update_user_meta($userId, 'cbse-auto-inform', $_POST['cbse-auto-inform']);
-        $autoPrint = is_numeric($_POST['cbse-auto-print']) ? $_POST['cbse-auto-print'] : 0;
-        update_user_meta($userId, 'cbse-auto-print', $autoPrint);
     }
 
 
