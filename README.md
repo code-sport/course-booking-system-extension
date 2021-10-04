@@ -1,6 +1,8 @@
 # Course Booking System Extension
 [This plugin for WordPress](https://wordpress.org/plugins/course-booking-system-extension/) is an extension for the [Course Booking System](https://de.wordpress.org/plugins/course-booking-system/) from [ComMotion](https://commotion.online/).
 
+Feel free [to translate](https://translate.wordpress.org/projects/wp-plugins/course-booking-system-extension) it into your language
+
 ## Requirements
 - [Course Booking System](https://de.wordpress.org/plugins/course-booking-system/)
 - [Basic-Auth](https://github.com/WP-API/Basic-Auth) is necessary that the data can be read from the api.
