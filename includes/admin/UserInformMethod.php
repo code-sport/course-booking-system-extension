@@ -46,6 +46,25 @@ class UserInformMethod
                     </span>
                 </td>
             </tr>
+            <tr>
+                <th scope="row">
+                    <label for="cbse_auto_print">
+                        <?php _e("Auto inform via", 'course_booking_system_extension'); ?>
+                    </label>
+                </th>
+                <td>
+                    <?php
+                    //get dropdown saved value
+                    $selected = get_the_author_meta('cbse-auto-print', $user->ID);
+                    ?>
+                    <input type="checkbox" id="cbse_auto_print" name="cbse-auto-print" <?= ($selected == "none") ? 'checked="checked"' : '' ?> >
+                   <br/>
+                    <span
+                        class="description">
+                        <?php _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.", 'course_booking_system_extension'); ?>
+                    </span>
+                </td>
+            </tr>
         </table>
 
         <?php
@@ -62,6 +81,8 @@ class UserInformMethod
             return false;
         }
         update_user_meta($userId, 'cbse-auto-inform', $_POST['cbse-auto-inform']);
+        $autoPrint = is_numeric($_POST['cbse-auto-print']) ? $_POST['cbse-auto-print'] : 0;
+        update_user_meta($userId, 'cbse-auto-print', $autoPrint);
     }
 
 

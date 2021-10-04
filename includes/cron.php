@@ -30,6 +30,7 @@ function cbse_cron_quarterly_exec()
         add_option('cbse_cron_quarterly_last_run', $timeNow);
     } else {
         cbse_cron_sent_mail_to_coach($dateLastRun, $dateNow);
+        cbse_cron_sent_mail_to_print($dateLastRun, $dateNow);
         update_option('cbse_cron_quarterly_last_run', $timeNow);
     }
 }
@@ -67,6 +68,28 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
         if ($autoInformWay == 'email') {
             cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, $userId);
         }
+    }
+}
+
+function cbse_cron_sent_mail_to_print(DateTime $dateLastRun, DateTime $dateNow)
+{
+    $interval = new DateInterval('PT15I');
+
+    $dateFrom = clone $dateLastRun;
+    $dateFrom->add($interval);
+    $dateTo = clone $dateNow;
+    $dateTo->add($interval);
+
+    $courses = cbse_courses_in_time($dateFrom, $dateTo);
+
+    foreach ($courses as $course) {
+        $userId = ($course->substitutes_user_id ?? $course->user_id);
+        $autoPrint = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-inform', $userId);
+
+        if ($autoPrint) {
+            //TODO cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, $userId);
+        }
+
     }
 }
 
