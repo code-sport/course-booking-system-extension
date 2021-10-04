@@ -64,7 +64,7 @@ function cbse_course_date_bookings($courseId, $date): array
         $booking->first_name = $user_meta->first_name;
         $booking->last_name = $user_meta->last_name;
         $booking->nickname = $user_meta->nickname;
-        $booking->covid19_status = __(get_the_author_meta('covid-19-status', $booking->user_id));
+        $booking->covid19_status = get_the_author_meta('covid-19-status', $booking->user_id);
         // TODO Validate status with date
         $bookings[] = $booking;
     }
@@ -176,6 +176,8 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
     $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
     $user_meta_course = get_userdata($courseInfo->substitutes->user_id ?? $courseInfo->timeslot->user_id);
+    $user_covid19_status_course = __(get_the_author_meta('covid-19-status', $user_meta_course->ID), 'course_booking_system_extension')
+        ?? __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" . __('recovered', 'course_booking_system_extension');
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date(get_option('date_format'), strtotime($date));
     $time_start_string = date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
@@ -272,7 +274,7 @@ EOD;
         $pdf->Ln();
     }
     $pdf->Cell($w[0], 6, __('Responsible coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
-    $pdf->Cell($w[1], 6, "{$user_meta_course->last_name}, {$user_meta_course->first_name}", 0, 0, 'L', false);
+    $pdf->Cell($w[1], 6, "{$user_meta_course->last_name}, {$user_meta_course->first_name} ({$user_covid19_status_course})", 0, 0, 'L', false);
     $pdf->Ln();
     $pdf->Ln();
     $pdf->Cell($w[0], 6, __('Signature coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
@@ -294,7 +296,7 @@ EOD;
     $pdf->Cell($w[0], 10, "", 1, 0, 'C', 1);
     $pdf->Cell($w[1], 10, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->SetFont('', 'B', 4, '', true);
-    $pdf->Cell($w[2], 10, __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" .         __('recovered', 'course_booking_system_extension'), 1, 0, 'C', 1);
+    $pdf->Cell($w[2], 10, __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" . __('recovered', 'course_booking_system_extension'), 1, 0, 'C', 1);
     $pdf->SetFont('', 'B', 10, '', true);
     $pdf->Cell($w[3], 10, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
     $pdf->Ln();
