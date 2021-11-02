@@ -73,7 +73,7 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
 
 function cbse_cron_sent_mail_to_print(DateTime $dateLastRun, DateTime $dateNow)
 {
-    $interval = new DateInterval('PT15I');
+    $interval = new DateInterval('PT15M');
 
     $dateFrom = clone $dateLastRun;
     $dateFrom->add($interval);

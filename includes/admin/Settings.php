@@ -2,6 +2,8 @@
 
 namespace CBSE;
 
+use DateTime;
+
 class Settings
 {
     public function __construct()
@@ -20,7 +22,7 @@ class Settings
             __('Course Booking System Extension', 'course_booking_system_extension'), //Menu Title
             'manage_options', //Capability
             'course_booking_system_extension', //Page slug
-            'RenderSettingsPage'); //Callback to print html
+            [$this, 'RenderSettingsPage']); //Callback to print html
     }
 
 
@@ -32,23 +34,33 @@ class Settings
             $this->cbse_missing_setting();
         }
 
-        //section name, display name, callback to print description of section, page to which section is attached.
-        add_settings_section('cbse_header', __('Header', 'course_booking_system_extension'), 'cbse_plugin_section_header_text', 'course_booking_system_extension');
 
-        //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
-        //last field section is optional.
-        add_settings_field('header_image_attachment_id', __('Image Attachment ID', 'course_booking_system_extension'), 'cbse_header_image_attachment_id', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('header_title', 'Title', __('cbse_header_title', 'course_booking_system_extension'), 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('mail_coach_message', __('Coach Mail Message', 'course_booking_system_extension'), 'cbse_mail_coach_message', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('mail_categories_title', __('Title for Categories', 'course_booking_system_extension'), 'cbse_mail_categories_title', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('mail_categories_exclude', __('Exclude Categories', 'course_booking_system_extension'), 'cbse_mail_categories_exclude', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('mail_tags_title', __('Title for Tags', 'course_booking_system_extension'), 'cbse_mail_tags_title', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('mail_tags_exclude', __('Exclude Tags', 'course_booking_system_extension'), 'cbse_mail_tags_exclude', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('cron_enable', __('Cron Enable', 'course_booking_system_extension'), 'cbse_cron_enable', 'course_booking_system_extension', 'cbse_header');
-        add_settings_field('cron_before_time', __('Cron Sent before course', 'course_booking_system_extension'), 'cbse_cron_before_time', 'course_booking_system_extension', 'cbse_header');
+        switch ($this->getActiveTab()) {
+            case 'pdf':
+                $this->SettingsSectionsFieldsPdf();
+                break;
+            case 'legacy':
+                //section name, display name, callback to print description of section, page to which section is attached.
+                add_settings_section('cbse_header', __('Header', 'course_booking_system_extension'), [$this, 'cbse_plugin_section_header_text'], 'course_booking_system_extension');
+
+                //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
+                //last field section is optional.
+                add_settings_field('header_image_attachment_id', __('Image Attachment ID', 'course_booking_system_extension'), [$this, 'cbse_header_image_attachment_id'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('header_title', __('cbse_header_title', 'course_booking_system_extension'), [$this, 'cbse_header_title'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('mail_coach_message', __('Coach Mail Message', 'course_booking_system_extension'), [$this, 'cbse_mail_coach_message'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('mail_categories_title', __('Title for Categories', 'course_booking_system_extension'), [$this, 'cbse_mail_categories_title'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('mail_categories_exclude', __('Exclude Categories', 'course_booking_system_extension'), [$this, 'cbse_mail_categories_exclude'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('mail_tags_title', __('Title for Tags', 'course_booking_system_extension'), [$this, 'cbse_mail_tags_title'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('mail_tags_exclude', __('Exclude Tags', 'course_booking_system_extension'), [$this, 'cbse_mail_tags_exclude'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('cron_enable', __('Cron Enable', 'course_booking_system_extension'), [$this, 'cbse_cron_enable'], 'course_booking_system_extension', 'cbse_header');
+                add_settings_field('cron_before_time', __('Cron Sent before course', 'course_booking_system_extension'), [$this, 'cbse_cron_before_time'], 'course_booking_system_extension', 'cbse_header');
+                break;
+        }
 
         //section name, form element name, callback for sanitization
-        register_setting('cbse_header', 'cbse_options', 'cbse_header_validate');
+        add_option('cbse_pdf_header_options', null);
+        register_setting('cbse_pdf_header', 'cbse_pdf_header_options', [$this, 'PdfHeaderValidate']);
+        register_setting('cbse_header', 'cbse_options', [$this, 'cbse_header_validate']); // Legacy
     }
 
 
@@ -116,9 +128,18 @@ class Settings
             <form action="options.php" method="post">
                 <?php
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
-                settings_fields('cbse_header');
+                switch ($this->getActiveTab()) {
+                    case 'pdf':
+                        settings_fields('cbse_pdf_header');
+                        break;
+                    case 'legacy':
+                        settings_fields('cbse_header');
+                        break;
+                }
+
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
                 do_settings_sections('course_booking_system_extension');
+
                 // Add the submit button to serialize the options
                 submit_button();
                 ?>
@@ -129,7 +150,7 @@ class Settings
 
     public function SettingsTab()
     {
-        $active_tab = 'general'; // TODO: Create method
+        $active_tab = $this->getActiveTab();
         ?>
         <a class="nav-tab <?php echo $active_tab == 'general' || '' ? 'nav-tab-active' : ''; ?>"
            href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=general'); ?>"><?php _e('General', 'course_booking_system_extension'); ?></a>
@@ -137,8 +158,28 @@ class Settings
            href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=pdf'); ?>"><?php _e('PDF', 'course_booking_system_extension'); ?></a>
         <a class="nav-tab <?php echo $active_tab == 'mail' || '' ? 'nav-tab-active' : ''; ?>"
            href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=mail'); ?>"><?php _e('Mail', 'course_booking_system_extension'); ?></a>
+        <a class="nav-tab <?php echo $active_tab == 'autoprint' || '' ? 'nav-tab-active' : ''; ?>"
+           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=autoprint'); ?>"><?php _e('Auto Print via Mail', 'course_booking_system_extension'); ?></a>
+        <a class="nav-tab <?php echo $active_tab == 'legacy' || '' ? 'nav-tab-active' : ''; ?>"
+           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=legacy'); ?>"><?php _e('Legacy', 'course_booking_system_extension'); ?></a>
         <?php
     }
+
+    private function getActiveTab()
+    {
+        return $_GET['tab'] ?? 'general';
+    }
+
+    /* ======== Start PDF ======== */
+    private function SettingsSectionsFieldsPdf()
+    {
+        add_settings_section('cbse_pdf_header', __('Header of PDF', 'course_booking_system_extension'), [$this, 'SectionPdfHeaderText'], 'course_booking_system_extension');
+    }
+
+    public function SectionPdfHeaderText(){
+        echo '<p>' . _e('Here you can set all header options for generated pdf.', 'course-booking-system-extension') . '</p>';
+    }
+    /* ======== End  PDF ======== */
 
     function cbse_plugin_section_header_text()
     {
@@ -212,7 +253,7 @@ class Settings
         $options = get_option('cbse_options');
         $html = '<input type="checkbox" id="cron_enable" name="cbse_options[cron_enable]" value="1"' . checked(1, $options['cron_enable'], false) . '/>';
         $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.', 'course-booking-system-extension') . '</label>';
-        if (cbse_cron_enabled()) {
+        if ($this->cbse_cron_enabled()) {
             $lastRun = get_option('cbse_cron_quarterly_last_run');
             $dateLastRun = new DateTime();
             $dateLastRun->setTimestamp($lastRun);
@@ -253,7 +294,7 @@ class Settings
         $validatedInput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
         $validatedInput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
 
-        cbse_switch_cron(boolval($validatedInput['cron_enable']));
+        $this->cbse_switch_cron(boolval($validatedInput['cron_enable']));
 
         return $validatedInput;
     }
@@ -278,7 +319,8 @@ class Settings
 
     }
 
+
 }
 
 // TODO: Find a better WordPress way
-new Settings();
+$settings = new Settings();
