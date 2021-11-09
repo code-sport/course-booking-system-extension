@@ -58,7 +58,7 @@ class Settings
         //section name, form element name, callback for sanitization
         add_option('cbse_pdf_header_options', null);
         register_setting('cbse_pdf_header', 'cbse_pdf_header_options', [$this, 'PdfHeaderValidate']);
-        register_setting('cbse_header', 'cbse_options', [$this, 'cbse_header_validate']); // Legacy
+        register_setting('cbse_header', 'cbse_options', [$this, 'headerValidate']); // Legacy
     }
 
 
@@ -173,7 +173,7 @@ class Settings
      * @param $input
      * @return array
      */
-    function cbse_header_validate($input): array
+   public function headerValidate($input): array
     {
         // Header Image
         $validatedInput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
@@ -191,12 +191,12 @@ class Settings
         $validatedInput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
         $validatedInput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
 
-        $this->cbse_switch_cron(boolval($validatedInput['cron_enable']));
+        $this->switchCron(boolval($validatedInput['cron_enable']));
 
         return $validatedInput;
     }
 
-    function cbse_switch_cron(bool $cronEnabled)
+        private function switchCron(bool $cronEnabled)
     {
         $hook = 'cbse_cron_quarterly_hook';
 
