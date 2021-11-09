@@ -20,7 +20,8 @@ class PdfCbseSettings extends CbseSettings
             'cbse_pdf_header',
             __('Header of PDF', 'course_booking_system_extension'),
             [$this, 'sectionPdfHeaderText'],
-            'course_booking_system_extension');
+            'course_booking_system_extension'
+        );
     }
 
     public function sectionPdfHeaderText()

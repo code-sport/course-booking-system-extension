@@ -64,10 +64,13 @@ class UserInformMethod
                         value="1"
                         <?= ($selected == "1") ? 'checked="checked"' : '' ?>
                     >
-                   <br/>
+                    <br/>
                     <span
                         class="description">
-                        <?php _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.", 'course_booking_system_extension'); ?>
+                        <?php
+                        _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.",
+                            'course_booking_system_extension');
+                        ?>
                     </span>
                 </td>
             </tr>
