@@ -7,10 +7,10 @@ class Plugin
     public function __construct()
     {
         // Plugin overview Page
-        add_filter('plugin_action_links_' . __PLUGIN_BASENAME__, [$this, 'ActionLinks']);
+        add_filter('plugin_action_links_' . PLUGIN_BASENAME, [$this, 'actionLinks']);
     }
 
-    public function ActionLinks($actions): array
+    public function actionLinks($actions): array
     {
         $cbseLinks = array(
             '<a href="'

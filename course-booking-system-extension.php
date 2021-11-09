@@ -15,7 +15,7 @@
  */
 
 defined('ABSPATH') || exit;
-define('__PLUGIN_BASENAME__', plugin_basename(__FILE__));
+define('PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 
 function cbse_include_all()
