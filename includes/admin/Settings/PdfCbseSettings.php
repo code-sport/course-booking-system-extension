@@ -2,8 +2,17 @@
 
 namespace CBSE\Admin\Settings;
 
-class PdfSettings implements ISettings
+class PdfCbseSettings extends CbseSettings
 {
+    public function TabName(): string
+    {
+        return __('PDF', 'course_booking_system_extension');
+    }
+
+    public function TabKey(): string
+    {
+       return 'pdf';
+    }
 
     public function RegisterSettings()
     {
@@ -19,4 +28,5 @@ class PdfSettings implements ISettings
     {
         settings_fields('cbse_pdf_header');
     }
+
 }

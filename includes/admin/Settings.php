@@ -2,25 +2,25 @@
 
 namespace CBSE\Admin;
 
-use CBSE\Admin\Settings\LegacySettings;
-use CBSE\Admin\Settings\PdfSettings;
+use CBSE\Admin\Settings\LegacyCbseSettings;
+use CBSE\Admin\Settings\PdfCbseSettings;
 
-require_once plugin_dir_path(__FILE__) . 'Settings/ISettings.php';
+require_once plugin_dir_path(__FILE__) . 'Settings/CbseSettings.php';
 require_once plugin_dir_path(__FILE__) . 'Settings/PdfSettings.php';
 require_once plugin_dir_path(__FILE__) . 'Settings/LegacySettings.php';
 
 class Settings
 {
-    private PdfSettings $pdfSettings;
-    private LegacySettings $legacySettings;
+    private PdfCbseSettings $pdfSettings;
+    private LegacyCbseSettings $legacySettings;
 
     public function __construct()
     {
         add_action('admin_menu', [$this, 'AddSettingsPageInMenu']);
         add_action('admin_init', [$this, 'RegisterSettings']);
 
-        $this->pdfSettings = new PdfSettings();
-        $this->legacySettings = new LegacySettings();
+        $this->pdfSettings = new PdfCbseSettings();
+        $this->legacySettings = new LegacyCbseSettings();
     }
 
     /**

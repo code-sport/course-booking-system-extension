@@ -4,8 +4,18 @@ namespace CBSE\Admin\Settings;
 
 use DateTime;
 
-class LegacySettings implements ISettings
+class LegacyCbseSettings extends CbseSettings
 {
+    public function TabName(): string
+    {
+        return __('Legacy', 'course_booking_system_extension');
+    }
+
+    public function TabKey(): string
+    {
+        return 'legacy';
+    }
+
 
     public function RegisterSettings()
     {
