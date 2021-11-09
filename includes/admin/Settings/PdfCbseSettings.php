@@ -4,27 +4,33 @@ namespace CBSE\Admin\Settings;
 
 class PdfCbseSettings extends CbseSettings
 {
-    public function TabName(): string
+    public function tabName(): string
     {
         return __('PDF', 'course_booking_system_extension');
     }
 
-    public function TabKey(): string
+    public function tabKey(): string
     {
        return 'pdf';
     }
 
-    public function RegisterSettings()
+    public function registerSettings()
     {
-        add_settings_section('cbse_pdf_header', __('Header of PDF', 'course_booking_system_extension'), [$this, 'SectionPdfHeaderText'], 'course_booking_system_extension');
+        add_settings_section(
+            'cbse_pdf_header',
+            __('Header of PDF', 'course_booking_system_extension'),
+            [$this, 'sectionPdfHeaderText'],
+            'course_booking_system_extension');
     }
 
-    public function SectionPdfHeaderText()
+    public function sectionPdfHeaderText()
     {
-        echo '<p>' . _e('Here you can set all header options for generated pdf.', 'course-booking-system-extension') . '</p>';
+        echo '<p>'
+            . _e('Here you can set all header options for generated pdf.', 'course-booking-system-extension')
+            . '</p>';
     }
 
-    public function RenderSettingsPage()
+    public function renderSettingsPage()
     {
         settings_fields('cbse_pdf_header');
     }

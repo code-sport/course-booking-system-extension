@@ -48,10 +48,10 @@ class Settings
 
         switch ($this->getActiveTab()) {
             case 'pdf':
-                $this->pdfSettings->RegisterSettings();
+                $this->pdfSettings->registerSettings();
                 break;
             case 'legacy':
-                $this->legacySettings->RegisterSettings();
+                $this->legacySettings->registerSettings();
                 break;
         }
 
@@ -128,10 +128,10 @@ class Settings
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
                 switch ($this->getActiveTab()) {
                     case 'pdf':
-                        $this->pdfSettings->RenderSettingsPage();
+                        $this->pdfSettings->renderSettingsPage();
                         break;
                     case 'legacy':
-                        $this->legacySettings->RenderSettingsPage();
+                        $this->legacySettings->renderSettingsPage();
                         break;
                 }
 

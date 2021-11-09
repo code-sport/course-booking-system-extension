@@ -2,23 +2,42 @@
 
 namespace CBSE\Admin\Settings;
 
+/**
+ * For the settigns tabs
+ */
 abstract class CbseSettings
 {
-    abstract public function TabName(): string;
+    /**
+     * The shown name on the tab
+     * @return string
+     */
+    abstract public function tabName(): string;
 
-    abstract public function TabKey(): string;
+    /**
+     * The key of the tab
+     * @return string
+     */
+    abstract public function tabKey(): string;
 
-    abstract public function RegisterSettings();
+    /**
+     * Add the needed fields
+     * @return mixed
+     */
+    abstract public function registerSettings();
 
-    abstract public function RenderSettingsPage();
+    /**
+     * Show the fields for the settings
+     * @return mixed
+     */
+    abstract public function renderSettingsPage();
 
     /**
      * Checks if this instance is for the key responsible
      * @param $tabKey
      * @return bool
      */
-    public function IsTab($tabKey): bool
+    public function isTab($tabKey): bool
     {
-        return $this->TabKey() === $tabKey;
+        return $this->tabKey() === $tabKey;
     }
 }

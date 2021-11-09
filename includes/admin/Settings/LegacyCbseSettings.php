@@ -6,18 +6,18 @@ use DateTime;
 
 class LegacyCbseSettings extends CbseSettings
 {
-    public function TabName(): string
+    public function tabName(): string
     {
         return __('Legacy', 'course_booking_system_extension');
     }
 
-    public function TabKey(): string
+    public function tabKey(): string
     {
         return 'legacy';
     }
 
 
-    public function RegisterSettings()
+    public function registerSettings()
     {
         //section name, display name, callback to print description of section, page to which section is attached.
         add_settings_section('cbse_header', __('Header', 'course_booking_system_extension'), [$this, 'cbse_plugin_section_header_text'], 'course_booking_system_extension');
@@ -125,7 +125,7 @@ class LegacyCbseSettings extends CbseSettings
         echo "<input id='cron_before_time_minute' name='cbse_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . esc_attr($options['cron_before_time_minute'] ?? "") . "' />" . __('Minute', 'course-booking-system-extension');
     }
 
-    public function RenderSettingsPage()
+    public function renderSettingsPage()
     {
         settings_fields('cbse_header');
     }
