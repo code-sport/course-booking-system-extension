@@ -15,6 +15,7 @@
  */
 
 defined('ABSPATH') || exit;
+define('__PLUGIN_BASENAME__', plugin_basename(__FILE__));
 
 
 function cbse_include_all()
@@ -47,9 +48,6 @@ cbse_include_all();
 if (is_admin()) { // admin actions
     cbse_include_admin();
 }
-
-// Plugin overview Page
-add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'cbse_add_action_links');
 
 // Install and update
 add_action('upgrader_process_complete', 'cbse_install_and_update', 10, 2);
