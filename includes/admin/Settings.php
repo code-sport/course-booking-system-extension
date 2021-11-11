@@ -2,25 +2,39 @@
 
 namespace CBSE\Admin;
 
+use CBSE\Admin\Settings\AutoPrintCbseSettings;
+use CBSE\Admin\Settings\GeneralCbseSettings;
 use CBSE\Admin\Settings\LegacyCbseSettings;
+use CBSE\Admin\Settings\MailCoachCbseSettings;
 use CBSE\Admin\Settings\PdfCbseSettings;
 
 require_once plugin_dir_path(__FILE__) . 'Settings/CbseSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/PdfSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/LegacySettings.php';
+require_once plugin_dir_path(__FILE__) . 'Settings/GeneralCbseSettings.php';
+require_once plugin_dir_path(__FILE__) . 'Settings/PdfCbseSettings.php';
+require_once plugin_dir_path(__FILE__) . 'Settings/MailCoachCbseSettings.php';
+require_once plugin_dir_path(__FILE__) . 'Settings/AutoPrintCbseSettings.php';
+require_once plugin_dir_path(__FILE__) . 'Settings/LegacyCbseSettings.php';
 
 class Settings
 {
-    private PdfCbseSettings $pdfSettings;
-    private LegacyCbseSettings $legacySettings;
+    private GeneralCbseSettings $generalCbseSettings;
+    private PdfCbseSettings $pdfCbseSettings;
+    private MailCoachCbseSettings $mailCoachCbseSettings;
+    private AutoPrintCbseSettings $autoPrintCbseSettings;
+    private LegacyCbseSettings $legacyCbseSettings;
 
     public function __construct()
     {
         add_action('admin_menu', [$this, 'AddSettingsPageInMenu']);
         add_action('admin_init', [$this, 'RegisterSettings']);
 
-        $this->pdfSettings = new PdfCbseSettings();
-        $this->legacySettings = new LegacyCbseSettings();
+
+        $this->generalCbseSettings = new GeneralCbseSettings();
+        $this->pdfCbseSettings = new PdfCbseSettings();
+        $this->mailCoachCbseSettings = new MailCoachCbseSettings();
+        $this->autoPrintCbseSettings = new AutoPrintCbseSettings();
+        $this->legacyCbseSettings = new LegacyCbseSettings();
+
     }
 
     /**
@@ -45,20 +59,24 @@ class Settings
             $this->cbse_missing_setting();
         }
 
-
         switch ($this->getActiveTab()) {
-            case 'pdf':
-                $this->pdfSettings->registerSettings();
+            default:
+            case $this->generalCbseSettings->tabKey():
+                $this->generalCbseSettings->registerSettings();
                 break;
-            case 'legacy':
-                $this->legacySettings->registerSettings();
+            case $this->pdfCbseSettings->tabKey():
+                $this->pdfCbseSettings->registerSettings();
+                break;
+            case $this->mailCoachCbseSettings->tabKey():
+                $this->mailCoachCbseSettings->registerSettings();
+                break;
+            case $this->autoPrintCbseSettings->tabKey():
+                $this->autoPrintCbseSettings->registerSettings();
+                break;
+            case $this->legacyCbseSettings->tabKey():
+                $this->legacyCbseSettings->registerSettings();
                 break;
         }
-
-        //section name, form element name, callback for sanitization
-        add_option('cbse_pdf_header_options', null);
-        register_setting('cbse_pdf_header', 'cbse_pdf_header_options', [$this, 'PdfHeaderValidate']);
-        register_setting('cbse_header', 'cbse_options', [$this, 'headerValidate']); // Legacy
     }
 
 
@@ -127,11 +145,21 @@ class Settings
                 <?php
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
                 switch ($this->getActiveTab()) {
-                    case 'pdf':
-                        $this->pdfSettings->renderSettingsPage();
+                    default:
+                    case $this->generalCbseSettings->tabKey():
+                        $this->generalCbseSettings->renderSettingsPage();
                         break;
-                    case 'legacy':
-                        $this->legacySettings->renderSettingsPage();
+                    case $this->pdfCbseSettings->tabKey():
+                        $this->pdfCbseSettings->renderSettingsPage();
+                        break;
+                    case $this->mailCoachCbseSettings->tabKey():
+                        $this->mailCoachCbseSettings->renderSettingsPage();
+                        break;
+                    case $this->autoPrintCbseSettings->tabKey():
+                        $this->autoPrintCbseSettings->renderSettingsPage();
+                        break;
+                    case $this->legacyCbseSettings->tabKey():
+                        $this->legacyCbseSettings->renderSettingsPage();
                         break;
                 }
 
@@ -149,18 +177,12 @@ class Settings
     public function SettingsTab()
     {
         $active_tab = $this->getActiveTab();
-        ?>
-        <a class="nav-tab <?php echo $active_tab == 'general' || '' ? 'nav-tab-active' : ''; ?>"
-           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=general'); ?>"><?php _e('General', 'course_booking_system_extension'); ?></a>
-        <a class="nav-tab <?php echo $active_tab == 'pdf' || '' ? 'nav-tab-active' : ''; ?>"
-           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=pdf'); ?>"><?php _e('PDF', 'course_booking_system_extension'); ?></a>
-        <a class="nav-tab <?php echo $active_tab == 'mail' || '' ? 'nav-tab-active' : ''; ?>"
-           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=mail'); ?>"><?php _e('Mail - Coach', 'course_booking_system_extension'); ?></a>
-        <a class="nav-tab <?php echo $active_tab == 'autoprint' || '' ? 'nav-tab-active' : ''; ?>"
-           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=autoprint'); ?>"><?php _e('Auto Print via Mail', 'course_booking_system_extension'); ?></a>
-        <a class="nav-tab <?php echo $active_tab == 'legacy' || '' ? 'nav-tab-active' : ''; ?>"
-           href="<?php echo admin_url('options-general.php?page=course_booking_system_extension&tab=legacy'); ?>"><?php _e('Legacy', 'course_booking_system_extension'); ?></a>
-        <?php
+
+        echo $this->generalCbseSettings->getTabHtmlLink($active_tab);
+        echo $this->pdfCbseSettings->getTabHtmlLink($active_tab);
+        echo $this->mailCoachCbseSettings->getTabHtmlLink($active_tab);
+        echo $this->autoPrintCbseSettings->getTabHtmlLink($active_tab);
+        echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
     }
 
     private function getActiveTab()
@@ -168,47 +190,7 @@ class Settings
         return $_GET['tab'] ?? 'general';
     }
 
-    /**
-     * Validate the input for the header data
-     * @param $input
-     * @return array
-     */
-   public function headerValidate($input): array
-    {
-        // Header Image
-        $validatedInput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
-        if (!is_numeric($validatedInput['header_image_attachment_id'])) {
-            $validatedInput['header_image_attachment_id'] = '';
-        }
 
-        $validatedInput['header_title'] = trim($input['header_title']);
-        $validatedInput['mail_coach_message'] = trim($input['mail_coach_message']);
-        $validatedInput['mail_categories_title'] = trim($input['mail_categories_title']);
-        $validatedInput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
-        $validatedInput['mail_tags_title'] = trim($input['mail_tags_title']);
-        $validatedInput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
-        $validatedInput['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
-        $validatedInput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
-        $validatedInput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
-
-        $this->switchCron(boolval($validatedInput['cron_enable']));
-
-        return $validatedInput;
-    }
-
-        private function switchCron(bool $cronEnabled)
-    {
-        $hook = 'cbse_cron_quarterly_hook';
-
-        if ($cronEnabled) {
-            if (!wp_next_scheduled($hook)) {
-                wp_schedule_event(time(), 'quarterly', $hook);
-            }
-        } else {
-            $timestamp = wp_next_scheduled($hook);
-            wp_unschedule_event($timestamp, $hook);
-        }
-    }
 
 
 }

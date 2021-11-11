@@ -2,7 +2,7 @@
 Contributors: codesport
 Donate link: https://www.paypal.com/donate?hosted_button_id=ZW6C88ATGA6QS
 Requires at least: 5.8.1
-Tested up to: 5.8.1
+Tested up to: 5.8.2
 Requires PHP: 7.4
 Stable tag: 0.1.1
 License: GPL v3

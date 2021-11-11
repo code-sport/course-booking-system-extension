@@ -6,6 +6,11 @@ use DateTime;
 
 class LegacyCbseSettings extends CbseSettings
 {
+    public function __construct()
+    {
+        parent::__construct('cbse_header', 'cbse_options');
+    }
+
     public function tabName(): string
     {
         return __('Legacy', 'course_booking_system_extension');
@@ -135,4 +140,47 @@ class LegacyCbseSettings extends CbseSettings
         return (bool)wp_next_scheduled('cbse_cron_quarterly_hook');
 
     }
+
+    /**
+     * Validate the input for the header data
+     * @param $input
+     * @return array
+     */
+    public function Validate($input): array
+    {
+        // Header Image
+        $validatedInput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
+        if (!is_numeric($validatedInput['header_image_attachment_id'])) {
+            $validatedInput['header_image_attachment_id'] = '';
+        }
+
+        $validatedInput['header_title'] = trim($input['header_title']);
+        $validatedInput['mail_coach_message'] = trim($input['mail_coach_message']);
+        $validatedInput['mail_categories_title'] = trim($input['mail_categories_title']);
+        $validatedInput['mail_categories_exclude'] = trim($input['mail_categories_exclude']);
+        $validatedInput['mail_tags_title'] = trim($input['mail_tags_title']);
+        $validatedInput['mail_tags_exclude'] = trim($input['mail_tags_exclude']);
+        $validatedInput['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
+        $validatedInput['cron_before_time_hour'] = is_numeric(trim($input['cron_before_time_hour'])) ? trim($input['cron_before_time_hour']) : 2;
+        $validatedInput['cron_before_time_minute'] = is_numeric(trim($input['cron_before_time_minute'])) ? trim($input['cron_before_time_minute']) : 0;
+
+        $this->switchCron(boolval($validatedInput['cron_enable']));
+
+        return $validatedInput;
+    }
+
+    private function switchCron(bool $cronEnabled)
+    {
+        $hook = 'cbse_cron_quarterly_hook';
+
+        if ($cronEnabled) {
+            if (!wp_next_scheduled($hook)) {
+                wp_schedule_event(time(), 'quarterly', $hook);
+            }
+        } else {
+            $timestamp = wp_next_scheduled($hook);
+            wp_unschedule_event($timestamp, $hook);
+        }
+    }
+
 }

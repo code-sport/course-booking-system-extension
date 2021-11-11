@@ -8,7 +8,7 @@
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
  * WC requires at least: 5.8.1
- * WC tested up to: 5.8.1
+ * WC tested up to: 5.8.2
  * Requires PHP: 7.4
  * License: GPL v3
  * License URI: https://github.com/code-sport/course-booking-system-extension/blob/main/license.txt

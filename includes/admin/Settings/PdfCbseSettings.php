@@ -4,6 +4,11 @@ namespace CBSE\Admin\Settings;
 
 class PdfCbseSettings extends CbseSettings
 {
+    public function __construct()
+    {
+        parent::__construct('cbse_pdf_header', 'cbse_pdf_header_options');
+    }
+
     public function tabName(): string
     {
         return __('PDF', 'course_booking_system_extension');
@@ -31,9 +36,15 @@ class PdfCbseSettings extends CbseSettings
             . '</p>';
     }
 
-    public function renderSettingsPage()
+
+    public function Validate($input)
     {
-        settings_fields('cbse_pdf_header');
+       return $input;
     }
 
+
+    public function renderSettingsPage()
+    {
+        // TODO: Implement renderSettingsPage() method.
+    }
 }
