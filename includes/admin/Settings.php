@@ -191,8 +191,6 @@ class Settings
     }
 
 
-
-
 }
 
 // TODO: Find a better WordPress way
