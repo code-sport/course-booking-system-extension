@@ -79,7 +79,6 @@ class Settings
         }
     }
 
-
     private function cbse_initialize_setting()
     {
         $settings = [
@@ -130,6 +129,11 @@ class Settings
         }
 
         update_option('cbse_options', $options);
+    }
+
+    private function getActiveTab()
+    {
+        return $_GET['tab'] ?? 'general';
     }
 
     public function RenderSettingsPage()
@@ -183,11 +187,6 @@ class Settings
         echo $this->mailCoachCbseSettings->getTabHtmlLink($active_tab);
         echo $this->autoPrintCbseSettings->getTabHtmlLink($active_tab);
         echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
-    }
-
-    private function getActiveTab()
-    {
-        return $_GET['tab'] ?? 'general';
     }
 
 

@@ -25,7 +25,7 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . 'includes/templates.php';
 
     // WordPress parts
-    require_once plugin_dir_path(__FILE__) . 'includes/ajax.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/Ajax.php';
     require_once plugin_dir_path(__FILE__) . 'includes/api.php';
     require_once plugin_dir_path(__FILE__) . 'includes/cron.php';
     require_once plugin_dir_path(__FILE__) . 'includes/shortcodes.php';
