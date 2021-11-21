@@ -27,12 +27,12 @@ class Ajax
             array('jquery'), get_plugin_data(__FILE__)['Version'],
             true
         );
-        $title_nonce = wp_create_nonce($this->action);
+        $titleNonce = wp_create_nonce($this->action);
         wp_localize_script('ajax-script',
             'ajax_object',
             [
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'nonce' => $title_nonce,
+                'nonce' => $titleNonce,
                 'hook' => var_export($hook, true),
             ]
         );
