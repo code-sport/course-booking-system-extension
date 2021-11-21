@@ -2,6 +2,9 @@
 
 namespace CBSE;
 
+use CBSE\Dto\CourseInfoDate;
+use DateTime;
+
 require_once 'DocumentationMail.php';
 
 class Ajax
@@ -42,8 +45,9 @@ class Ajax
     {
         check_ajax_referer($this->action);
         $courseId = intval(sanitize_key($_POST['course_id']));
-        $date = sanitize_key($_POST['date']);
-        $documentationMail = new DocumentationMail($courseId, $date, get_current_user_id());
+        $date = DateTime::createFromFormat('Y-m-d', sanitize_key($_POST['date']));
+        $course = new CourseInfoDate($courseId, $date);
+        $documentationMail = new DocumentationMail($course, get_current_user_id());
         $sent = $documentationMail->sent();
         $args = array('course_id' => $courseId,
             'date' => $date, 'sent' => $sent,

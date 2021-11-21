@@ -3,7 +3,7 @@
 namespace CBSE\Admin\Settings;
 
 /**
- * For the settigns tabs
+ * For the settings tabs
  */
 abstract class CbseSettings
 {
@@ -93,6 +93,12 @@ abstract class CbseSettings
 
     protected function getOptions($setting)
     {
-        return get_option($this->optionName)[$setting];
+        $option = get_option($this->optionName);
+        if ($option != null && array_key_exists($setting, $option))
+        {
+            return $option[$setting];
+        }
+
+        return null;
     }
 }

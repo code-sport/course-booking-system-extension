@@ -2,7 +2,11 @@
 
 namespace CBSE;
 
-class Mail
+abstract class Mail
 {
+    public function __construct()
+    {
+    }
 
+    public abstract function sent(): bool;
 }

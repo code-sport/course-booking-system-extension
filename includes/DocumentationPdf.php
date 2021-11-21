@@ -7,14 +7,12 @@ use DateTime;
 
 class DocumentationPdf extends CBSE_PDF
 {
-    private int $courseId;
-    private DateTime $date;
+    private CourseInfoDate $course;
 
-    public function __construct(int $courseId, DateTime $date)
+    public function __construct(CourseInfoDate $courseInfoDate)
     {
         parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $this->courseId = $courseId;
-        $this->date = $date;
+        $this->course = $courseInfoDate;
     }
 
     public function __destruct()
@@ -91,5 +89,13 @@ class DocumentationPdf extends CBSE_PDF
         // print standard ASCII chars, you can use core fonts like
         // helvetica or times to reduce file size.
         $this->SetFont('dejavusans', '', 10, '', true);
+    }
+
+    /**
+     * Delete the generated file
+     */
+    public function unlink(): bool
+    {
+        return unlink($this->getPdfFile());
     }
 }

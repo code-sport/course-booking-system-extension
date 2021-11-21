@@ -24,7 +24,7 @@ class CourseInfoDate extends DtoBase
     private array $bookings;
 
 
-    public function __construct($courseId, $date)
+    public function __construct(int $courseId, DateTime $date)
     {
         $this->courseId = $courseId;
         $this->date = $date;
@@ -124,5 +124,29 @@ class CourseInfoDate extends DtoBase
     public function getBookings(): array
     {
         return $this->bookings;
+    }
+
+
+    public function getCourseDateTimeString(): string
+    {
+        $date_string = $this->getCourseDateString();
+        $time_start_string = $this->getCourseStartTimeString();
+        $time_end_string = $this->getCourseEndTimeString();
+        return "{$date_string} {$time_start_string} - {$time_end_string}";
+    }
+
+    public function getCourseDateString(): string
+    {
+        return $this->date->format(get_option('date_format'));
+    }
+
+    public function getCourseStartTimeString() : string
+    {
+        return date(get_option('time_format'), strtotime($this->timeslot->event_start));
+    }
+
+    public function getCourseEndTimeString() : string
+    {
+        return date(get_option('time_format'), strtotime($this->timeslot->event_end));
     }
 }

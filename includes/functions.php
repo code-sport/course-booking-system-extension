@@ -43,6 +43,7 @@ function cbse_install_and_update()
     CBSE_PDF::installAndUpdate();
 }
 
+//TODO migrate to class
 function cbse_helper_array_exclude_and_column($array, $exclude, $filter)
 {
     $excludes = explode(',', $exclude);
@@ -86,8 +87,7 @@ function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 {
     $cbse_options = get_option('cbse_options');
 
-    require_once 'DocumentationPdf.php';
-    require_once 'CBSE_PDF_include.php';
+
     $docuPDF = new DocumentationPdf($courseId, $date);
 
     $courseInfo = cbse_course_info($courseId, $date);
