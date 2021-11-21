@@ -11,18 +11,6 @@ final  class ShortcodeOverviewForCourseHead
     private static ?ShortcodeOverviewForCourseHead $instance = null;
 
     /**
-     * gets the instance via lazy initialization (created on first usage)
-     */
-    public static function getInstance(): ShortcodeOverviewForCourseHead
-    {
-        if (ShortcodeOverviewForCourseHead::$instance === null) {
-            ShortcodeOverviewForCourseHead::$instance = new ShortcodeOverviewForCourseHead();
-        }
-
-        return ShortcodeOverviewForCourseHead::$instance;
-    }
-
-    /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
      */
@@ -30,22 +18,6 @@ final  class ShortcodeOverviewForCourseHead
     {
         $this->init();
     }
-
-    /**
-     * prevent the instance from being cloned (which would create a second instance of it)
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    public function __wakeup()
-    {
-        throw new Exception("Cannot unserialize singleton");
-    }
-
 
     /**
      * Init
@@ -56,6 +28,27 @@ final  class ShortcodeOverviewForCourseHead
 
         add_action('wp_enqueue_scripts', array($this, "addScripts"));
 
+    }
+
+    /**
+     * gets the instance via lazy initialization (created on first usage)
+     */
+    public static function getInstance(): ShortcodeOverviewForCourseHead
+    {
+        if (ShortcodeOverviewForCourseHead::$instance === null)
+        {
+            ShortcodeOverviewForCourseHead::$instance = new ShortcodeOverviewForCourseHead();
+        }
+
+        return ShortcodeOverviewForCourseHead::$instance;
+    }
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     */
+    public function __wakeup()
+    {
+        throw new Exception("Cannot unserialize singleton");
     }
 
     /**
@@ -188,14 +181,21 @@ final  class ShortcodeOverviewForCourseHead
         return $o;
     }
 
+    private function getCoaches(): array
+    {
+        return get_users(['role__in' => ['administrator', 'editor', 'author', 'contributor']]);
+    }
+
     public function addScripts()
     {
         wp_register_style('cbse_event_head_courses_style', plugins_url('../assets/css/cbse_event_head_courses.css', __FILE__));
     }
 
-    private function getCoaches(): array
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+    private function __clone()
     {
-        return get_users(['role__in' => ['administrator', 'editor', 'author', 'contributor']]);
     }
 }
 
