@@ -14,7 +14,7 @@ class MailCoachCbseSettings extends CbseSettings
      */
     public function tabName(): string
     {
-        return  __('Mail - Coach', 'course_booking_system_extension');
+        return __('Mail - Coach', 'course_booking_system_extension');
     }
 
     /**
@@ -30,7 +30,7 @@ class MailCoachCbseSettings extends CbseSettings
      */
     public function registerSettings()
     {
-        // TODO: Implement registerSettings() method.
+
     }
 
     /**

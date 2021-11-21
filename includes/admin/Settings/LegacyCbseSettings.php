@@ -112,7 +112,8 @@ class LegacyCbseSettings extends CbseSettings
         $options = get_option('cbse_options');
         $html = '<input type="checkbox" id="cron_enable" name="cbse_options[cron_enable]" value="1"' . checked(1, $options['cron_enable'], false) . '/>';
         $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.', 'course-booking-system-extension') . '</label>';
-        if ($this->cbse_cron_enabled()) {
+        if ($this->cbse_cron_enabled())
+        {
             $lastRun = get_option('cbse_cron_quarterly_last_run');
             $dateLastRun = new DateTime();
             $dateLastRun->setTimestamp($lastRun);
@@ -143,14 +144,19 @@ class LegacyCbseSettings extends CbseSettings
 
     /**
      * Validate the input for the header data
+     *
      * @param $input
+     *
      * @return array
      */
     public function Validate($input): array
     {
+        do_action('qm/debug', 'LegacyCbseSettings->Validate {input}', ['input' => json_encode($input),]);
+
         // Header Image
         $validatedInput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
-        if (!is_numeric($validatedInput['header_image_attachment_id'])) {
+        if (!is_numeric($validatedInput['header_image_attachment_id']))
+        {
             $validatedInput['header_image_attachment_id'] = '';
         }
 
@@ -173,11 +179,15 @@ class LegacyCbseSettings extends CbseSettings
     {
         $hook = 'cbse_cron_quarterly_hook';
 
-        if ($cronEnabled) {
-            if (!wp_next_scheduled($hook)) {
+        if ($cronEnabled)
+        {
+            if (!wp_next_scheduled($hook))
+            {
                 wp_schedule_event(time(), 'quarterly', $hook);
             }
-        } else {
+        }
+        else
+        {
             $timestamp = wp_next_scheduled($hook);
             wp_unschedule_event($timestamp, $hook);
         }

@@ -3,6 +3,7 @@
 namespace CBSE;
 
 require_once 'Mail.php';
+require_once 'CBSE_PDF_include.php';
 
 class DocumentationMail extends Mail
 {

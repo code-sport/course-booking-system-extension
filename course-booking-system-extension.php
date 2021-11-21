@@ -23,6 +23,8 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
     require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
     require_once plugin_dir_path(__FILE__) . 'includes/templates.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/dto/CourseInfoDate.php';
+
 
     // WordPress parts
     require_once plugin_dir_path(__FILE__) . 'includes/Ajax.php';
@@ -45,7 +47,8 @@ function cbse_include_admin()
 
 cbse_include_all();
 
-if (is_admin()) { // admin actions
+if (is_admin())
+{ // admin actions
     cbse_include_admin();
 }
 

@@ -17,13 +17,15 @@ class UserInformMethod
     {
         ?>
 
-        <h3><?php _e("Course Booking System Extension Settings", 'course_booking_system_extension'); ?></h3>
+        <h3><?php
+            _e("Course Booking System Extension Settings", 'course_booking_system_extension'); ?></h3>
 
         <table class="form-table">
             <tr>
                 <th scope="row">
                     <label for="cbse_inform_method">
-                        <?php _e("Auto inform via", 'course_booking_system_extension'); ?>
+                        <?php
+                        _e("Auto inform via", 'course_booking_system_extension'); ?>
                     </label>
                 </th>
                 <td>
@@ -33,23 +35,27 @@ class UserInformMethod
                     ?>
                     <select name="cbse-auto-inform" id="cbse_inform_method">
                         <option value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>>
-                            <?php _e('none', 'course_booking_system_extension') ?>
+                            <?php
+                            _e('none', 'course_booking_system_extension') ?>
                         </option>
                         <option value="email"
                             <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>>
-                            <?php _e('email', 'course_booking_system_extension') ?>
+                            <?php
+                            _e('email', 'course_booking_system_extension') ?>
                         </option>
                     </select><br/>
                     <span
-                        class="description">
-                        <?php _e("Please select how you want to be informed.", 'course_booking_system_extension'); ?>
+                            class="description">
+                        <?php
+                        _e("Please select how you want to be informed.", 'course_booking_system_extension'); ?>
                     </span>
                 </td>
             </tr>
             <tr>
                 <th scope="row">
                     <label for="cbse_auto_print">
-                        <?php _e("Auto inform via", 'course_booking_system_extension'); ?>
+                        <?php
+                        _e("Auto inform via", 'course_booking_system_extension'); ?>
                     </label>
                 </th>
                 <td>
@@ -58,18 +64,17 @@ class UserInformMethod
                     $selected = get_the_author_meta('cbse-auto-print', $user->ID);
                     ?>
                     <input
-                        type="checkbox"
-                        id="cbse_auto_print"
-                        name="cbse-auto-print"
-                        value="1"
+                            type="checkbox"
+                            id="cbse_auto_print"
+                            name="cbse-auto-print"
+                            value="1"
                         <?= ($selected == "1") ? 'checked="checked"' : '' ?>
                     >
                     <br/>
                     <span
-                        class="description">
+                            class="description">
                         <?php
-                        _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.",
-                            'course_booking_system_extension');
+                        _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.", 'course_booking_system_extension');
                         ?>
                     </span>
                 </td>
@@ -82,11 +87,13 @@ class UserInformMethod
 
     public function saveUserProfile($userId)
     {
-        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $userId)) {
+        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $userId))
+        {
             return false;
         }
 
-        if (!current_user_can('edit_user', $userId)) {
+        if (!current_user_can('edit_user', $userId))
+        {
             return false;
         }
         update_user_meta($userId, 'cbse-auto-inform', $_POST['cbse-auto-inform']);

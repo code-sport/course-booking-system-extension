@@ -36,60 +36,33 @@ class Course_Booking_System_Extension extends WP_REST_Controller
      */
     public function register_routes()
     {
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/event/(?P<id>\d+)/courses', array(
-            'methods' => WP_REST_Server::READABLE,
-            'callback' => array($this, 'get_courses_from_event'),
-            'args' => array(
-                'id' => array(
-                    'validate_callback' => function ($param, $request, $key) {
-                        return is_numeric($param);
-                    },
-                    'required' => true
-                ),
-            ),
-            'permission_callback' => array($this, 'api_permission')
-        ));
+        register_rest_route($this->namespace, '/' . $this->rest_base . '/event/(?P<id>\d+)/courses', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_courses_from_event'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        {
+            return is_numeric($param);
+        }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
 
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/course/(?P<id>\d+)', array(
-            'methods' => WP_REST_Server::READABLE,
-            'callback' => array($this, 'get_course_basic'),
-            'args' => array(
-                'id' => array(
-                    'validate_callback' => function ($param, $request, $key) {
-                        return is_numeric($param);
-                    },
-                    'required' => true
-                ),
-            ),
-            'permission_callback' => array($this, 'api_permission')
-        ));
+        register_rest_route($this->namespace, '/' . $this->rest_base . '/course/(?P<id>\d+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_basic'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        {
+            return is_numeric($param);
+        }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
 
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array(
-            'methods' => WP_REST_Server::READABLE,
-            'callback' => array($this, 'get_course_date_participants'),
-            'args' => array(
-                'id' => array(
-                    'validate_callback' => function ($param, $request, $key) {
-                        return is_numeric($param);
-                    },
-                    'required' => true
-                ),
-                'date' => array(
-                    'validate_callback' => function ($param, $request, $key) {
-                        return $this->cbse_is_date($param);
-                    },
-                    'required' => true
-                ),
-            ),
-            'permission_callback' => array($this, 'api_permission')
-        ));
+        register_rest_route($this->namespace, '/' . $this->rest_base . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_date_participants'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        {
+            return is_numeric($param);
+        }, 'required' => true), 'date' => array('validate_callback' => function ($param, $request, $key)
+        {
+            return $this->cbse_is_date($param);
+        }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
     }
 
     public function cbse_is_date($date)
     {
-        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date)) {
+        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date))
+        {
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -99,7 +72,8 @@ class Course_Booking_System_Extension extends WP_REST_Controller
         global $wpdb;
         $courses = $wpdb->get_results("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `event_id` = " . $data['id'] . ";");
 
-        if (empty($courses)) {
+        if (empty($courses))
+        {
             return new WP_Error('no_event', 'Invalid event', array('status' => 404));
         }
 
@@ -115,18 +89,10 @@ class Course_Booking_System_Extension extends WP_REST_Controller
         $date_attendances = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_attendances` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
 
 
-        $course_basic->dates =
-            array_unique(
-                array_column(
-                    array_merge(
-                        $date_attendances,
-                        $date_booking,
-                        $date_waitlists
-                    )
-                    , 'date')
-            );
+        $course_basic->dates = array_unique(array_column(array_merge($date_attendances, $date_booking, $date_waitlists), 'date'));
 
-        if (empty($course_basic->id)) {
+        if (empty($course_basic->id))
+        {
             return new WP_Error('no_course', 'Invalid course', array('status' => 404));
         }
 
@@ -146,7 +112,8 @@ class Course_Booking_System_Extension extends WP_REST_Controller
         $course_basic->substitutes = $substitutes->user_id ?? null;
         $course_basic->notes = $wpdb->get_results($wpdb->prepare("SELECT `note_id`, `note` FROM `" . $wpdb->prefix . "mp_timetable_notes` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
 
-        if (empty($course_basic->id)) {
+        if (empty($course_basic->id))
+        {
             return new WP_Error('no_course', 'Invalid course', array('status' => 404));
         }
 
@@ -156,20 +123,20 @@ class Course_Booking_System_Extension extends WP_REST_Controller
 
     public function api_permission($request)
     {
-        if (is_user_logged_in()) {
-            if (current_user_can('manage_options')) {
+        if (is_user_logged_in())
+        {
+            if (current_user_can('manage_options'))
+            {
                 return true;
-            } else {
-                return new WP_Error('cbse_not-administrator',
-                    __("You are not allowed to read courses.", 'cbse'),
-                    array('status' => 403)
-                );
             }
-        } else {
-            return new WP_Error('cbse_not-logged-in',
-                __("You are not logged in.", 'cbse'),
-                array('status' => 401)
-            );
+            else
+            {
+                return new WP_Error('cbse_not-administrator', __("You are not allowed to read courses.", 'cbse'), array('status' => 403));
+            }
+        }
+        else
+        {
+            return new WP_Error('cbse_not-logged-in', __("You are not logged in.", 'cbse'), array('status' => 401));
         }
     }
 }
@@ -177,7 +144,8 @@ class Course_Booking_System_Extension extends WP_REST_Controller
 /**
  * Function to register our new routes from the controller.
  */
-add_action('rest_api_init', function () {
+add_action('rest_api_init', function ()
+{
 
     $controller = new Course_Booking_System_Extension();
     $controller->register_routes();

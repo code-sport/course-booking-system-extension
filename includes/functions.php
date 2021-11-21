@@ -1,8 +1,12 @@
 <?php
 
+use CBSE\CBSE_PDF;
+use CBSE\DocumentationPdf;
+
 function cbse_courses_for_head($userId, $pastdays = 7, $futuredays = 7)
 {
-    if (!is_int($userId) || $userId < 0) {
+    if (!is_int($userId) || $userId < 0)
+    {
         throw new Exception("userID must be a positive int.");
     }
 
@@ -32,100 +36,18 @@ function cbse_courses_for_head($userId, $pastdays = 7, $futuredays = 7)
     return $timeslots;
 }
 
-function cbse_course_info($courseId, $date): stdClass
-{
-    if (!is_int($courseId)) {
-        $courseId = intval($courseId);
-    }
-
-    global $wpdb;
-    $courseInfo = new stdClass();
-    // TODO extract in extra method to avoid duplicated calling
-    $courseInfo->timeslot = $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $courseId));
-    $courseInfo->event = get_post($courseInfo->timeslot->event_id);
-    $courseInfo->event_meta = get_post($courseInfo->timeslot->event_id);
-    $courseInfo->event_categories = get_the_terms($courseInfo->timeslot->event_id, 'mp-event_category');
-    $courseInfo->event_tags = get_the_terms($courseInfo->timeslot->event_id, 'mp-event_tag');
-    $courseInfo->column = get_post($courseInfo->timeslot->column_id);
-    $courseInfo->column_meta = get_post($courseInfo->timeslot->column_id);
-    $courseInfo->substitutes = $wpdb->get_row($wpdb->prepare("SELECT `user_id` FROM `" . $wpdb->prefix . "mp_timetable_substitutes` WHERE `course_id` = %d AND `date` = '%s';", $courseId, $date));
-
-    return $courseInfo;
-}
-
-function cbse_course_date_bookings($courseId, $date): array
-{
-    global $wpdb;
-    //TODO past and future days
-    $bookings_raw = $wpdb->get_results($wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_bookings` WHERE `course_id` =  %d AND `date` = %s;", $courseId, $date));
-    $bookings = array();
-    foreach ($bookings_raw as $booking) {
-        $user_meta = get_userdata($booking->user_id);
-        $booking->first_name = $user_meta->first_name;
-        $booking->last_name = $user_meta->last_name;
-        $booking->nickname = $user_meta->nickname;
-        $booking->covid19_status = get_the_author_meta('covid-19-status', $booking->user_id);
-        // TODO Validate status with date
-        $bookings[] = $booking;
-    }
-    usort($bookings, fn($a, $b) => strcmp($a->last_name, $b->last_name));
-
-    return $bookings;
-}
-
-function cbse_get_tcpdf()
-{
-    $tcpdf_folder = plugin_dir_path(__FILE__) . '../dependencies';
-
-    $scan = scandir($tcpdf_folder);
-    foreach ($scan as $scan_file) {
-        if (substr($scan_file, 0, 6) === "TCPDF-") { //TODO Check if is a dictionary
-            $tcpdf_folder .= '/' . $scan_file;
-            break;
-        }
-    }
-
-    return $tcpdf_folder . '/tcpdf.php';
-}
 
 function cbse_install_and_update()
 {
-    $tcpdf_Folder = plugin_dir_path(__FILE__) . '../dependencies/';
-    if (!is_dir($tcpdf_Folder)) {
-        mkdir($tcpdf_Folder, 0777, true);
-    }
-
-    $fpdf_file = cbse_get_tcpdf();
-    if (!is_file($fpdf_file)) {
-        do_action('qm/debug', 'PDF library is not available under : {path}', ['path' => $fpdf_file]);
-        $url = 'https://github.com/tecnickcom/TCPDF/archive/refs/tags/6.4.2.zip';
-        $zip_filename = 'TCPDF.zip';
-
-        // WordPress Download
-        $response = wp_remote_get($url, array(
-            'timeout' => 120,
-        ));
-        do_action('qm/debug', 'wp_remote_get: {response}', ['response' => $response]);
-        $body = wp_remote_retrieve_body($response);
-        // Write the file using put_contents instead of fopen(), etc.
-        $wp_filesystem = cbse_get_wp_filesystem();
-
-        $wp_filesystem->put_contents($zip_filename, $body);
-
-        // Extract
-        $result = unzip_file($zip_filename, $tcpdf_Folder);
-        if (is_wp_error($result)) {
-            do_action('qm/error', 'Could not extract TCPDF');
-        }
-        // Delete download
-        unlink($zip_filename);
-    }
+    //TODO: Create own class!
+    CBSE_PDF::installAndUpdate();
 }
 
 function cbse_helper_array_exclude_and_column($array, $exclude, $filter)
 {
     $excludes = explode(',', $exclude);
-    $array_filtered = array_filter($array, function ($val) use ($excludes) {
+    $array_filtered = array_filter($array, function ($val) use ($excludes)
+    {
         // Fatal error: Uncaught Error: Cannot use object of type WP_Term as array
         $values = $val->to_array();
         $id = $values['term_id'];
@@ -139,6 +61,7 @@ function cbse_helper_array_exclude_and_column($array, $exclude, $filter)
  *
  * @param DateTime $timeFrom
  * @param DateTime $timeTo
+ *
  * @return array|object|null
  */
 function cbse_courses_in_time(DateTime $timeFrom, DateTime $timeTo)
@@ -161,23 +84,17 @@ function cbse_courses_in_time(DateTime $timeFrom, DateTime $timeTo)
 
 function cbse_sent_mail_with_course_date_bookings($courseId, $date, $userId)
 {
-    $pcpdf_file = cbse_get_tcpdf();
-    if (!is_file($pcpdf_file)) {
-        cbse_install_and_update();
-    }
-    require_once $pcpdf_file;
-    require_once 'CBSE_PDF.php';
-
     $cbse_options = get_option('cbse_options');
 
-    $pdf_file = plugin_dir_path(__FILE__) . $courseId . '_' . $date . '.pdf';
+    require_once 'DocumentationPdf.php';
+    require_once 'CBSE_PDF_include.php';
+    $docuPDF = new DocumentationPdf($courseId, $date);
 
     $courseInfo = cbse_course_info($courseId, $date);
     $courseInfo_categories = !empty($courseInfo->event_categories) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_categories, $cbse_options['mail_categories_exclude'], 'name')) : '';
     $courseInfo_tags = !empty($courseInfo->event_tags) ? implode(", ", cbse_helper_array_exclude_and_column($courseInfo->event_tags, $cbse_options['mail_tags_exclude'], 'name')) : '';
     $user_meta_course = get_userdata($courseInfo->substitutes->user_id ?? $courseInfo->timeslot->user_id);
-    $user_covid19_status_course = __(get_the_author_meta('covid-19-status', $user_meta_course->ID), 'course_booking_system_extension')
-        ?? __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" . __('recovered', 'course_booking_system_extension');
+    $user_covid19_status_course = __(get_the_author_meta('covid-19-status', $user_meta_course->ID), 'course_booking_system_extension') ?? __('tested', 'course_booking_system_extension') . "/" . __('vaccinated', 'course_booking_system_extension') . "/" . __('recovered', 'course_booking_system_extension');
     $bookings = cbse_course_date_bookings($courseId, $date);
     $date_string = date(get_option('date_format'), strtotime($date));
     $time_start_string = date(get_option('time_format'), strtotime($courseInfo->timeslot->event_start));
@@ -199,51 +116,9 @@ EOD;
     $html_attendees = '<h2>' . __('Participants', 'course-booking-system-extension') . ':</h2>';
 
 
-    //TODO Move into own class that a footer can be added
-    // create new PDF document
+    //TODO Remove it
     $pdf = new CBSE_PDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-    // set document information
-    $pdf->SetCreator(PDF_CREATOR);
-    $pdf->SetAuthor('Code.Sport');
-    $pdf->SetTitle("$date_string " . get_option('cbse_options')['header_title']);
-    $pdf->SetSubject("{$courseInfo_categories} | {$courseInfo->event->post_title} | {$courseInfo_DateTime}");
-
-    // set default header data
-    $pdf->setPrintHeader(false);
-    $pdf->setFooterData(array(0, 0, 0), array(0, 0, 0));
-    $pdf->setFooterText("{$courseInfo->event->post_title} | {$courseInfo_DateTime}");
-
-    // set header and footer fonts
-    $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-    $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-
-    // set default monospaced font
-    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-    // set margins
-    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_LEFT);
-    $pdf->SetHeaderMargin(0);
-    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-    // set auto page breaks
-    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-
-    // set image scale factor
-    $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-    // set default font subsetting mode
-    $pdf->setFontSubsetting(true);
-
-    // Set font
-    // dejavusans is a UTF-8 Unicode font, if you only need to
-    // print standard ASCII chars, you can use core fonts like
-    // helvetica or times to reduce file size.
-    $pdf->SetFont('dejavusans', '', 10, '', true);
-
-    // Add a page
-    // This method has several options, check the source code documentation for more information.
-    $pdf->AddPage();
 
     // Print text using writeHTML()
     $pdf->writeHTML($html, true, false, true, false, '');
@@ -258,17 +133,20 @@ EOD;
     $pdf->Cell($w[0], 6, __('Title', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
     $pdf->Cell($w[1], 6, $courseInfo->event->post_title, 0, 0, 'L', false);
     $pdf->Ln();
-    if (!empty($courseInfo->timeslot->description)) {
+    if (!empty($courseInfo->timeslot->description))
+    {
         $pdf->Cell($w[0], 6, __('Description', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
         $pdf->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
         $pdf->Ln();
     }
-    if ($cbse_options['mail_categories_exclude'] != '0') {
+    if ($cbse_options['mail_categories_exclude'] != '0')
+    {
         $pdf->Cell($w[0], 6, ($cbse_options['mail_categories_title'] ?? __('Categories', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
         $pdf->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
         $pdf->Ln();
     }
-    if ($cbse_options['mail_tags_exclude'] != '0') {
+    if ($cbse_options['mail_tags_exclude'] != '0')
+    {
         $pdf->Cell($w[0], 6, ($cbse_options['mail_tags_title'] ?? __('Tags', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
         $pdf->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
         $pdf->Ln();
@@ -310,7 +188,8 @@ EOD;
     $pdf->SetTextColor(0);
     $pdf->SetFont('');
 
-    foreach ($bookings as $booking) {
+    foreach ($bookings as $booking)
+    {
         $bookingNames[] = $bookingNumber . '. ' . trim($booking->last_name) . ', ' . trim($booking->first_name); // For mail
 
         $pdf->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
@@ -321,7 +200,8 @@ EOD;
         $fill = !$fill;
         $bookingNumber++;
     }
-    for ($i = $bookingNumber; $i <= $courseInfo->event_meta->attendance; $i++) {
+    for ($i = $bookingNumber; $i <= $courseInfo->event_meta->attendance; $i++)
+    {
         $pdf->Cell($w[0], 10, $i, 1, 0, 'R', $fill);
         $pdf->Cell($w[1], 10, "", 1, 0, 'L', $fill);
         $pdf->Cell($w[2], 10, "", 1, 0, 'C', $fill);
@@ -330,9 +210,6 @@ EOD;
         $fill = !$fill;
     }
 
-    // Close and output PDF document
-    // This method has several options, check the source code documentation for more information.
-    $pdf->Output($pdf_file, 'F');
 
     $user_info = get_userdata($userId);
 
@@ -349,20 +226,22 @@ EOD;
     $message = str_replace('%number_of_bookings%', count($bookings), $message);
     $message = str_replace('%maximum_participants%', $courseInfo->event_meta->attendance, $message);
 
-    if (strpos($message, '%booking_names%') !== false) {
+    if (strpos($message, '%booking_names%') !== false)
+    {
         $messageReplace = '';
-        foreach ($bookingNames as $bookingName) {
+        foreach ($bookingNames as $bookingName)
+        {
             $messageReplace .= $bookingName . PHP_EOL;
         }
         $message = str_replace('%booking_names%', $messageReplace, $message);
     }
 
     $headers = "";
-    $attachments = array($pdf_file);
+    $attachments = array($docuPDF->getPdfFile());
 
     $mail_sent = wp_mail($to, $subject, $message, $headers, $attachments);
 
-    unlink($pdf_file);
+    unlink($docuPDF->getPdfFile());
 
     return $mail_sent;
 
@@ -372,7 +251,8 @@ function cbse_get_wp_filesystem()
 {
     global $wp_filesystem;
 
-    if (is_null($wp_filesystem)) {
+    if (is_null($wp_filesystem))
+    {
         require_once ABSPATH . '/wp-admin/includes/file.php';
         WP_Filesystem();
     }

@@ -42,8 +42,7 @@ class Settings
      */
     public function AddSettingsPageInMenu()
     {
-        add_options_page(
-            __('Course Booking System Extension', 'course_booking_system_extension'), //Page Title
+        add_options_page(__('Course Booking System Extension', 'course_booking_system_extension'), //Page Title
             __('Course Booking System Extension', 'course_booking_system_extension'), //Menu Title
             'manage_options', //Capability
             'course_booking_system_extension', //Page slug
@@ -53,13 +52,17 @@ class Settings
 
     public function RegisterSettings()
     {
-        if (false === get_option('cbse_options')) {
+        if (false === get_option('cbse_options'))
+        {
             $this->cbse_initialize_setting();
-        } else {
+        }
+        else
+        {
             $this->cbse_missing_setting();
         }
 
-        switch ($this->getActiveTab()) {
+        switch ($this->getActiveTab())
+        {
             default:
             case $this->generalCbseSettings->tabKey():
                 $this->generalCbseSettings->registerSettings();
@@ -81,18 +84,7 @@ class Settings
 
     private function cbse_initialize_setting()
     {
-        $settings = [
-            'header_image_attachment_id' => '',
-            'header_title' => __('Sports operation documentation', 'course-booking-system-extension'),
-            'mail_coach_message' => __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension'),
-            'mail_categories_title' => __('Categories', 'course-booking-system-extension'),
-            'mail_categories_exclude' => '',
-            'mail_tags_title' => __('Tags', 'course-booking-system-extension'),
-            'mail_tags_exclude' => '',
-            'cron_enable' => 'true',
-            'cron_before_time_hour' => 2,
-            'cron_before_time_minute' => 0
-        ];
+        $settings = ['header_image_attachment_id' => '', 'header_title' => __('Sports operation documentation', 'course-booking-system-extension'), 'mail_coach_message' => __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension'), 'mail_categories_title' => __('Categories', 'course-booking-system-extension'), 'mail_categories_exclude' => '', 'mail_tags_title' => __('Tags', 'course-booking-system-extension'), 'mail_tags_exclude' => '', 'cron_enable' => 'true', 'cron_before_time_hour' => 2, 'cron_before_time_minute' => 0];
         add_option('cbse_options', $settings);
     }
 
@@ -100,31 +92,38 @@ class Settings
     {
         $options = get_option('cbse_options');
 
-        if (!array_key_exists('header_title', $options)) {
+        if (!array_key_exists('header_title', $options))
+        {
             $options['header_title'] = __('Sports operation documentation', 'course-booking-system-extension');
         }
 
-        if (!array_key_exists('mail_coach_message', $options)) {
+        if (!array_key_exists('mail_coach_message', $options))
+        {
             $options['mail_coach_message'] = __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension');
         }
 
-        if (!array_key_exists('mail_categories_title', $options)) {
+        if (!array_key_exists('mail_categories_title', $options))
+        {
             $options['mail_categories_title'] = __('Categories');
         }
 
-        if (!array_key_exists('mail_tags_title', $options)) {
+        if (!array_key_exists('mail_tags_title', $options))
+        {
             $options['mail_tags_title'] = __('Tags');
         }
 
-        if (!array_key_exists('cron_enable', $options)) {
+        if (!array_key_exists('cron_enable', $options))
+        {
             $options['cron_enable'] = 1;
         }
 
-        if (!array_key_exists('cron_before_time_hour', $options)) {
+        if (!array_key_exists('cron_before_time_hour', $options))
+        {
             $options['cron_before_time_hour'] = 2;
         }
 
-        if (!array_key_exists('cron_before_time_minute', $options)) {
+        if (!array_key_exists('cron_before_time_minute', $options))
+        {
             $options['cron_before_time_minute'] = 0;
         }
 
@@ -141,14 +140,18 @@ class Settings
         ?>
         <div class="wrap">
             <div id="icon-options-general" class="icon32"></div>
-            <?php settings_errors(); ?>
-            <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-            <h2 class="nav-tab-wrapper"><?php $this->SettingsTab(); ?></h2>
+            <?php
+            settings_errors(); ?>
+            <h1><?php
+                echo esc_html(get_admin_page_title()); ?></h1>
+            <h2 class="nav-tab-wrapper"><?php
+                $this->SettingsTab(); ?></h2>
 
             <form action="options.php" method="post">
                 <?php
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
-                switch ($this->getActiveTab()) {
+                switch ($this->getActiveTab())
+                {
                     default:
                     case $this->generalCbseSettings->tabKey():
                         $this->generalCbseSettings->renderSettingsPage();
