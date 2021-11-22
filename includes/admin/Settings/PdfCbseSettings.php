@@ -29,7 +29,17 @@ class PdfCbseSettings extends CbseSettings
 
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
-        add_settings_field('categories_exclude', __('Exclude Categories', 'course_booking_system_extension'), [$this, 'categoriesExclude'], 'course_booking_system_extension', $this->sectionHeader);
+        add_settings_field('header_image_attachment_id',
+            __('Image Attachment ID', 'course_booking_system_extension'),
+            [$this, 'headerImage'],
+            'course_booking_system_extension',
+            $this->sectionHeader);
+
+        add_settings_field('title',
+            __('Title', 'course_booking_system_extension'),
+            [$this, 'title'],
+            'course_booking_system_extension',
+            $this->sectionHeader);
     }
 
     public function sectionPdfHeaderText()
@@ -37,17 +47,32 @@ class PdfCbseSettings extends CbseSettings
         echo '<p>' . _e('Here you can set all header options for generated pdf.', 'course-booking-system-extension') . '</p>';
     }
 
+    public function headerImage()
+    {
+        $value = esc_attr($this->getOptions('header_image_attachment_id') ?? "");
+        echo "<input id='header_image_attachment_id' name='cbse_pdf_header_options[header_image_attachment_id]' type='text' value='" . $value . "' />";
+    }
 
-    public function Validate($input): array
+    public function title()
+    {
+        $value = esc_attr($this->getOptions('title') ?? __('Sports operation documentation', 'course-booking-system-extension'));
+        echo "<input id='subject' name='cbse_pdf_header_options[title]' type='text' value='" . $value . "' />";
+        echo "<p class='description'>" . __('Title for the pdf.', 'course-booking-system-extension') . "</p>";
+    }
+
+
+    public function validate($input)
     {
         do_action('qm/debug', 'PdfCbseSettings->Validate {input}', ['input' => json_encode($input),]);
 
-        if ($input !== null)
+        /*if ($input !== null)
         {
+            $validatedInput['header_image_attachment_id'] = trim($input['header_image_attachment_id']);
             $validatedInput['categories_exclude'] = trim($input['categories_exclude']);
             return $validatedInput;
         }
-        return array();
+        return array();*/
+        return $input;
     }
 
 
@@ -56,10 +81,5 @@ class PdfCbseSettings extends CbseSettings
         settings_fields($this->sectionHeader);
     }
 
-    function categoriesExclude()
-    {
-        $value = esc_attr($this->getOptions('categories_exclude') ?? "");
-        echo "<input id='categories_exclude' name='cbse_pdf_header_options[categories_exclude]' type='text' value='" . $value . "' />";
-        echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', 'course-booking-system-extension') . "</p>";
-    }
+
 }

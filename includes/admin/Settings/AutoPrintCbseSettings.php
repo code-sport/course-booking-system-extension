@@ -42,7 +42,7 @@ class AutoPrintCbseSettings extends CbseSettings
         // TODO: Implement renderSettingsPage() method.
     }
 
-    public function Validate($input)
+    public function validate($input)
     {
         // TODO: Implement Validate() method.
     }

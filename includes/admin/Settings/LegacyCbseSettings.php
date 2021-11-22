@@ -149,7 +149,7 @@ class LegacyCbseSettings extends CbseSettings
      *
      * @return array
      */
-    public function Validate($input): array
+    public function validate($input): array
     {
         do_action('qm/debug', 'LegacyCbseSettings->Validate {input}', ['input' => json_encode($input),]);
 

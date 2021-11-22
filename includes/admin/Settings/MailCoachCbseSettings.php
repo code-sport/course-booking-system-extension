@@ -2,6 +2,8 @@
 
 namespace CBSE\Admin\Settings;
 
+use DateTime;
+
 class MailCoachCbseSettings extends CbseSettings
 {
     private string $sectionHeader = 'cbse_coach_mail';
@@ -50,6 +52,16 @@ class MailCoachCbseSettings extends CbseSettings
             [$this, 'message'],
             'course_booking_system_extension',
             $this->sectionHeader);
+        add_settings_field('cron_enable',
+            __('Cron Enable', 'course_booking_system_extension'),
+            [$this, 'cronEnable'],
+            'course_booking_system_extension',
+            $this->sectionHeader);
+        add_settings_field('cron_before_time',
+            __('Cron Sent before course', 'course_booking_system_extension'),
+            [$this, 'cronBeforeTime'],
+            'course_booking_system_extension',
+            $this->sectionHeader);
     }
 
     public function sectionCoachMailText()
@@ -61,14 +73,14 @@ class MailCoachCbseSettings extends CbseSettings
         echo $text;
     }
 
-    function subject()
+    public function subject()
     {
-        $value = esc_attr($this->getOptions('subject') ?? "");
+        $value = esc_attr($this->getOptions('subject') ?? __('Sports operation documentation', 'course-booking-system-extension'));
         echo "<input id='subject' name='cbse_coach_mail_options[subject]' type='text' value='" . $value . "' />";
         echo "<p class='description'>" . __('Prefix of the subject', 'course-booking-system-extension') . "</p>";
     }
 
-    function message()
+    public function message()
     {
         $value = esc_attr($this->getOptions('message') ?? "");
         $html = "<textarea  id='mail_coach_message' name='cbse_coach_mail_options[message]' type='text' row='6' cols='50'>" . $value . "</textarea>";
@@ -87,16 +99,46 @@ class MailCoachCbseSettings extends CbseSettings
         echo $html;
     }
 
+    public function cronEnable()
+    {
+        $value = esc_attr($this->getOptions('cron_enable') ?? 1);
+        $html = '<input type="checkbox" id="cron_enable" name="cbse_coach_mail_options[cron_enable]" value="1"' . checked(1, $value, false) . '/>';
+        $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.', 'course-booking-system-extension') . '</label>';
+        if ($this->cbse_cron_enabled())
+        {
+            $lastRun = get_option('cbse_cron_quarterly_last_run');
+            $dateLastRun = new DateTime();
+            $dateLastRun->setTimestamp($lastRun);
+            $dateLastRun->setTimezone(wp_timezone());
+            $html .= '<p>' . __('Cron is active.', 'course-booking-system-extension') . ' ' . sprintf(__('Last run was: %s %s', 'course-booking-system-extension'), $dateLastRun->format(get_option('date_format')), $dateLastRun->format(get_option('time_format'))) . '</p>';
+        }
+
+        echo $html;
+    }
+
+    public function cronBeforeTime()
+    {
+        $value_hours = esc_attr($this->getOptions('cron_before_time_hour') ?? 2);
+        $value_minutes = esc_attr($this->getOptions('cron_before_time_minute') ?? 0);
+        echo "<input id='cron_before_time_hour' name='cbse_coach_mail_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . $value_hours . "' />" . __('Hour', 'course-booking-system-extension');
+        echo "<input id='cron_before_time_minute' name='cbse_coach_mail_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . $value_minutes . "' />" . __('Minute', 'course-booking-system-extension');
+    }
+
     public function renderSettingsPage()
     {
         settings_fields($this->sectionHeader);
     }
 
-    public function Validate($input)
+    public function validate($input)
     {
         do_action('qm/debug', 'MailCoachCbseSettings->Validate {input}', ['input' => json_encode($input),]);
         return $input;
     }
 
+    private function cbse_cron_enabled(): bool
+    {
+        return (bool)wp_next_scheduled('cbse_cron_quarterly_hook');
+
+    }
 
 }

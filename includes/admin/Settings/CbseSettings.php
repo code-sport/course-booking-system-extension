@@ -15,7 +15,7 @@ abstract class CbseSettings
         $this->optionGroup = $option_group;
         $this->optionName = $option_name;
 
-        register_setting($this->optionGroup, $this->optionName, [$this, 'Validate']);
+        register_setting($this->optionGroup, $this->optionName, [$this, 'validate']);
 
         //section name, form element name, callback for sanitization
         add_option($this->optionName, array());
@@ -34,7 +34,7 @@ abstract class CbseSettings
         settings_fields($this->optionGroup);
     }
 
-    abstract public function Validate($input);
+    abstract public function validate($input);
 
     /**
      * Show the fields for the settings
