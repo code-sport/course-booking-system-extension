@@ -76,28 +76,28 @@ class GeneralCbseSettings extends CbseSettings
     /* Categories */
     public function categoriesTitle()
     {
-        $value = esc_attr($this->getOptions('mail_categories_title') ?? __('Categories', 'course-booking-system-extension'));
-        echo "<input id='mail_categories_title' name='cbse_general_options[mail_categories_title]' type='text' value='" . $value . "' />";
+        $value = esc_attr($this->getOptions('categories_title') ?? __('Categories', 'course-booking-system-extension'));
+        echo "<input id='mail_categories_title' name='cbse_general_options[categories_title]' type='text' value='" . $value . "' />";
     }
 
     public function categoriesExclude()
     {
-        $value = esc_attr($this->getOptions('mail_categories_exclude') ?? "");
-        echo "<input id='mail_categories_exclude' name='cbse_general_options[mail_categories_exclude]' type='text' value='" . $value . "' />";
+        $value = esc_attr($this->getOptions('categories_exclude') ?? "");
+        echo "<input id='mail_categories_exclude' name='cbse_general_options[categories_exclude]' type='text' value='" . $value . "' />";
         echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', 'course-booking-system-extension') . "</p>";
     }
 
     /* Tags */
     public function tagsTitle()
     {
-        $value = esc_attr($this->getOptions('mail_tags_title') ?? __('Tags', 'course-booking-system-extension'));
-        echo "<input id='mail_tags_title' name='cbse_general_options[mail_tags_title]' type='text' value='" . $value . "' />";
+        $value = esc_attr($this->getOptions('tags_title') ?? __('Tags', 'course-booking-system-extension'));
+        echo "<input id='mail_tags_title' name='cbse_general_options[tags_title]' type='text' value='" . $value . "' />";
     }
 
     public function tagsExclude()
     {
-        $value = esc_attr($this->getOptions('mail_tags_exclude') ?? "");
-        echo "<input id='mail_tags_exclude' name='cbse_general_options[mail_tags_exclude]' type='text' value='" . $value . "' />";
+        $value = esc_attr($this->getOptions('tags_exclude') ?? "");
+        echo "<input id='mail_tags_exclude' name='cbse_general_options[tags_exclude]' type='text' value='" . $value . "' />";
         echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', 'course-booking-system-extension') . "</p>";
     }
 

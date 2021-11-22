@@ -4,6 +4,7 @@ namespace CBSE\Dto;
 
 require_once 'DtoBase.php';
 
+use CBSE\Helper\ArrayHelper;
 use DateTime;
 use WP_Error;
 use WP_Post;
@@ -16,8 +17,8 @@ class CourseInfoDate extends DtoBase
     private $timeslot;
     private $event;
     private $eventMeta;
-    private $event_categories;
-    private $event_tags;
+    private $eventCategories;
+    private $eventTags;
     private $column;
     private $column_meta;
     private $substitutes;
@@ -32,8 +33,8 @@ class CourseInfoDate extends DtoBase
         $this->timeslot = $this->loadTimeslots();
         $this->event = get_post($this->timeslot->event_id);
         $this->eventMeta = get_post($this->timeslot->event_id);
-        $this->event_categories = get_the_terms($this->timeslot->event_id, 'mp-event_category');
-        $this->event_tags = get_the_terms($this->timeslot->event_id, 'mp-event_tag');
+        $this->eventCategories = get_the_terms($this->timeslot->event_id, 'mp-event_category');
+        $this->eventTags = get_the_terms($this->timeslot->event_id, 'mp-event_tag');
         $this->column = get_post($this->timeslot->column_id);
         $this->column_meta = get_post($this->timeslot->column_id);
         $this->substitutes = $this->loadSubstitutes();
@@ -83,7 +84,17 @@ class CourseInfoDate extends DtoBase
      */
     public function getEventCategories()
     {
-        return $this->event_categories;
+        $exclude = get_option('cbse_general_options')['categories_exclude'];
+        return ArrayHelper::excludeAndColumn($this->eventCategories, $exclude, 'name');
+    }
+
+    /**
+     * @return false|WP_Error|WP_Term[]
+     */
+    public function getEventTags()
+    {
+        $exclude = get_option('cbse_general_options')['tags_exclude'];
+        return ArrayHelper::excludeAndColumn($this->eventTags, $exclude, 'name');
     }
 
     /**
@@ -140,13 +151,15 @@ class CourseInfoDate extends DtoBase
         return $this->date->format(get_option('date_format'));
     }
 
-    public function getCourseStartTimeString() : string
+    public function getCourseStartTimeString(): string
     {
         return date(get_option('time_format'), strtotime($this->timeslot->event_start));
     }
 
-    public function getCourseEndTimeString() : string
+    public function getCourseEndTimeString(): string
     {
         return date(get_option('time_format'), strtotime($this->timeslot->event_end));
     }
+
+
 }

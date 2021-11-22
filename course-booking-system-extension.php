@@ -21,6 +21,7 @@ define('PLUGIN_BASENAME', plugin_basename(__FILE__));
 function cbse_include_all()
 {
     require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/Helper/ArrayHelper.php';
     require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
     require_once plugin_dir_path(__FILE__) . 'includes/templates.php';
     require_once plugin_dir_path(__FILE__) . 'includes/dto/CourseInfoDate.php';
