@@ -10,10 +10,10 @@ abstract class CbseSettings
     protected $optionGroup;
     protected $optionName;
 
-    public function __construct($option_group, $option_name)
+    public function __construct($optionGroup, $optionName)
     {
-        $this->optionGroup = $option_group;
-        $this->optionName = $option_name;
+        $this->optionGroup = $optionGroup;
+        $this->optionName = $optionName;
 
         register_setting($this->optionGroup, $this->optionName, [$this, 'validate']);
 
@@ -50,7 +50,8 @@ abstract class CbseSettings
      */
     public function getTabHtmlLink($tabKey): string
     {
-        return '<a class="nav-tab  ' . $this->isTabActive($tabKey) . '"' . 'href="' . $this->getAdminUrl() . '">' . $this->tabName() . '</a>';
+        return '<a class="nav-tab  ' . $this->isTabActive($tabKey) . '"'
+            . 'href="' . $this->getAdminUrl() . '">' . $this->tabName() . '</a>';
 
 
     }

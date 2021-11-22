@@ -2,28 +2,79 @@
 
 namespace CBSE;
 
+use DateTime;
+
 class UserCovid19Status
 {
-    private int $userId;
+    private string $status;
+    private string $date;
 
     public function __construct(int $userId)
     {
-        $this->userId = $userId;
+        $this->status = get_the_author_meta('covid-19-status', $userId);
+        $this->date = get_the_author_meta('covid-19-status_date', $userId);
     }
 
     public function getStatusOrAll(): string
     {
-        return __($this->getStatus(), 'course-booking-system-extension') ??
+        return __($this->getValidatedStatus(), 'course-booking-system-extension') ??
             UserCovid19Status::getAll();
     }
 
-    /**
-     * @return string
-     */
-    private function getStatus(): string
+    private function getValidatedStatus(): string
     {
-        //TODO: Validate
-        return get_the_author_meta('covid-19-status', $this->userId);
+        if ($this->validate())
+        {
+            return $this->status;
+        }
+        return '';
+    }
+
+    public function validate(): bool
+    {
+        $valid = false;
+        $dateTime = DateTime::createFromFormat('Y-m-d', $this->date);
+        switch ($this->status)
+        {
+            case 'tested';
+                $valid = $this->validateTest($dateTime);
+                break;
+            case 'vaccinated';
+                $valid = $this->validateVaccinated($dateTime);
+                break;
+
+            case 'recovered';
+                $valid = $this->validateRecovered($dateTime);
+                break;
+            default:
+            case 'unknown';
+                break;
+        }
+        return $valid;
+    }
+
+    private function validateTest(DateTime $date): bool
+    {
+        $today = new DateTime("today");
+        $diff = $today->diff($date);
+        $diffDays = (integer)$diff->format("%R%a"); // Extract days count in interval
+        return $diffDays == 0;
+    }
+
+    private function validateVaccinated(DateTime $date): bool
+    {
+        $today = new DateTime("today");
+        $diff = $today->diff($date);
+        $diffDays = (integer)$diff->format("%R%a"); // Extract days count in interval
+        return ($diffDays < -14) && ($diffDays > -365);
+    }
+
+    private function validateRecovered(DateTime $date): bool
+    {
+        $today = new DateTime("today");
+        $diff = $today->diff($date);
+        $diffDays = (integer)$diff->format("%R%a"); // Extract days count in interval
+        return ($diffDays < -28) && ($diffDays > -182);
     }
 
     public static function getAll($separator = '|'): string
@@ -36,8 +87,13 @@ class UserCovid19Status
         return implode($separator, $all);
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
     public function getStatusOrEmpty(): string
     {
-        return __($this->getStatus(), 'course-booking-system-extension');
+        return __($this->getValidatedStatus(), 'course-booking-system-extension');
     }
 }
