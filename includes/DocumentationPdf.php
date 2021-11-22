@@ -8,11 +8,15 @@ use DateTime;
 class DocumentationPdf extends CBSE_PDF
 {
     private CourseInfoDate $course;
+    private $generalOptions;
+    private $pdfOptions;
 
     public function __construct(CourseInfoDate $courseInfoDate)
     {
         parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $this->course = $courseInfoDate;
+        $this->generalOptions = get_option('cbse_general_options');
+        $this->pdfOptions = get_option('cbse_pdf_header_options');
     }
 
     public function __destruct()
@@ -47,7 +51,9 @@ class DocumentationPdf extends CBSE_PDF
         // This method has several options, check the source code documentation for more information.
         $this->AddPage();
 
-        $this->AddHeader();
+        $this->addHeader();
+        $this->courseInfo();
+        $this->bookings();
 
         // Close and output PDF document
         // This method has several options, check the source code documentation for more information.
@@ -58,8 +64,6 @@ class DocumentationPdf extends CBSE_PDF
     {
         $courseInfo_categories = !empty($this->course->getEventCategories()) ? implode(", ", $this->course->getEventCategories()->event_categories) : '';
         $date_string = $this->course->getCourseDateString();
-        $time_start_string = $this->course->getCourseStartTimeString();
-        $time_end_string = $this->course->getCourseEndTimeString();
         $courseInfo_DateTime = $this->course->getCourseDateTimeString();
 
         // set document information
@@ -101,9 +105,9 @@ class DocumentationPdf extends CBSE_PDF
         $this->SetFont('dejavusans', '', 10, '', true);
     }
 
-    private function AddHeader()
+    private function addHeader()
     {
-        $image_id = get_option('cbse_pdf_header_options')['header_image_attachment_id'];
+        $image_id = $this->pdfOptions['header_image_attachment_id'];
         $image = wp_get_attachment_image($image_id, 700, "", array("class" => "img-responsive"));
         $title = get_option('cbse_pdf_header_options')['title'];
 
@@ -124,5 +128,103 @@ class DocumentationPdf extends CBSE_PDF
             $html .= "<h1>" . $title . "</h1>";
         }
         $this->writeHTML($html, true, false, true, false, '');
+    }
+
+    private function courseInfo()
+    {
+        $courseInfo_categories = !empty($this->course->getEventCategories()) ? implode(", ", $this->course->getEventCategories()->event_categories) : '';
+        $courseInfo_tags = !empty($this->course->getEventTags()) ? implode(", ", $this->course->getEventCategories
+        ()->event_categories) : '';
+        $courseInfo_DateTime = $this->course->getCourseDateTimeString();
+        $user_meta_course = get_userdata($this->course->getSubstitutes()->user_id ?? $this->course->getTimeslot()->user_id);
+        $userCovid19Status = new UserCovid19Status($user_meta_course->ID);
+
+        $w = array(55, 125);
+        $this->Ln();
+        $this->Cell($w[0], 6, __('Date and Time', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[1], 6, "$courseInfo_DateTime", 0, 0, 'L', false);
+        $this->Ln();
+        $this->Cell($w[0], 6, __('Title', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[1], 6, $this->course->getEvent()->post_title, 0, 0, 'L', false);
+        $this->Ln();
+        if (!empty($courseInfo->timeslot->description))
+        {
+            $this->Cell($w[0], 6, __('Description', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+            $this->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
+            $this->Ln();
+        }
+        if ($this->generalOptions['categories_exclude'] != '0')
+        {
+            $this->Cell($w[0], 6, ($this->generalOptions['categories_title'] ?? __('Categories', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
+            $this->Cell($w[1], 6, $courseInfo_categories, 0, 0, 'L', false);
+            $this->Ln();
+        }
+        if ($this->generalOptions['tags_exclude'] != '0')
+        {
+            $this->Cell($w[0], 6, ($this->generalOptions['tags_title'] ?? __('Tags', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
+            $this->Cell($w[1], 6, $courseInfo_tags, 0, 0, 'L', false);
+            $this->Ln();
+        }
+        $this->Cell($w[0], 6, __('Responsible coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[1], 6, "{$user_meta_course->last_name}, {$user_meta_course->first_name} ({$userCovid19Status->getStatusOrAll()})", 0, 0, 'L', false);
+        $this->Ln();
+        $this->Ln();
+        $this->Cell($w[0], 6, __('Signature coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[1], 6, "", 'B', 0, 'L', false);
+    }
+
+    private function bookings()
+    {
+        $html_attendees = '<h2>' . __('Participants', 'course-booking-system-extension') . ':</h2>';
+
+        $this->Ln();
+        $this->Ln();
+        $this->writeHTML($html_attendees, true, false, true, false, 'L');
+
+        // Table header
+        $w = array(10, 80, 35, 55);
+
+        $this->SetFillColor(79, 79, 79);
+        $this->SetTextColor(255);
+        $this->SetDrawColor(0, 0, 0);
+        $this->SetLineWidth(0.3);
+        $this->SetFont('', 'B');
+
+        $this->Cell($w[0], 10, "", 1, 0, 'C', 1);
+        $this->Cell($w[1], 10, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
+        $this->SetFont('', 'B', 4, '', true);
+        $this->Cell($w[2], 10, UserCovid19Status::getAll(), 1, 0, 'C', 1);
+        $this->SetFont('', 'B', 10, '', true);
+        $this->Cell($w[3], 10, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
+        $this->Ln();
+
+        //Table body
+        $bookingNumber = 1;
+        $fill = 0;
+
+        $this->SetFillColor(237, 237, 237);
+        $this->SetTextColor(0);
+        $this->SetFont('');
+
+        foreach ($this->course->getBookings() as $booking)
+        {
+            $this->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
+            $this->Cell($w[1], 10, trim($booking->last_name) . ", " . trim($booking->first_name), 1, 0, 'L', $fill);
+            $this->Cell($w[2], 10, __($booking->covid19_status, 'course-booking-system-extension'), 1, 0, 'C', $fill);
+            $this->Cell($w[3], 10, "", 1, 0, 'C', $fill);
+            $this->Ln();
+            $fill = !$fill;
+            $bookingNumber++;
+        }
+        for ($i = $bookingNumber; $i <= $this->course->getEventMeta()->attendance; $i++)
+        {
+            $this->Cell($w[0], 10, $i, 1, 0, 'R', $fill);
+            $this->Cell($w[1], 10, "", 1, 0, 'L', $fill);
+            $this->Cell($w[2], 10, "", 1, 0, 'C', $fill);
+            $this->Cell($w[3], 10, "", 1, 0, 'C', $fill);
+            $this->Ln();
+            $fill = !$fill;
+        }
+
     }
 }

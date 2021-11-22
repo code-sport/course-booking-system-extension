@@ -24,6 +24,7 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . 'includes/Helper/ArrayHelper.php';
     require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
     require_once plugin_dir_path(__FILE__) . 'includes/templates.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/UserCovid19Status.php';
     require_once plugin_dir_path(__FILE__) . 'includes/dto/CourseInfoDate.php';
 
 
@@ -35,7 +36,7 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . 'includes/shortcodes/ShortcodeUserCovid19Status.php';
 
     // User
-    require_once plugin_dir_path(__FILE__) . 'includes/admin/UserCovid19Status.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/admin/UserCovid19StatusSettings.php';
     require_once plugin_dir_path(__FILE__) . 'includes/admin/UserInformMethod.php';
 
 }

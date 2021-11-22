@@ -5,6 +5,7 @@ namespace CBSE\Dto;
 require_once 'DtoBase.php';
 
 use CBSE\Helper\ArrayHelper;
+use CBSE\UserCovid19Status;
 use DateTime;
 use WP_Error;
 use WP_Post;
@@ -70,8 +71,8 @@ class CourseInfoDate extends DtoBase
             $booking->first_name = $user_meta->first_name;
             $booking->last_name = $user_meta->last_name;
             $booking->nickname = $user_meta->nickname;
-            $booking->covid19_status = get_the_author_meta('covid-19-status', $booking->user_id);
-            // TODO Validate status with date
+            $covid19Status = new UserCovid19Status($booking->user_id);
+            $booking->covid19_status = $covid19Status->getStatusOrEmpty();
             $bookings[] = $booking;
         }
         usort($bookings, fn($a, $b) => strcmp($a->last_name, $b->last_name));
@@ -165,11 +166,6 @@ class CourseInfoDate extends DtoBase
         return $this->date->format(get_option('date_format'));
     }
 
-    public function getCourseDate(): DateTime
-    {
-        return $this->date;
-    }
-
     public function getCourseStartTimeString(): string
     {
         return date(get_option('time_format'), strtotime($this->timeslot->event_start));
@@ -180,12 +176,25 @@ class CourseInfoDate extends DtoBase
         return date(get_option('time_format'), strtotime($this->timeslot->event_end));
     }
 
+    public function getCourseDate(): DateTime
+    {
+        return $this->date;
+    }
+
     /**
      * @return int
      */
     public function getCourseId(): int
     {
         return $this->courseId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubstitutes()
+    {
+        return $this->substitutes;
     }
 
 

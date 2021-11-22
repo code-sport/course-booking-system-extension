@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE;
+namespace CBSE\Admin;
 
-class UserCovid19Status
+class UserCovid19StatusSettings
 {
     public function __construct()
     {
@@ -23,13 +23,13 @@ class UserCovid19Status
         ?>
 
         <h3><?php
-            _e("Covid-19 Status", 'course_booking_system_extension'); ?></h3>
+            _e("Covid-19 Status", 'course-booking-system-extension'); ?></h3>
 
         <table class="form-table">
             <tr>
                 <th scope="row"><label
                             for="covid-19-status"><?php
-                        _e("Status", 'course_booking_system_extension'); ?></label></th>
+                        _e("Status", 'course-booking-system-extension'); ?></label></th>
                 <td>
                     <?php
                     //get dropdown saved value
@@ -41,30 +41,30 @@ class UserCovid19Status
                             <?php
                             echo ($selected == "tested") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('tested', 'course_booking_system_extension') ?>
+                            _e('tested', 'course-booking-system-extension') ?>
                         </option>
                         <option value="vaccinated"
                             <?php
                             echo ($selected == "vaccinated") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('vaccinated', 'course_booking_system_extension') ?>
+                            _e('vaccinated', 'course-booking-system-extension') ?>
                         </option>
                         <option value="recovered"
                             <?php
                             echo ($selected == "recovered") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('recovered', 'course_booking_system_extension') ?>
+                            _e('recovered', 'course-booking-system-extension') ?>
                         </option>
                         <option value="unknown"
                             <?php
                             echo (empty($selected) || $selected == "unknown") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('unknown', 'course_booking_system_extension') ?>
+                            _e('unknown', 'course-booking-system-extension') ?>
                         </option>
                     </select><br/>
                     <span class="description">
                         <?php
-                        _e("Please select your covid-19 status.", 'course_booking_system_extension'); ?>
+                        _e("Please select your covid-19 status.", 'course-booking-system-extension'); ?>
                     </span>
                 </td>
             </tr>
@@ -72,7 +72,7 @@ class UserCovid19Status
                 <th scope="row">
                     <label for="covid-19-status_date">
                         <?php
-                        _e("Date", 'course_booking_system_extension'); ?>
+                        _e("Date", 'course-booking-system-extension'); ?>
                     </label>
                 </th>
                 <td>
@@ -88,7 +88,7 @@ class UserCovid19Status
                     <span
                             class="description">
                         <?php
-                        _e('Select the date of your covid-19-status', 'course_booking_system_extension') ?>
+                        _e('Select the date of your covid-19-status', 'course-booking-system-extension') ?>
                     </span>
                 </td>
             </tr>
@@ -126,4 +126,4 @@ class UserCovid19Status
     }
 }
 
-$var = new UserCovid19Status();
+$var = new UserCovid19StatusSettings();
