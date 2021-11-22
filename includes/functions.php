@@ -71,15 +71,3 @@ function cbse_courses_in_time(DateTime $timeFrom, DateTime $timeTo)
     return $wpdb->get_results($wpdb->prepare($query, $timeFrom->format('Y-m-d H:i:s'), $timeTo->format('Y-m-d H:i:s')));
 }
 
-function cbse_get_wp_filesystem()
-{
-    global $wp_filesystem;
-
-    if (is_null($wp_filesystem))
-    {
-        require_once ABSPATH . '/wp-admin/includes/file.php';
-        WP_Filesystem();
-    }
-
-    return $wp_filesystem;
-}

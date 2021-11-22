@@ -59,5 +59,19 @@ function cbse_get_tcpdf(): string // TODO find a better way
     return $tpcPdfFile;
 }
 
+function cbse_get_wp_filesystem()
+{
+    global $wp_filesystem;
+
+    if (is_null($wp_filesystem))
+    {
+        require_once ABSPATH . '/wp-admin/includes/file.php';
+        WP_Filesystem();
+    }
+
+    return $wp_filesystem;
+}
+
+
 require_once cbse_get_tcpdf();
 require_once 'CBSE_PDF.php';
