@@ -36,6 +36,9 @@ class UserCovid19Status
         $dateTime = DateTime::createFromFormat('Y-m-d', $this->date);
         switch ($this->status)
         {
+            default:
+            case 'unknown';
+                break;
             case 'tested';
                 $valid = $this->validateTest($dateTime);
                 break;
@@ -46,9 +49,6 @@ class UserCovid19Status
             case 'recovered';
                 $valid = $this->validateRecovered($dateTime);
                 break;
-            default:
-            case 'unknown';
-                break;
         }
         return $valid;
     }
@@ -57,7 +57,8 @@ class UserCovid19Status
     {
         $today = new DateTime("today");
         $diff = $today->diff($date);
-        $diffDays = (integer)$diff->format("%R%a"); // Extract days count in interval
+        // Extract days count in interval
+        $diffDays = (integer)$diff->format("%R%a");
         return $diffDays == 0;
     }
 
@@ -65,7 +66,8 @@ class UserCovid19Status
     {
         $today = new DateTime("today");
         $diff = $today->diff($date);
-        $diffDays = (integer)$diff->format("%R%a"); // Extract days count in interval
+        // Extract days count in interval
+        $diffDays = (integer)$diff->format("%R%a");
         return ($diffDays < -14) && ($diffDays > -365);
     }
 
@@ -73,7 +75,8 @@ class UserCovid19Status
     {
         $today = new DateTime("today");
         $diff = $today->diff($date);
-        $diffDays = (integer)$diff->format("%R%a"); // Extract days count in interval
+        // Extract days count in interval
+        $diffDays = (integer)$diff->format("%R%a");
         return ($diffDays < -28) && ($diffDays > -182);
     }
 
