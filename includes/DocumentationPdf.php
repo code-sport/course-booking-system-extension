@@ -209,7 +209,7 @@ class DocumentationPdf extends CBSE_PDF
         foreach ($this->course->getBookings() as $booking)
         {
             $this->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
-            $this->Cell($w[1], 10, trim($booking->last_name) . ", " . trim($booking->first_name), 1, 0, 'L', $fill);
+            $this->Cell($w[1], 10, trim($booking->lastName) . ", " . trim($booking->firstName), 1, 0, 'L', $fill);
             $this->Cell($w[2], 10, __($booking->covid19_status, 'course-booking-system-extension'), 1, 0, 'C', $fill);
             $this->Cell($w[3], 10, "", 1, 0, 'C', $fill);
             $this->Ln();

@@ -79,8 +79,8 @@ class DocumentationMail extends Mail
     private function getMessage(): string
     {
         $message = $this->mailSettings['message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension');
-        $message = str_replace('%first_name%', $this->user->first_name, $message);
-        $message = str_replace('%last_name%', $this->user->last_name, $message);
+        $message = str_replace('%first_name%', $this->user->firstName, $message);
+        $message = str_replace('%last_name%', $this->user->lastName, $message);
         $message = str_replace('%course_date%', $this->course->getCourseDateString(), $message);
         $message = str_replace('%course_start%', $this->course->getCourseStartTimeString(), $message);
         $message = str_replace('%course_end%', $this->course->getCourseEndTimeString(), $message);

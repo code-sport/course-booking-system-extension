@@ -21,7 +21,7 @@ class CourseInfoDate extends DtoBase
     private $eventCategories;
     private $eventTags;
     private $column;
-    private $column_meta;
+    private $columnMeta;
     private $substitutes;
     private array $bookings;
 
@@ -37,7 +37,7 @@ class CourseInfoDate extends DtoBase
         $this->eventCategories = get_the_terms($this->timeslot->event_id, 'mp-event_category');
         $this->eventTags = get_the_terms($this->timeslot->event_id, 'mp-event_tag');
         $this->column = get_post($this->timeslot->column_id);
-        $this->column_meta = get_post($this->timeslot->column_id);
+        $this->columnMeta = get_post($this->timeslot->column_id);
         $this->substitutes = $this->loadSubstitutes();
         $this->bookings = $this->loadBookings();
     }
@@ -48,7 +48,8 @@ class CourseInfoDate extends DtoBase
     private function loadTimeslots()
     {
         global $wpdb;
-        return $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_data') . "` WHERE `id` = %d;", $this->courseId));
+        return $wpdb->get_row(
+            $wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_data') . "` WHERE `id` = %d;", $this->courseId));
     }
 
     /**
@@ -57,20 +58,22 @@ class CourseInfoDate extends DtoBase
     private function loadSubstitutes()
     {
         global $wpdb;
-        return $wpdb->get_row($wpdb->prepare("SELECT `user_id` FROM `" . $this->datebaseTableName('mp_timetable_substitutes') . "` WHERE `course_id` = %d AND `date` = '%s';", $this->courseId, $this->date->format('Y-m-d')));
+        return $wpdb->get_row(
+            $wpdb->prepare("SELECT `user_id` FROM `" . $this->datebaseTableName('mp_timetable_substitutes') . "` WHERE `course_id` = %d AND `date` = '%s';", $this->courseId, $this->date->format('Y-m-d')));
     }
 
     private function loadBookings(): array
     {
         global $wpdb;
-        $bookings_raw = $wpdb->get_results($wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_bookings') . "` WHERE `course_id` =  %d AND `date` = %s;", $this->courseId, $this->date->format('Y-m-d')));
+        $bookings_raw = $wpdb->get_results(
+            $wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_bookings') . "` WHERE `course_id` =  %d AND `date` = %s;", $this->courseId, $this->date->format('Y-m-d')));
         $bookings = array();
         foreach ($bookings_raw as $booking)
         {
-            $user_meta = get_userdata($booking->user_id);
-            $booking->first_name = $user_meta->first_name;
-            $booking->last_name = $user_meta->last_name;
-            $booking->nickname = $user_meta->nickname;
+            $userMeta = get_userdata($booking->user_id);
+            $booking->firstName = $userMeta->first_name;
+            $booking->lastName = $userMeta->last_name;
+            $booking->nickname = $userMeta->nickname;
             $covid19Status = new UserCovid19Status($booking->user_id);
             $booking->covid19_status = $covid19Status->getStatusOrEmpty();
             $bookings[] = $booking;
@@ -155,10 +158,10 @@ class CourseInfoDate extends DtoBase
 
     public function getCourseDateTimeString(): string
     {
-        $date_string = $this->getCourseDateString();
-        $time_start_string = $this->getCourseStartTimeString();
-        $time_end_string = $this->getCourseEndTimeString();
-        return "{$date_string} {$time_start_string} - {$time_end_string}";
+        $courseDateString = $this->getCourseDateString();
+        $courseStartTimeString = $this->getCourseStartTimeString();
+        $courseEndTimeString = $this->getCourseEndTimeString();
+        return "{$courseDateString} {$courseStartTimeString} - {$courseEndTimeString}";
     }
 
     public function getCourseDateString(): string
@@ -195,6 +198,14 @@ class CourseInfoDate extends DtoBase
     public function getSubstitutes()
     {
         return $this->substitutes;
+    }
+
+    /**
+     * @return array|WP_Post|null
+     */
+    public function getColumnMeta()
+    {
+        return $this->columnMeta;
     }
 
 

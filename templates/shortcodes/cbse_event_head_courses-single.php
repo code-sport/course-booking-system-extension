@@ -28,7 +28,7 @@ elseif ($difference > 0)
     <ol>
         <?php
         foreach ($args['courseInfo']->getBookings() as $booking) { ?>
-            <li><?= trim($booking->last_name) ?>, <?= trim($booking->first_name) ?>
+            <li><?= trim($booking->lastName) ?>, <?= trim($booking->firstName) ?>
                 <?php
                 if (!empty($booking->covid19_status)) : ?>
                     (<?php
