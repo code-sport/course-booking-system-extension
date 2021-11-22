@@ -10,7 +10,7 @@ class Templates
         add_action('wp_head', [$this, 'cbse_required_files']);
     }
 
-    function cbse_required_files()
+    public function cbse_required_files()
     {
         do_action('qm/info', 'cbse_required_files');
         // Shortcodes / Table Header
@@ -30,7 +30,7 @@ class Templates
         }
     }
 
-    function cbs_required_file_event_head_courses_single()
+    public function cbs_required_file_event_head_courses_single()
     {
         ?>
         <div class="notice">
