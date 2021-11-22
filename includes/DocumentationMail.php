@@ -35,11 +35,12 @@ class DocumentationMail extends Mail
         $subject = $this->getSubject();
         $message = $this->getMessage();
         $headers = $this->getHeaders();
-        //$docuPDF = new DocumentationPdf($this->course);
-        $attachments = array(/*$docuPDF->getPdfFile()*/);
+        $docuPDF = new DocumentationPdf($this->course);
+        $docuPDF->generatePdf();
+        $attachments = array($docuPDF->getPdfFile());
 
         $mailSent = wp_mail($to, $subject, $message, $headers, $attachments);
-        //$docuPDF->unlink();
+        $docuPDF->unlink();
 
 
         return $mailSent;

@@ -85,7 +85,7 @@ class CourseInfoDate extends DtoBase
     public function getEventCategories()
     {
         $exclude = get_option('cbse_general_options')['categories_exclude'];
-        if ($exclude != '0')
+        if ($exclude != '0' && is_array($this->eventCategories))
         {
             return ArrayHelper::excludeAndColumn($this->eventCategories, $exclude, 'name');
         }
@@ -101,7 +101,7 @@ class CourseInfoDate extends DtoBase
     public function getEventTags()
     {
         $exclude = get_option('cbse_general_options')['tags_exclude'];
-        if ($exclude != '0')
+        if ($exclude != '0' && is_array($this->eventTags))
         {
             return ArrayHelper::excludeAndColumn($this->eventTags, $exclude, 'name');
         }
@@ -165,6 +165,11 @@ class CourseInfoDate extends DtoBase
         return $this->date->format(get_option('date_format'));
     }
 
+    public function getCourseDate(): DateTime
+    {
+        return $this->date;
+    }
+
     public function getCourseStartTimeString(): string
     {
         return date(get_option('time_format'), strtotime($this->timeslot->event_start));
@@ -173,6 +178,14 @@ class CourseInfoDate extends DtoBase
     public function getCourseEndTimeString(): string
     {
         return date(get_option('time_format'), strtotime($this->timeslot->event_end));
+    }
+
+    /**
+     * @return int
+     */
+    public function getCourseId(): int
+    {
+        return $this->courseId;
     }
 
 

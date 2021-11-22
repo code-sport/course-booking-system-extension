@@ -3,6 +3,7 @@
 use CBSE\CBSE_PDF;
 use CBSE\DocumentationPdf;
 
+// TODO create own DTO
 function cbse_courses_for_head($userId, $pastdays = 7, $futuredays = 7)
 {
     if (!is_int($userId) || $userId < 0)
