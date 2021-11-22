@@ -87,10 +87,10 @@ class DocumentationPdf extends CBSE_PDF
         // set margins
         $this->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_LEFT);
         $this->SetHeaderMargin(0);
-        $this->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $this->SetFooterMargin(7);
 
         // set auto page breaks
-        $this->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $this->SetAutoPageBreak(true, 7);
 
         // set image scale factor
         $this->setImageScale(PDF_IMAGE_SCALE_RATIO);
