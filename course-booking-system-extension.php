@@ -23,7 +23,7 @@ function cbse_include_all()
     require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
     require_once plugin_dir_path(__FILE__) . 'includes/Helper/ArrayHelper.php';
     require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
-    require_once plugin_dir_path(__FILE__) . 'includes/templates.php';
+    require_once plugin_dir_path(__FILE__) . 'includes/Templates.php';
     require_once plugin_dir_path(__FILE__) . 'includes/UserCovid19Status.php';
     require_once plugin_dir_path(__FILE__) . 'includes/dto/CourseInfoDate.php';
 

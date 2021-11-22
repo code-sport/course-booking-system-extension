@@ -1,6 +1,8 @@
 <?php
 
-class CBSE_Templates
+namespace CBSE;
+
+class Templates
 {
     public function init()
     {
@@ -38,5 +40,5 @@ class CBSE_Templates
     }
 }
 
-$templates = new CBSE_Templates();
+$templates = new Templates();
 $templates->init();
