@@ -35,7 +35,7 @@ class Templates
     {
         ?>
         <div class="notice">
-            <p><?= sprintf(__('The plugin "Course Booking System Extension" could not add the file "%s" to your theme. This file is required to ensure that the plugin works without restrictions. Please add the file to your theme manually or fix the error that the file could not be copied.', 'course-booking-system-extension'), 'cbse_event_head_courses-single') ?></p>
+            <p><?= sprintf(__('The plugin "Course Booking System Extension" could not add the file "%s" to your theme. This file is required to ensure that the plugin works without restrictions. Please add the file to your theme manually or fix the error that the file could not be copied.', CBSE_LANGUAGE_DOMAIN), 'cbse_event_head_courses-single') ?></p>
         </div>
         <?php
     }

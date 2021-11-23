@@ -18,14 +18,14 @@ class UserInformMethod
         ?>
 
         <h3><?php
-            _e("Course Booking System Extension Settings", 'course_booking_system_extension'); ?></h3>
+            _e("Course Booking System Extension Settings", CBSE_LANGUAGE_DOMAIN); ?></h3>
 
         <table class="form-table">
             <tr>
                 <th scope="row">
                     <label for="cbse_inform_method">
                         <?php
-                        _e("Auto inform via", 'course_booking_system_extension'); ?>
+                        _e("Auto inform via", CBSE_LANGUAGE_DOMAIN); ?>
                     </label>
                 </th>
                 <td>
@@ -36,18 +36,18 @@ class UserInformMethod
                     <select name="cbse-auto-inform" id="cbse_inform_method">
                         <option value="none" <?= ($selected == "none") ? 'selected="selected"' : '' ?>>
                             <?php
-                            _e('none', 'course_booking_system_extension') ?>
+                            _e('none', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
                         <option value="email"
                             <?= (empty($selected) || $selected == "email") ? 'selected="selected"' : '' ?>>
                             <?php
-                            _e('email', 'course_booking_system_extension') ?>
+                            _e('email', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
                     </select><br/>
                     <span
                             class="description">
                         <?php
-                        _e("Please select how you want to be informed.", 'course_booking_system_extension'); ?>
+                        _e("Please select how you want to be informed.", CBSE_LANGUAGE_DOMAIN); ?>
                     </span>
                 </td>
             </tr>
@@ -55,7 +55,7 @@ class UserInformMethod
                 <th scope="row">
                     <label for="cbse_auto_print">
                         <?php
-                        _e("Auto inform via", 'course_booking_system_extension'); ?>
+                        _e("Auto inform via", CBSE_LANGUAGE_DOMAIN); ?>
                     </label>
                 </th>
                 <td>
@@ -74,7 +74,7 @@ class UserInformMethod
                     <span
                             class="description">
                         <?php
-                        _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.", 'course_booking_system_extension');
+                        _e("If activated, the documentation Sport operation in the hall will be printed automatically, as far as a printer is set up.", CBSE_LANGUAGE_DOMAIN);
                         ?>
                     </span>
                 </td>

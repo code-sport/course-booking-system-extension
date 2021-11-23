@@ -67,7 +67,7 @@ class GeneralCbseSettings extends CbseSettings
     public function sectionGeneral()
     {
         $text = '<p>';
-        $text .= __('Here you can set all general options.', 'course-booking-system-extension');
+        $text .= __('Here you can set all general options.', CBSE_LANGUAGE_DOMAIN);
         $text .= '</p>';
 
         echo $text;
@@ -76,7 +76,7 @@ class GeneralCbseSettings extends CbseSettings
     /* Categories */
     public function categoriesTitle()
     {
-        $value = esc_attr($this->getOptions('categories_title') ?? __('Categories', 'course-booking-system-extension'));
+        $value = esc_attr($this->getOptions('categories_title') ?? __('Categories', CBSE_LANGUAGE_DOMAIN));
         echo "<input id='mail_categories_title' name='cbse_general_options[categories_title]' type='text' value='" . $value . "' />";
     }
 
@@ -84,13 +84,13 @@ class GeneralCbseSettings extends CbseSettings
     {
         $value = esc_attr($this->getOptions('categories_exclude') ?? "");
         echo "<input id='mail_categories_exclude' name='cbse_general_options[categories_exclude]' type='text' value='" . $value . "' />";
-        echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', 'course-booking-system-extension') . "</p>";
+        echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', CBSE_LANGUAGE_DOMAIN) . "</p>";
     }
 
     /* Tags */
     public function tagsTitle()
     {
-        $value = esc_attr($this->getOptions('tags_title') ?? __('Tags', 'course-booking-system-extension'));
+        $value = esc_attr($this->getOptions('tags_title') ?? __('Tags', CBSE_LANGUAGE_DOMAIN));
         echo "<input id='mail_tags_title' name='cbse_general_options[tags_title]' type='text' value='" . $value . "' />";
     }
 
@@ -98,7 +98,7 @@ class GeneralCbseSettings extends CbseSettings
     {
         $value = esc_attr($this->getOptions('tags_exclude') ?? "");
         echo "<input id='mail_tags_exclude' name='cbse_general_options[tags_exclude]' type='text' value='" . $value . "' />";
-        echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', 'course-booking-system-extension') . "</p>";
+        echo "<p class='description'>" . __('0 will hide this field. Please add the values comma seperated.', CBSE_LANGUAGE_DOMAIN) . "</p>";
     }
 
 

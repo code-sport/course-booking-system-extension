@@ -15,7 +15,8 @@
  */
 
 defined('ABSPATH') || exit;
-define('PLUGIN_BASENAME', plugin_basename(__FILE__));
+define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));
+define('CBSE_LANGUAGE_DOMAIN', 'course-booking-system-extension');
 
 
 function cbse_include_all()

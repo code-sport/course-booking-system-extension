@@ -17,7 +17,7 @@ class UserCovid19Status
 
     public function getStatusOrAll(): string
     {
-        return __($this->getValidatedStatus(), 'course-booking-system-extension') ??
+        return __($this->getValidatedStatus(), CBSE_LANGUAGE_DOMAIN) ??
             UserCovid19Status::getAll();
     }
 
@@ -83,9 +83,9 @@ class UserCovid19Status
     public static function getAll($separator = '|'): string
     {
         $all = array(
-            __('tested', 'course-booking-system-extension'),
-            __('vaccinated', 'course-booking-system-extension'),
-            __('recovered', 'course-booking-system-extension')
+            __('tested', CBSE_LANGUAGE_DOMAIN),
+            __('vaccinated', CBSE_LANGUAGE_DOMAIN),
+            __('recovered', CBSE_LANGUAGE_DOMAIN)
         );
         return implode($separator, $all);
     }
@@ -97,6 +97,6 @@ class UserCovid19Status
 
     public function getStatusOrEmpty(): string
     {
-        return __($this->getValidatedStatus(), 'course-booking-system-extension');
+        return __($this->getValidatedStatus(), CBSE_LANGUAGE_DOMAIN);
     }
 }

@@ -144,41 +144,41 @@ class DocumentationPdf extends CBSE_PDF
 
         $w = array(55, 125);
         $this->Ln();
-        $this->Cell($w[0], 6, __('Date and Time', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[0], 6, __('Date and Time', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);
         $this->Cell($w[1], 6, "$courseInfoDateTime", 0, 0, 'L', false);
         $this->Ln();
-        $this->Cell($w[0], 6, __('Title', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[0], 6, __('Title', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);
         $this->Cell($w[1], 6, $this->course->getEvent()->post_title, 0, 0, 'L', false);
         $this->Ln();
         if (!empty($courseInfo->timeslot->description))
         {
-            $this->Cell($w[0], 6, __('Description', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+            $this->Cell($w[0], 6, __('Description', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);
             $this->Cell($w[1], 6, $courseInfo->timeslot->description, 0, 0, 'L', false);
             $this->Ln();
         }
         if ($this->generalOptions['categories_exclude'] != '0')
         {
-            $this->Cell($w[0], 6, ($this->generalOptions['categories_title'] ?? __('Categories', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
+            $this->Cell($w[0], 6, ($this->generalOptions['categories_title'] ?? __('Categories', CBSE_LANGUAGE_DOMAIN)) . ':', 0, 0, 'L', false);
             $this->Cell($w[1], 6, $courseInfoCategories, 0, 0, 'L', false);
             $this->Ln();
         }
         if ($this->generalOptions['tags_exclude'] != '0')
         {
-            $this->Cell($w[0], 6, ($this->generalOptions['tags_title'] ?? __('Tags', 'course-booking-system-extension')) . ':', 0, 0, 'L', false);
+            $this->Cell($w[0], 6, ($this->generalOptions['tags_title'] ?? __('Tags', CBSE_LANGUAGE_DOMAIN)) . ':', 0, 0, 'L', false);
             $this->Cell($w[1], 6, $courseInfoTags, 0, 0, 'L', false);
             $this->Ln();
         }
-        $this->Cell($w[0], 6, __('Responsible coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[0], 6, __('Responsible coach', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);
         $this->Cell($w[1], 6, "{$userMeta->last_name}, {$userMeta->first_name} ({$userCovid19Status->getStatusOrAll()})", 0, 0, 'L', false);
         $this->Ln();
         $this->Ln();
-        $this->Cell($w[0], 6, __('Signature coach', 'course-booking-system-extension') . ':', 0, 0, 'L', false);
+        $this->Cell($w[0], 6, __('Signature coach', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);
         $this->Cell($w[1], 6, "", 'B', 0, 'L', false);
     }
 
     private function bookings()
     {
-        $htmlAttendees = '<h2>' . __('Participants', 'course-booking-system-extension') . ':</h2>';
+        $htmlAttendees = '<h2>' . __('Participants', CBSE_LANGUAGE_DOMAIN) . ':</h2>';
 
         $this->Ln();
         $this->Ln();
@@ -194,11 +194,11 @@ class DocumentationPdf extends CBSE_PDF
         $this->SetFont('', 'B');
 
         $this->Cell($w[0], 10, "", 1, 0, 'C', 1);
-        $this->Cell($w[1], 10, __('Surname, Firstname (legible!)', 'course-booking-system-extension'), 1, 0, 'C', 1);
+        $this->Cell($w[1], 10, __('Surname, Firstname (legible!)', CBSE_LANGUAGE_DOMAIN), 1, 0, 'C', 1);
         $this->SetFont('', 'B', 4, '', true);
         $this->Cell($w[2], 10, UserCovid19Status::getAll(), 1, 0, 'C', 1);
         $this->SetFont('', 'B', 10, '', true);
-        $this->Cell($w[3], 10, __('Signature', 'course-booking-system-extension'), 1, 0, 'C', 1);
+        $this->Cell($w[3], 10, __('Signature', CBSE_LANGUAGE_DOMAIN), 1, 0, 'C', 1);
         $this->Ln();
 
         //Table body
@@ -213,7 +213,7 @@ class DocumentationPdf extends CBSE_PDF
         {
             $this->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
             $this->Cell($w[1], 10, trim($booking->lastName) . ", " . trim($booking->firstName), 1, 0, 'L', $fill);
-            $this->Cell($w[2], 10, __($booking->covid19_status, 'course-booking-system-extension'), 1, 0, 'C', $fill);
+            $this->Cell($w[2], 10, __($booking->covid19_status, CBSE_LANGUAGE_DOMAIN), 1, 0, 'C', $fill);
             $this->Cell($w[3], 10, "", 1, 0, 'C', $fill);
             $this->Ln();
             $fill = !$fill;

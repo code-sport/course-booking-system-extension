@@ -67,7 +67,7 @@ class MailCoachCbseSettings extends CbseSettings
     public function sectionCoachMailText()
     {
         $text = '<p>';
-        $text .= __('Here you can set all options for mail which are sent to the coaches.', 'course-booking-system-extension');
+        $text .= __('Here you can set all options for mail which are sent to the coaches.', CBSE_LANGUAGE_DOMAIN);
         $text .= '</p>';
 
         echo $text;
@@ -75,25 +75,33 @@ class MailCoachCbseSettings extends CbseSettings
 
     public function subject()
     {
-        $value = esc_attr($this->getOptions('subject') ?? __('Sports operation documentation', 'course-booking-system-extension'));
+        $value = esc_attr($this->getOptions('subject') ?? __('Sports operation documentation', CBSE_LANGUAGE_DOMAIN));
         echo "<input id='subject' name='cbse_coach_mail_options[subject]' type='text' value='" . $value . "' />";
-        echo "<p class='description'>" . __('Prefix of the subject', 'course-booking-system-extension') . "</p>";
+        echo "<p class='description'>" . __('Prefix of the subject', CBSE_LANGUAGE_DOMAIN) . "</p>";
     }
 
     public function message()
     {
+        $items = array(
+            __('%first_name% will be replaced with the first name of the coach.', CBSE_LANGUAGE_DOMAIN),
+            __('%last_name% will be replaced with the last name of the coach.', CBSE_LANGUAGE_DOMAIN),
+            __('%course_date% will be replaced with the date of the course.', CBSE_LANGUAGE_DOMAIN),
+            __('%course_start% will be replaced with the start time of the course.', CBSE_LANGUAGE_DOMAIN),
+            __('%course_end% will be replaced with the end time of the course.', CBSE_LANGUAGE_DOMAIN),
+            __('%course_title% will be replaced with the name of the course.', CBSE_LANGUAGE_DOMAIN),
+            __('%number_of_bookings% will be replaced with number of bookings.', CBSE_LANGUAGE_DOMAIN),
+            __('%maximum_participants% will be replaced with the maximum of participants in the course.',
+                CBSE_LANGUAGE_DOMAIN),
+            __('%booking_names% will be replaced with the names of the booking.', CBSE_LANGUAGE_DOMAIN)
+        );
+
         $value = esc_attr($this->getOptions('message') ?? "");
         $html = "<textarea  id='mail_coach_message' name='cbse_coach_mail_options[message]' type='text' row='6' cols='50'>" . $value . "</textarea>";
         $html .= "<ul class='description'>";
-        $html .= "<li>{__('%first_name% will be replaced with the first name of the coach.', 'course-booking-system-extension')}</li>";
-        $html .= "<li>{__('%last_name% will be replaced with the last name of the coach.', 'course-booking-system-extension')}</li>";
-        $html .= "<li>{__('%course_date% will be replaced with the date of the course.', 'course-booking-system-extension')}</li>";
-        $html .= "<li>{__('%course_start% will be replaced with the start time of the course.', 'course-booking-system-extension')}</li>";
-        $html .= "<li>{__('%course_end% will be replaced with the end time of the course.', 'course-booking-system-extension')}</li>";
-        $html .= "<li>{__('%course_title% will be replaced with the name of the course.', 'course-booking-system-extension') }</li>";
-        $html .= "<li>{__('%number_of_bookings% will be replaced with number of bookings.', 'course-booking-system-extension') }</li>";
-        $html .= "<li>{__('%maximum_participants% will be replaced with the maximum of participants in the course.', 'course-booking-system-extension')}</li>";
-        $html .= "<li>{__('%booking_names% will be replaced with the names of the booking.', 'course-booking-system-extension') }</li>";
+        foreach ($items as $item)
+        {
+            $html .= "<li>{$item}</li>";
+        }
         $html .= '</ul>';
 
         echo $html;
@@ -103,14 +111,14 @@ class MailCoachCbseSettings extends CbseSettings
     {
         $value = esc_attr($this->getOptions('cron_enable') ?? 1);
         $html = '<input type="checkbox" id="cron_enable" name="cbse_coach_mail_options[cron_enable]" value="1"' . checked(1, $value, false) . '/>';
-        $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.', 'course-booking-system-extension') . '</label>';
+        $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.', CBSE_LANGUAGE_DOMAIN) . '</label>';
         if ($this->cbse_cron_enabled())
         {
             $lastRun = get_option('cbse_cron_quarterly_last_run');
             $dateLastRun = new DateTime();
             $dateLastRun->setTimestamp($lastRun);
             $dateLastRun->setTimezone(wp_timezone());
-            $html .= '<p>' . __('Cron is active.', 'course-booking-system-extension') . ' ' . sprintf(__('Last run was: %s %s', 'course-booking-system-extension'), $dateLastRun->format(get_option('date_format')), $dateLastRun->format(get_option('time_format'))) . '</p>';
+            $html .= '<p>' . __('Cron is active.', CBSE_LANGUAGE_DOMAIN) . ' ' . sprintf(__('Last run was: %s %s', CBSE_LANGUAGE_DOMAIN), $dateLastRun->format(get_option('date_format')), $dateLastRun->format(get_option('time_format'))) . '</p>';
         }
 
         echo $html;
@@ -126,8 +134,8 @@ class MailCoachCbseSettings extends CbseSettings
     {
         $valueHours = esc_attr($this->getOptions('cron_before_time_hour') ?? 2);
         $valueMinutes = esc_attr($this->getOptions('cron_before_time_minute') ?? 0);
-        echo "<input id='cron_before_time_hour' name='cbse_coach_mail_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . $valueHours . "' />" . __('Hour', 'course-booking-system-extension');
-        echo "<input id='cron_before_time_minute' name='cbse_coach_mail_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . $valueMinutes . "' />" . __('Minute', 'course-booking-system-extension');
+        echo "<input id='cron_before_time_hour' name='cbse_coach_mail_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . $valueHours . "' />" . __('Hour', CBSE_LANGUAGE_DOMAIN);
+        echo "<input id='cron_before_time_minute' name='cbse_coach_mail_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . $valueMinutes . "' />" . __('Minute', CBSE_LANGUAGE_DOMAIN);
     }
 
     public function renderSettingsPage()

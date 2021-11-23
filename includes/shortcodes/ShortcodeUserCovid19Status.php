@@ -85,11 +85,11 @@ final class ShortcodeUserCovid19Status
             {
                 case 'tested':
                 case 'unknown':
-                    $massage = __('Your deposited Covid-19-Status is %s.', 'course_booking_system_extension');
+                    $massage = __('Your deposited Covid-19-Status is %s.', CBSE_LANGUAGE_DOMAIN);
                     $o .= wp_sprintf($massage, $covid19Status);
                     break;
                 default:
-                    $massage = __('Your deposited Covid-19-Status is %s from %s.', 'course_booking_system_extension');
+                    $massage = __('Your deposited Covid-19-Status is %s from %s.', CBSE_LANGUAGE_DOMAIN);
                     $o .= wp_sprintf($massage, $covid19Status, $dateString);
             }
 

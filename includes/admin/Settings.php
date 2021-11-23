@@ -21,7 +21,7 @@ class Settings
     private PdfCbseSettings $pdfCbseSettings;
     private MailCoachCbseSettings $mailCoachCbseSettings;
     private AutoPrintCbseSettings $autoPrintCbseSettings;
-    private LegacyCbseSettings $legacyCbseSettings;
+    //private LegacyCbseSettings $legacyCbseSettings;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class Settings
         $this->pdfCbseSettings = new PdfCbseSettings();
         $this->mailCoachCbseSettings = new MailCoachCbseSettings();
         $this->autoPrintCbseSettings = new AutoPrintCbseSettings();
-        $this->legacyCbseSettings = new LegacyCbseSettings();
+        //$this->legacyCbseSettings = new LegacyCbseSettings();
 
     }
 
@@ -42,8 +42,8 @@ class Settings
      */
     public function AddSettingsPageInMenu()
     {
-        add_options_page(__('Course Booking System Extension', 'course_booking_system_extension'), //Page Title
-            __('Course Booking System Extension', 'course_booking_system_extension'), //Menu Title
+        add_options_page(__('Course Booking System Extension', CBSE_LANGUAGE_DOMAIN), //Page Title
+            __('Course Booking System Extension', CBSE_LANGUAGE_DOMAIN), //Menu Title
             'manage_options', //Capability
             'course_booking_system_extension', //Page slug
             [$this, 'RenderSettingsPage']); //Callback to print html
@@ -52,14 +52,14 @@ class Settings
 
     public function RegisterSettings()
     {
-        if (false === get_option('cbse_options'))
+        /*if (false === get_option('cbse_options'))
         {
             $this->cbse_initialize_setting();
         }
         else
         {
             $this->cbse_missing_setting();
-        }
+        }*/
 
         switch ($this->getActiveTab())
         {
@@ -76,9 +76,9 @@ class Settings
             case $this->autoPrintCbseSettings->tabKey():
                 $this->autoPrintCbseSettings->registerSettings();
                 break;
-            case $this->legacyCbseSettings->tabKey():
+           /* case $this->legacyCbseSettings->tabKey():
                 $this->legacyCbseSettings->registerSettings();
-                break;
+                break;*/
         }
     }
 
@@ -165,9 +165,9 @@ class Settings
                     case $this->autoPrintCbseSettings->tabKey():
                         $this->autoPrintCbseSettings->renderSettingsPage();
                         break;
-                    case $this->legacyCbseSettings->tabKey():
+                   /* case $this->legacyCbseSettings->tabKey():
                         $this->legacyCbseSettings->renderSettingsPage();
-                        break;
+                        break;*/
                 }
 
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
@@ -189,7 +189,7 @@ class Settings
         echo $this->pdfCbseSettings->getTabHtmlLink($active_tab);
         echo $this->mailCoachCbseSettings->getTabHtmlLink($active_tab);
         echo $this->autoPrintCbseSettings->getTabHtmlLink($active_tab);
-        echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
+        //echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
     }
 
 

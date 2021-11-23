@@ -23,13 +23,13 @@ class UserCovid19StatusSettings
         ?>
 
         <h3><?php
-            _e("Covid-19 Status", 'course-booking-system-extension'); ?></h3>
+            _e("Covid-19 Status", CBSE_LANGUAGE_DOMAIN); ?></h3>
 
         <table class="form-table">
             <tr>
                 <th scope="row"><label
                             for="covid-19-status"><?php
-                        _e("Status", 'course-booking-system-extension'); ?></label></th>
+                        _e("Status", CBSE_LANGUAGE_DOMAIN); ?></label></th>
                 <td>
                     <?php
                     //get dropdown saved value
@@ -41,30 +41,30 @@ class UserCovid19StatusSettings
                             <?php
                             echo ($selected == "tested") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('tested', 'course-booking-system-extension') ?>
+                            _e('tested', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
                         <option value="vaccinated"
                             <?php
                             echo ($selected == "vaccinated") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('vaccinated', 'course-booking-system-extension') ?>
+                            _e('vaccinated', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
                         <option value="recovered"
                             <?php
                             echo ($selected == "recovered") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('recovered', 'course-booking-system-extension') ?>
+                            _e('recovered', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
                         <option value="unknown"
                             <?php
                             echo (empty($selected) || $selected == "unknown") ? $selectedHtml : '' ?>>
                             <?php
-                            _e('unknown', 'course-booking-system-extension') ?>
+                            _e('unknown', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
                     </select><br/>
                     <span class="description">
                         <?php
-                        _e("Please select your covid-19 status.", 'course-booking-system-extension'); ?>
+                        _e("Please select your covid-19 status.", CBSE_LANGUAGE_DOMAIN); ?>
                     </span>
                 </td>
             </tr>
@@ -72,7 +72,7 @@ class UserCovid19StatusSettings
                 <th scope="row">
                     <label for="covid-19-status_date">
                         <?php
-                        _e("Date", 'course-booking-system-extension'); ?>
+                        _e("Date", CBSE_LANGUAGE_DOMAIN); ?>
                     </label>
                 </th>
                 <td>
@@ -88,7 +88,7 @@ class UserCovid19StatusSettings
                     <span
                             class="description">
                         <?php
-                        _e('Select the date of your covid-19-status', 'course-booking-system-extension') ?>
+                        _e('Select the date of your covid-19-status', CBSE_LANGUAGE_DOMAIN) ?>
                     </span>
                 </td>
             </tr>

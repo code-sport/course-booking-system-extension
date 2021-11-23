@@ -24,7 +24,7 @@ elseif ($difference > 0)
         <?= date(get_option('time_format'), strtotime($args['timeslot']->event_start)) ?>
         - <?= date(get_option('time_format'), strtotime($args['timeslot']->event_end)) ?></p>
     <h3 class="cbse-course-title"><?= $args['courseInfo']->getEvent()->post_title ?></h3>
-    <p><?= __('Bookings', 'course-booking-system-extension') ?></p>
+    <p><?= __('Bookings', CBSE_LANGUAGE_DOMAIN) ?></p>
     <ol>
         <?php
         foreach ($args['courseInfo']->getBookings() as $booking) { ?>
@@ -32,7 +32,7 @@ elseif ($difference > 0)
                 <?php
                 if (!empty($booking->covid19_status)) : ?>
                     (<?php
-                    _e($booking->covid19_status, 'course-booking-system-extension') ?>)
+                    _e($booking->covid19_status, CBSE_LANGUAGE_DOMAIN) ?>)
                 <?php
                 endif; ?>
             </li>
@@ -50,7 +50,7 @@ elseif ($difference > 0)
                 class="cbse cbse_participants_via_email"
                 data-button='<?= json_encode(array('course_id' => $args['timeslot']->course_id, 'date' => $args['timeslot']->date)) ?>'
         >
-            <?= __('Participants via email', 'course-booking-system-extension') ?>
+            <?= __('Participants via email', CBSE_LANGUAGE_DOMAIN) ?>
         </button>
     </p>
 

@@ -7,7 +7,7 @@ class Plugin
     public function __construct()
     {
         // Plugin overview Page
-        add_filter('plugin_action_links_' . PLUGIN_BASENAME, [$this, 'actionLinks']);
+        add_filter('plugin_action_links_' . CBSE_PLUGIN_BASENAME, [$this, 'actionLinks']);
     }
 
     public function actionLinks($actions): array
@@ -24,7 +24,7 @@ class Plugin
     private function getSettings(): string
     {
         return '<a href="' . admin_url('options-general.php?page=course_booking_system_extension') . '">'
-            . __('Settings', 'course_booking_system_extension') . '</a>';
+            . __('Settings', CBSE_LANGUAGE_DOMAIN) . '</a>';
     }
 
 }

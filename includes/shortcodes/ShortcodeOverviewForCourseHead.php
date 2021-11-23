@@ -69,7 +69,7 @@ final  class ShortcodeOverviewForCourseHead
         $atts = array_change_key_case((array)$atts, CASE_LOWER);
 
         // override default attributes with user attributes
-        $cbse_atts = shortcode_atts(array('title' => __('My Events as Coach', 'course-booking-system-extension'), 'pastdays' => 7, 'futuredays' => 7), $atts, $tag);
+        $cbse_atts = shortcode_atts(array('title' => __('My Events as Coach', CBSE_LANGUAGE_DOMAIN), 'pastdays' => 7, 'futuredays' => 7), $atts, $tag);
 
         wp_enqueue_style('cbse_event_head_courses_style');
 
@@ -95,14 +95,14 @@ final  class ShortcodeOverviewForCourseHead
             if (!empty($cbse_atts['title']))
             {
                 // title
-                $o .= '<h2>' . esc_html__($cbse_atts['title'], 'course-booking-system-extension') . '</h2>';
+                $o .= '<h2>' . esc_html__($cbse_atts['title'], CBSE_LANGUAGE_DOMAIN) . '</h2>';
             }
 
 
             if ($isManager)
             {
                 $o .= '<div class="cbse-manager">';
-                $o .= '<label for="cbse_switch_coach">' . __('Switch coach', 'course-booking-system-extension') . ' </label>';
+                $o .= '<label for="cbse_switch_coach">' . __('Switch coach', CBSE_LANGUAGE_DOMAIN) . ' </label>';
                 $o .= '<select name="cbse_switch_coach" id="cbse_switch_coach">';
                 foreach ($this->getCoaches() as $coach)
                 {
@@ -123,10 +123,10 @@ final  class ShortcodeOverviewForCourseHead
 
             // Display settings
             $o .= '<div class="cbse-time-settings">';
-            $o .= __('show courses of', 'course-booking-system-extension') . '<br />';
-            $o .= '<input type="checkbox" id="cbse-time-past" name="cbse-time-past" value="past" checked><label for="cbse-time-past">' . __('past', 'course-booking-system-extension') . '</label><br />';
-            $o .= '<input type="checkbox" id="cbse-time-today" name="cbse-time-today" value="today" checked><label for="cbse-time-today">' . __('today', 'course-booking-system-extension') . '</label><br />';
-            $o .= '<input type="checkbox" id="cbse-time-future" name="cbse-time-future" value="future" checked><label for="cbse-time-future">' . __('future', 'course-booking-system-extension') . '</label>';
+            $o .= __('show courses of', CBSE_LANGUAGE_DOMAIN) . '<br />';
+            $o .= '<input type="checkbox" id="cbse-time-past" name="cbse-time-past" value="past" checked><label for="cbse-time-past">' . __('past', CBSE_LANGUAGE_DOMAIN) . '</label><br />';
+            $o .= '<input type="checkbox" id="cbse-time-today" name="cbse-time-today" value="today" checked><label for="cbse-time-today">' . __('today', CBSE_LANGUAGE_DOMAIN) . '</label><br />';
+            $o .= '<input type="checkbox" id="cbse-time-future" name="cbse-time-future" value="future" checked><label for="cbse-time-future">' . __('future', CBSE_LANGUAGE_DOMAIN) . '</label>';
             $o .= '</div>';
 
             //list with trainings

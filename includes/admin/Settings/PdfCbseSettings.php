@@ -44,7 +44,8 @@ class PdfCbseSettings extends CbseSettings
 
     public function sectionPdfHeaderText()
     {
-        echo '<p>' . _e('Here you can set all header options for generated pdf.', 'course-booking-system-extension') . '</p>';
+        echo '<p>' . __('Here you can set all header options for generated pdf.', CBSE_LANGUAGE_DOMAIN)
+            . '</p>';
     }
 
     public function headerImage()
@@ -55,9 +56,9 @@ class PdfCbseSettings extends CbseSettings
 
     public function title()
     {
-        $value = esc_attr($this->getOptions('title') ?? __('Sports operation documentation', 'course-booking-system-extension'));
+        $value = esc_attr($this->getOptions('title') ?? __('Sports operation documentation', CBSE_LANGUAGE_DOMAIN));
         echo "<input id='subject' name='cbse_pdf_header_options[title]' type='text' value='" . $value . "' />";
-        echo "<p class='description'>" . __('Title for the pdf.', 'course-booking-system-extension') . "</p>";
+        echo "<p class='description'>" . __('Title for the pdf.', CBSE_LANGUAGE_DOMAIN) . "</p>";
     }
 
 
