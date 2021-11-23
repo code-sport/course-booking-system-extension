@@ -85,15 +85,15 @@ class MailCoachCbseSettings extends CbseSettings
         $value = esc_attr($this->getOptions('message') ?? "");
         $html = "<textarea  id='mail_coach_message' name='cbse_coach_mail_options[message]' type='text' row='6' cols='50'>" . $value . "</textarea>";
         $html .= "<ul class='description'>";
-        $html .= '<li>' . __('%first_name% will be replaced with the first name of the coach.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%last_name% will be replaced with the last name of the coach.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%course_date% will be replaced with the date of the course.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%course_start% will be replaced with the start time of the course.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%course_end% will be replaced with the end time of the course.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%course_title% will be replaced with the name of the course.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%number_of_bookings% will be replaced with number of bookings.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%maximum_participants% will be replaced with the maximum of participants in the course.', 'course-booking-system-extension') . '</li>';
-        $html .= '<li>' . __('%booking_names% will be replaced with the names of the booking.', 'course-booking-system-extension') . '</li>';
+        $html .= "<li>{__('%first_name% will be replaced with the first name of the coach.', 'course-booking-system-extension')}</li>";
+        $html .= "<li>{__('%last_name% will be replaced with the last name of the coach.', 'course-booking-system-extension')}</li>";
+        $html .= "<li>{__('%course_date% will be replaced with the date of the course.', 'course-booking-system-extension')}</li>";
+        $html .= "<li>{__('%course_start% will be replaced with the start time of the course.', 'course-booking-system-extension')}</li>";
+        $html .= "<li>{__('%course_end% will be replaced with the end time of the course.', 'course-booking-system-extension')}</li>";
+        $html .= "<li>{__('%course_title% will be replaced with the name of the course.', 'course-booking-system-extension') }</li>";
+        $html .= "<li>{__('%number_of_bookings% will be replaced with number of bookings.', 'course-booking-system-extension') }</li>";
+        $html .= "<li>{__('%maximum_participants% will be replaced with the maximum of participants in the course.', 'course-booking-system-extension')}</li>";
+        $html .= "<li>{__('%booking_names% will be replaced with the names of the booking.', 'course-booking-system-extension') }</li>";
         $html .= '</ul>';
 
         echo $html;
@@ -116,12 +116,18 @@ class MailCoachCbseSettings extends CbseSettings
         echo $html;
     }
 
+    private function cbse_cron_enabled(): bool
+    {
+        return (bool)wp_next_scheduled('cbse_cron_quarterly_hook');
+
+    }
+
     public function cronBeforeTime()
     {
-        $value_hours = esc_attr($this->getOptions('cron_before_time_hour') ?? 2);
-        $value_minutes = esc_attr($this->getOptions('cron_before_time_minute') ?? 0);
-        echo "<input id='cron_before_time_hour' name='cbse_coach_mail_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . $value_hours . "' />" . __('Hour', 'course-booking-system-extension');
-        echo "<input id='cron_before_time_minute' name='cbse_coach_mail_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . $value_minutes . "' />" . __('Minute', 'course-booking-system-extension');
+        $valueHours = esc_attr($this->getOptions('cron_before_time_hour') ?? 2);
+        $valueMinutes = esc_attr($this->getOptions('cron_before_time_minute') ?? 0);
+        echo "<input id='cron_before_time_hour' name='cbse_coach_mail_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . $valueHours . "' />" . __('Hour', 'course-booking-system-extension');
+        echo "<input id='cron_before_time_minute' name='cbse_coach_mail_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . $valueMinutes . "' />" . __('Minute', 'course-booking-system-extension');
     }
 
     public function renderSettingsPage()
@@ -133,12 +139,6 @@ class MailCoachCbseSettings extends CbseSettings
     {
         do_action('qm/debug', 'MailCoachCbseSettings->Validate {input}', ['input' => json_encode($input),]);
         return $input;
-    }
-
-    private function cbse_cron_enabled(): bool
-    {
-        return (bool)wp_next_scheduled('cbse_cron_quarterly_hook');
-
     }
 
 }

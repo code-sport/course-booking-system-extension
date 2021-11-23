@@ -50,10 +50,7 @@ abstract class CbseSettings
      */
     public function getTabHtmlLink($tabKey): string
     {
-        return '<a class="nav-tab  ' . $this->isTabActive($tabKey) . '"'
-            . 'href="' . $this->getAdminUrl() . '">' . $this->tabName() . '</a>';
-
-
+        return "<a class=\"nav-tab {$this->isTabActive($tabKey)} \" href=\"{$this->getAdminUrl()}\">{$this->tabName()}</a>" ;
     }
 
     public function isTabActive($tabKey): string

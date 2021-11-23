@@ -8,5 +8,5 @@ abstract class Mail
     {
     }
 
-    public abstract function sent(): bool;
+    abstract public function sent(): bool;
 }
