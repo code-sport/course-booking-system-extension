@@ -4,7 +4,6 @@ namespace CBSE\Admin;
 
 use CBSE\Admin\Settings\AutoPrintCbseSettings;
 use CBSE\Admin\Settings\GeneralCbseSettings;
-use CBSE\Admin\Settings\LegacyCbseSettings;
 use CBSE\Admin\Settings\MailCoachCbseSettings;
 use CBSE\Admin\Settings\PdfCbseSettings;
 
@@ -13,7 +12,6 @@ require_once plugin_dir_path(__FILE__) . 'Settings/GeneralCbseSettings.php';
 require_once plugin_dir_path(__FILE__) . 'Settings/PdfCbseSettings.php';
 require_once plugin_dir_path(__FILE__) . 'Settings/MailCoachCbseSettings.php';
 require_once plugin_dir_path(__FILE__) . 'Settings/AutoPrintCbseSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/LegacyCbseSettings.php';
 
 class Settings
 {
@@ -21,8 +19,6 @@ class Settings
     private PdfCbseSettings $pdfCbseSettings;
     private MailCoachCbseSettings $mailCoachCbseSettings;
     private AutoPrintCbseSettings $autoPrintCbseSettings;
-    //TODO: Remove
-    private LegacyCbseSettings $legacyCbseSettings;
 
     public function __construct()
     {
@@ -34,8 +30,6 @@ class Settings
         $this->pdfCbseSettings = new PdfCbseSettings();
         $this->mailCoachCbseSettings = new MailCoachCbseSettings();
         $this->autoPrintCbseSettings = new AutoPrintCbseSettings();
-        $this->legacyCbseSettings = new LegacyCbseSettings();
-
     }
 
     /**
@@ -67,9 +61,6 @@ class Settings
                 break;
             case $this->autoPrintCbseSettings->tabKey():
                 $this->autoPrintCbseSettings->registerSettings();
-                break;
-            case $this->legacyCbseSettings->tabKey():
-                $this->legacyCbseSettings->registerSettings();
                 break;
         }
     }
@@ -109,19 +100,14 @@ class Settings
                     case $this->autoPrintCbseSettings->tabKey():
                         $this->autoPrintCbseSettings->renderSettingsPage();
                         break;
-                    case $this->legacyCbseSettings->tabKey():
-                        $this->legacyCbseSettings->renderSettingsPage();
-                        break;
                 }
 
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
                 do_settings_sections('course_booking_system_extension');
 
-                if ($this->getActiveTab() != $this->legacyCbseSettings->tabKey())
-                {
-                    // Add the submit button to serialize the options
-                    submit_button();
-                }
+
+                // Add the submit button to serialize the options
+                submit_button();
                 ?>
             </form>
         </div>
@@ -136,7 +122,6 @@ class Settings
         echo $this->pdfCbseSettings->getTabHtmlLink($active_tab);
         echo $this->mailCoachCbseSettings->getTabHtmlLink($active_tab);
         echo $this->autoPrintCbseSettings->getTabHtmlLink($active_tab);
-        echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
     }
 
 
