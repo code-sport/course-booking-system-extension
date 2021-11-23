@@ -21,7 +21,10 @@ class Ajax
     public function eventHeadCoursesEnqueue($hook)
     {
         global $post;
-        if (!(shortcode_exists('cbse_event_head_courses') && has_shortcode($post->post_content, 'cbse_event_head_courses')))
+        if (
+            !(shortcode_exists('cbse_event_head_courses')
+                && has_shortcode($post->post_content, 'cbse_event_head_courses'))
+        )
         {
             return;
         }
