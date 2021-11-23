@@ -65,10 +65,10 @@ class CourseInfoDate extends DtoBase
     private function loadBookings(): array
     {
         global $wpdb;
-        $bookings_raw = $wpdb->get_results(
+        $bookingsRaw = $wpdb->get_results(
             $wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_bookings') . "` WHERE `course_id` =  %d AND `date` = %s;", $this->courseId, $this->date->format('Y-m-d')));
-        $bookings = array();
-        foreach ($bookings_raw as $booking)
+        $bookingList = array();
+        foreach ($bookingsRaw as $booking)
         {
             $userMeta = get_userdata($booking->user_id);
             $booking->firstName = $userMeta->first_name;
@@ -76,11 +76,11 @@ class CourseInfoDate extends DtoBase
             $booking->nickname = $userMeta->nickname;
             $covid19Status = new UserCovid19Status($booking->user_id);
             $booking->covid19_status = $covid19Status->getStatusOrEmpty();
-            $bookings[] = $booking;
+            $bookingList[] = $booking;
         }
-        usort($bookings, fn($a, $b) => strcmp($a->last_name, $b->last_name));
+        usort($bookingList, fn($a, $b) => strcmp($a->last_name, $b->last_name));
 
-        return $bookings;
+        return $bookingList;
     }
 
     /**
