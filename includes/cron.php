@@ -5,9 +5,7 @@
 add_filter('cron_schedules', 'cbse_add_cron_quarterly_interval');
 function cbse_add_cron_quarterly_interval($schedules)
 {
-    $schedules['quarterly'] = array(
-        'interval' => 900,
-        'display' => esc_html__('Every 15 Minutes'),);
+    $schedules['quarterly'] = array('interval' => 900, 'display' => esc_html__('Every 15 Minutes'),);
     return $schedules;
 }
 
@@ -26,10 +24,14 @@ function cbse_cron_quarterly_exec()
     $dateLastRun->setTimestamp($lastRun);
     $dateLastRun->setTimezone(wp_timezone());
 
-    if ($lastRun === false) {
+    if ($lastRun === false)
+    {
         add_option('cbse_cron_quarterly_last_run', $timeNow);
-    } else {
+    }
+    else
+    {
         cbse_cron_sent_mail_to_coach($dateLastRun, $dateNow);
+        cbse_cron_sent_mail_to_print($dateLastRun, $dateNow);
         update_option('cbse_cron_quarterly_last_run', $timeNow);
     }
 }
@@ -40,9 +42,11 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
     $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)$options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 2;
     $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 && (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 0;
 
-    try {
+    try
+    {
         $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
-    } catch (Exception $e) {
+    } catch (Exception $e)
+    {
         $interval = new DateInterval('PT2H');
     }
     $dateFrom = clone $dateLastRun;
@@ -50,30 +54,59 @@ function cbse_cron_sent_mail_to_coach(DateTime $dateLastRun, DateTime $dateNow)
     $dateTo = clone $dateNow;
     $dateTo->add($interval);
 
-    if (defined('TEST')) {
+    if (defined('TEST'))
+    {
         wp_mail(get_option('admin_email'), 'CronTest', "Interval: $interval\nLast run: $dateLastRun");
     }
 
     $courses = cbse_courses_in_time($dateFrom, $dateTo);
 
-    foreach ($courses as $course) {
+    foreach ($courses as $course)
+    {
         $userId = ($course->substitutes_user_id ?? $course->user_id);
         $autoInformWay = empty(get_the_author_meta('cbse-auto-inform', $userId)) ? 'email' : get_the_author_meta('cbse-auto-inform', $userId);
 
-        if (defined('TEST')) {
+        if (defined('TEST'))
+        {
             wp_mail(get_option('admin_email'), 'CronTest', "UserId: $userId\nInformway Way: $autoInformWay " . ($autoInformWay == 'email'));
         }
 
-        if ($autoInformWay == 'email') {
+        if ($autoInformWay == 'email')
+        {
             cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, $userId);
         }
+    }
+}
+
+function cbse_cron_sent_mail_to_print(DateTime $dateLastRun, DateTime $dateNow)
+{
+    $interval = new DateInterval('PT15M');
+
+    $dateFrom = clone $dateLastRun;
+    $dateFrom->add($interval);
+    $dateTo = clone $dateNow;
+    $dateTo->add($interval);
+
+    $courses = cbse_courses_in_time($dateFrom, $dateTo);
+
+    foreach ($courses as $course)
+    {
+        $userId = ($course->substitutes_user_id ?? $course->user_id);
+        $autoPrint = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-inform', $userId);
+
+        if ($autoPrint)
+        {
+            //TODO cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, $userId);
+        }
+
     }
 }
 
 function cbse_cron_activation()
 {
     $hook = 'cbse_cron_quarterly_hook';
-    if (!wp_next_scheduled($hook)) {
+    if (!wp_next_scheduled($hook))
+    {
         wp_schedule_event(time(), 'quarterly', $hook);
     }
 }
