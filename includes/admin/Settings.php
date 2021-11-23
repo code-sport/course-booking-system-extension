@@ -21,7 +21,8 @@ class Settings
     private PdfCbseSettings $pdfCbseSettings;
     private MailCoachCbseSettings $mailCoachCbseSettings;
     private AutoPrintCbseSettings $autoPrintCbseSettings;
-    //private LegacyCbseSettings $legacyCbseSettings;
+    //TODO: Remove
+    private LegacyCbseSettings $legacyCbseSettings;
 
     public function __construct()
     {
@@ -33,7 +34,7 @@ class Settings
         $this->pdfCbseSettings = new PdfCbseSettings();
         $this->mailCoachCbseSettings = new MailCoachCbseSettings();
         $this->autoPrintCbseSettings = new AutoPrintCbseSettings();
-        //$this->legacyCbseSettings = new LegacyCbseSettings();
+        $this->legacyCbseSettings = new LegacyCbseSettings();
 
     }
 
@@ -52,15 +53,6 @@ class Settings
 
     public function RegisterSettings()
     {
-        /*if (false === get_option('cbse_options'))
-        {
-            $this->cbse_initialize_setting();
-        }
-        else
-        {
-            $this->cbse_missing_setting();
-        }*/
-
         switch ($this->getActiveTab())
         {
             default:
@@ -76,58 +68,10 @@ class Settings
             case $this->autoPrintCbseSettings->tabKey():
                 $this->autoPrintCbseSettings->registerSettings();
                 break;
-           /* case $this->legacyCbseSettings->tabKey():
+            case $this->legacyCbseSettings->tabKey():
                 $this->legacyCbseSettings->registerSettings();
-                break;*/
+                break;
         }
-    }
-
-    private function cbse_initialize_setting()
-    {
-        $settings = ['header_image_attachment_id' => '', 'header_title' => __('Sports operation documentation', 'course-booking-system-extension'), 'mail_coach_message' => __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension'), 'mail_categories_title' => __('Categories', 'course-booking-system-extension'), 'mail_categories_exclude' => '', 'mail_tags_title' => __('Tags', 'course-booking-system-extension'), 'mail_tags_exclude' => '', 'cron_enable' => 'true', 'cron_before_time_hour' => 2, 'cron_before_time_minute' => 0];
-        add_option('cbse_options', $settings);
-    }
-
-    private function cbse_missing_setting()
-    {
-        $options = get_option('cbse_options');
-
-        if (!array_key_exists('header_title', $options))
-        {
-            $options['header_title'] = __('Sports operation documentation', 'course-booking-system-extension');
-        }
-
-        if (!array_key_exists('mail_coach_message', $options))
-        {
-            $options['mail_coach_message'] = __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", 'course-booking-system-extension');
-        }
-
-        if (!array_key_exists('mail_categories_title', $options))
-        {
-            $options['mail_categories_title'] = __('Categories');
-        }
-
-        if (!array_key_exists('mail_tags_title', $options))
-        {
-            $options['mail_tags_title'] = __('Tags');
-        }
-
-        if (!array_key_exists('cron_enable', $options))
-        {
-            $options['cron_enable'] = 1;
-        }
-
-        if (!array_key_exists('cron_before_time_hour', $options))
-        {
-            $options['cron_before_time_hour'] = 2;
-        }
-
-        if (!array_key_exists('cron_before_time_minute', $options))
-        {
-            $options['cron_before_time_minute'] = 0;
-        }
-
-        update_option('cbse_options', $options);
     }
 
     private function getActiveTab()
@@ -165,16 +109,19 @@ class Settings
                     case $this->autoPrintCbseSettings->tabKey():
                         $this->autoPrintCbseSettings->renderSettingsPage();
                         break;
-                   /* case $this->legacyCbseSettings->tabKey():
+                    case $this->legacyCbseSettings->tabKey():
                         $this->legacyCbseSettings->renderSettingsPage();
-                        break;*/
+                        break;
                 }
 
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
                 do_settings_sections('course_booking_system_extension');
 
-                // Add the submit button to serialize the options
-                submit_button();
+                if ($this->getActiveTab() != $this->legacyCbseSettings->tabKey())
+                {
+                    // Add the submit button to serialize the options
+                    submit_button();
+                }
                 ?>
             </form>
         </div>
@@ -189,7 +136,7 @@ class Settings
         echo $this->pdfCbseSettings->getTabHtmlLink($active_tab);
         echo $this->mailCoachCbseSettings->getTabHtmlLink($active_tab);
         echo $this->autoPrintCbseSettings->getTabHtmlLink($active_tab);
-        //echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
+        echo $this->legacyCbseSettings->getTabHtmlLink($active_tab);
     }
 
 
