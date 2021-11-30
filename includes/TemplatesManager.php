@@ -2,7 +2,7 @@
 
 namespace CBSE;
 
-class Templates
+class TemplatesManager
 {
     public function init()
     {
@@ -41,5 +41,5 @@ class Templates
     }
 }
 
-$templates = new Templates();
+$templates = new TemplatesManager();
 $templates->init();

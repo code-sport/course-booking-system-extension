@@ -37,11 +37,10 @@ function cbse_courses_for_head($userId, $pastdays = 7, $futuredays = 7)
     return $timeslots;
 }
 
-
 function cbse_install_and_update()
 {
-    //TODO: Create own class!
-    CBSE_PDF::installAndUpdate();
+    require_once 'CBSE_PDF_include.php';
+    cbse_cbse_pdf_install_and_update();
 }
 
 
