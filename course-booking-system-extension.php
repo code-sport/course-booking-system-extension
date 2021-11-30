@@ -19,6 +19,8 @@ defined('ABSPATH') || exit;
 define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('CBSE_LANGUAGE_DOMAIN', 'course-booking-system-extension');
 
+require "vendor/autoload.php";
+
 
 function cbse_include_all()
 {
