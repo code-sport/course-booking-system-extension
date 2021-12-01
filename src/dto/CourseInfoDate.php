@@ -2,8 +2,6 @@
 
 namespace CBSE\Dto;
 
-require_once 'DtoBase.php';
-
 use CBSE\Helper\ArrayHelper;
 use CBSE\UserCovid19Status;
 use DateTime;

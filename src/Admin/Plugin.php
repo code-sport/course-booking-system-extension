@@ -28,5 +28,3 @@ class Plugin
     }
 
 }
-
-$plugin = new Plugin();

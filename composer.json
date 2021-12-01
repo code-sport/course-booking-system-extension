@@ -1,0 +1,23 @@
+{
+  "name": "code.sport/course-booking-system-extension",
+  "description": "WordPress Plugin Extension",
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^2.3",
+    "squizlabs/php_codesniffer": "3.6.1"
+  },
+  "license": "GPL v3",
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  },
+  "authors": [
+    {
+      "name": "code.sport",
+      "email": "git@codesport.info"
+    }
+  ],
+  "require": {
+    "tecnickcom/tcpdf": "^6.4.2"
+  }
+}

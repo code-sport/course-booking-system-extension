@@ -4,9 +4,6 @@ namespace CBSE;
 
 use CBSE\Dto\CourseInfoDate;
 
-require_once 'Mail.php';
-require_once 'CBSE_PDF_include.php';
-
 class DocumentationMail extends Mail
 {
     private CourseInfoDate $course;
@@ -27,9 +24,6 @@ class DocumentationMail extends Mail
 
     public function sent(): bool
     {
-        require_once 'DocumentationPdf.php';
-        require_once 'CBSE_PDF_include.php';
-
         $to = $this->getTo();
         $subject = $this->getSubject();
         $message = $this->getMessage();
@@ -62,8 +56,7 @@ class DocumentationMail extends Mail
     {
         $subject = $this->mailSettings['subject'];
         $subject .= " | {$this->course->getCourseDateTimeString()}";
-        $categories = !empty($this->course->getEventCategories())
-            ? implode(", ", $this->course->getEventCategories()) : '-';
+        $categories = !empty($this->course->getEventCategories()) ? implode(", ", $this->course->getEventCategories()) : '-';
         $subject .= " | {$categories}";
         $subject .= " | {$this->course->getEvent()->post_title}";
 
@@ -77,8 +70,7 @@ class DocumentationMail extends Mail
      */
     private function getMessage(): string
     {
-        $message = $this->mailSettings['message'] ??
-            __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", CBSE_LANGUAGE_DOMAIN);
+        $message = $this->mailSettings['message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", CBSE_LANGUAGE_DOMAIN);
         $message = str_replace('%first_name%', $this->user->firstName, $message);
         $message = str_replace('%last_name%', $this->user->lastName, $message);
         $message = str_replace('%course_date%', $this->course->getCourseDateString(), $message);
@@ -94,7 +86,7 @@ class DocumentationMail extends Mail
             $bookingNumber = 1;
             foreach ($this->course->getBookings() as $booking)
             {
-                $messageReplace .= $bookingNumber . '. ' . trim($booking->last_name) . ', ' . trim($booking->first_name) . PHP_EOL;
+                $messageReplace .= $bookingNumber . '. ' . trim($booking->lastName) . ', ' . trim($booking->firstName) . PHP_EOL;
             }
             $message = str_replace('%booking_names%', $messageReplace, $message);
         }

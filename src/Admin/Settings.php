@@ -7,12 +7,6 @@ use CBSE\Admin\Settings\GeneralCbseSettings;
 use CBSE\Admin\Settings\MailCoachCbseSettings;
 use CBSE\Admin\Settings\PdfCbseSettings;
 
-require_once plugin_dir_path(__FILE__) . 'Settings/CbseSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/GeneralCbseSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/PdfCbseSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/MailCoachCbseSettings.php';
-require_once plugin_dir_path(__FILE__) . 'Settings/AutoPrintCbseSettings.php';
-
 class Settings
 {
     private GeneralCbseSettings $generalCbseSettings;
@@ -132,6 +126,3 @@ class Settings
 
 
 }
-
-// TODO: Find a better WordPress way
-$settings = new Settings();

@@ -1,11 +1,11 @@
 <?php
 
+// ./src/CBSE.php
+
 namespace CBSE;
 
 use CBSE\Dto\CourseInfoDate;
 use DateTime;
-
-require_once 'DocumentationMail.php';
 
 class Ajax
 {
@@ -61,7 +61,4 @@ class Ajax
         wp_die();
     }
 }
-
-$ajax = new Ajax();
-
 
