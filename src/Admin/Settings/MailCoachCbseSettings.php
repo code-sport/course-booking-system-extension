@@ -12,6 +12,11 @@ class MailCoachCbseSettings extends CbseSettings
     public function __construct()
     {
         parent::__construct('cbse_coach_mail', 'cbse_coach_mail_options');
+
+        //section name, form element name, callback for sanitization
+        register_setting($this->optionGroup, $this->optionName, array(
+            'sanitize_callback' => [$this, 'validateFrom']
+        ));
     }
 
     /**
@@ -19,7 +24,7 @@ class MailCoachCbseSettings extends CbseSettings
      */
     public function tabName(): string
     {
-        return __('Mail - Coach', 'course_booking_system_extension');
+        return __('Mail - Coach', CBSE_LANGUAGE_DOMAIN);
     }
 
     /**
@@ -108,9 +113,11 @@ class MailCoachCbseSettings extends CbseSettings
         settings_fields($this->sectionHeader);
     }
 
-    public function validate($input)
+    public function validateFrom($input)
     {
-        do_action('qm/debug', 'MailCoachCbseSettings->Validate {input}', ['input' => json_encode($input),]);
+        do_action('qm/debug', 'MailCoachCbseSettings->Validate {input}', ['input' => json_encode($input)]);
+
+        var_dump($input);
 
         $cron = DocumentationCoach::getInstance();
         $input['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
