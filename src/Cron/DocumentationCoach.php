@@ -11,6 +11,7 @@ use Exception;
 
 class DocumentationCoach extends CronBase
 {
+
     private static ?DocumentationCoach $instance = null;
 
     /**
@@ -20,6 +21,8 @@ class DocumentationCoach extends CronBase
     private function __construct()
     {
         parent::__construct('cbse_cron_documentation_coach_hook');
+        //add_action($this->getHook(), [$this, 'quarterlyExec']);
+        define("TEST", true);
     }
 
     /**
@@ -63,7 +66,9 @@ class DocumentationCoach extends CronBase
 
         if (defined('TEST'))
         {
-            wp_mail(get_option('admin_email'), 'CronTest', "Interval: $interval\nLast run: $dateLastRun");
+            $intervalString = $interval->format('%H:%I:%S');
+            $dateLastRunString = $dateLastRun->format('Y-m-d H:i:s');
+            wp_mail(get_option('admin_email'), 'CronTest', "Interval: $intervalString \nLast run: $dateLastRunString");
         }
 
         $coursesInTime = new CoursesInTime($dateFrom, $dateTo);

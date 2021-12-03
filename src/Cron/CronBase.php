@@ -11,7 +11,7 @@ abstract class CronBase
 
     private $hook;
 
-    protected function __construct($hook)
+    protected function __construct(string $hook)
     {
         $this->hook = $hook;
         add_filter('cron_schedules', [$this, 'addCronQuarterlyInterval']);
@@ -28,7 +28,6 @@ abstract class CronBase
 
     public function quarterlyExec()
     {
-
         $timeNow = time();
         $dateNow = new DateTime();
         $dateNow->setTimestamp($timeNow);
@@ -38,6 +37,8 @@ abstract class CronBase
         $dateLastRun = new DateTime();
         $dateLastRun->setTimestamp($lastRun);
         $dateLastRun->setTimezone(wp_timezone());
+
+        // file_put_contents('cron.txt', $dateLastRun->format('c') . PHP_EOL, FILE_APPEND);
 
         if ($lastRun === false)
         {
