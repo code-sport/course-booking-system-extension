@@ -82,38 +82,6 @@ class CourseInfoDate extends DtoBase
     }
 
     /**
-     * @return false|WP_Error|WP_Term[]
-     */
-    public function getEventCategories()
-    {
-        $exclude = get_option('cbse_general_options')['categories_exclude'];
-        if ($exclude != '0' && is_array($this->eventCategories))
-        {
-            return ArrayHelper::excludeAndColumn($this->eventCategories, $exclude, 'name');
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    /**
-     * @return false|WP_Error|WP_Term[]
-     */
-    public function getEventTags()
-    {
-        $exclude = get_option('cbse_general_options')['tags_exclude'];
-        if ($exclude != '0' && is_array($this->eventTags))
-        {
-            return ArrayHelper::excludeAndColumn($this->eventTags, $exclude, 'name');
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    /**
      * @return array|WP_Post|null
      */
     public function getColumn()
@@ -152,7 +120,6 @@ class CourseInfoDate extends DtoBase
     {
         return $this->bookings;
     }
-
 
     public function getCourseDateTimeString(): string
     {
@@ -204,6 +171,57 @@ class CourseInfoDate extends DtoBase
     public function getColumnMeta()
     {
         return $this->columnMeta;
+    }
+
+    public function getEventCategoriesAsString($default = ''): string
+    {
+        return ($this->getEventCategories() != null
+            && !empty($this->getEventCategories())) ?
+            implode(", ", $this->getEventCategories()) : $default;
+    }
+
+    /**
+     * @return false|WP_Error|WP_Term[]
+     */
+    public function getEventCategories()
+    {
+        $exclude = get_option('cbse_general_options')['categories_exclude'];
+        if ($exclude != '0' && is_array($this->eventCategories))
+        {
+            return ArrayHelper::excludeAndColumn($this->eventCategories, $exclude, 'name');
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public function getEventTagsAsString(string $default = ''): string
+    {
+        if ($this->getEventTags() != null && !empty($this->getEventTags()))
+        {
+            return implode(", ", $this->getEventTags());
+        }
+        else
+        {
+            return $default;
+        }
+    }
+
+    /**
+     * @return false|WP_Error|WP_Term[]
+     */
+    public function getEventTags()
+    {
+        $exclude = get_option('cbse_general_options')['tags_exclude'];
+        if ($exclude != '0' && is_array($this->eventTags))
+        {
+            return ArrayHelper::excludeAndColumn($this->eventTags, $exclude, 'name');
+        }
+        else
+        {
+            return null;
+        }
     }
 
 
