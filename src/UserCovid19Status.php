@@ -2,17 +2,20 @@
 
 namespace CBSE;
 
+use CBSE\Dto\Covid19StatusItems;
 use DateTime;
 
 class UserCovid19Status
 {
     private string $status;
     private string $date;
+    private Covid19StatusItems $covid19StatusItems;
 
     public function __construct(int $userId)
     {
         $this->status = get_the_author_meta('covid-19-status', $userId);
         $this->date = get_the_author_meta('covid-19-status_date', $userId);
+        $this->covid19StatusItems = Covid19StatusItems::getInstance();
     }
 
     public function getStatusOrAll(): string
@@ -55,29 +58,20 @@ class UserCovid19Status
 
     private function validateTest(DateTime $date): bool
     {
-        $today = new DateTime("today");
-        $diff = $today->diff($date);
-        // Extract days count in interval
-        $diffDays = (integer)$diff->format("%R%a");
-        return $diffDays == 0;
+        $tested = $this->covid19StatusItems->getTested();
+        return $tested->isValid($date);
     }
 
     private function validateVaccinated(DateTime $date): bool
     {
-        $today = new DateTime("today");
-        $diff = $today->diff($date);
-        // Extract days count in interval
-        $diffDays = (integer)$diff->format("%R%a");
-        return ($diffDays < -14) && ($diffDays > -365);
+        $vaccinated = $this->covid19StatusItems->getVaccinated();
+        return $vaccinated->isValid($date);
     }
 
     private function validateRecovered(DateTime $date): bool
     {
-        $today = new DateTime("today");
-        $diff = $today->diff($date);
-        // Extract days count in interval
-        $diffDays = (integer)$diff->format("%R%a");
-        return ($diffDays < -28) && ($diffDays > -182);
+        $recovered = $this->covid19StatusItems->getRecovered();
+        return $recovered->isValid($date);
     }
 
     public static function getAll($separator = '|'): string

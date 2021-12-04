@@ -61,8 +61,7 @@ class DocumentationPdf extends CbsePdf
 
     private function setMetaInformation()
     {
-        $courseInfoCategories = (!empty($this->course->getEventCategories()) && !empty($this->course->getEventCategories()->event_categories)) ?
-            implode(", ", $this->course->getEventCategories()->event_categories) : '';
+        $courseInfoCategories = $this->course->getEventCategoriesAsString();
         $dateString = $this->course->getCourseDateString();
         $courseInfoDateTime = $this->course->getCourseDateTimeString();
 
@@ -133,10 +132,8 @@ class DocumentationPdf extends CbsePdf
 
     private function courseInfo()
     {
-        $courseInfoCategories = (!empty($this->course->getEventCategories()) && !empty($this->course->getEventCategories()->event_categories)) ?
-            implode(", ", $this->course->getEventCategories()->event_categories) : '';
-        $courseInfoTags = ($this->course->getEventTags() != null && !empty($this->course->getEventTags())) ?
-            implode(", ", $this->course->getEventTags()) : '';
+        $courseInfoCategories = $this->course->getEventCategoriesAsString();
+        $courseInfoTags = $this->course->getEventTagsAsString();
         $courseInfoDateTime = $this->course->getCourseDateTimeString();
         $userMeta = get_userdata($this->course->getSubstitutes()->user_id ?? $this->course->getTimeslot()->user_id);
         $userCovid19Status = new UserCovid19Status($userMeta->ID);
