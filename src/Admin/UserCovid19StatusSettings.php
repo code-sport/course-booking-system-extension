@@ -126,4 +126,4 @@ class UserCovid19StatusSettings
     }
 }
 
-$var = new UserCovid19StatusSettings();
+

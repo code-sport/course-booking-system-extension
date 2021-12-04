@@ -102,4 +102,3 @@ class UserInformMethod
 
 }
 
-$var = new UserInformMethod();

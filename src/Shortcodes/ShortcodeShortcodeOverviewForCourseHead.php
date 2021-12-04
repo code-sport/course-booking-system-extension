@@ -3,10 +3,11 @@
 namespace CBSE\Shortcode;
 
 use CBSE\Dto\CourseInfoDate;
+use CBSE\Dto\CoursesForHead;
 use DateTime;
 use Exception;
 
-final  class ShortcodeOverviewForCourseHead
+final class ShortcodeOverviewForCourseHead
 {
     private static ?ShortcodeOverviewForCourseHead $instance = null;
 
@@ -132,7 +133,8 @@ final  class ShortcodeOverviewForCourseHead
             //list with trainings
             $o .= '<div class="cbse-courses">';
             $o .= '<ul class="cbse_timeslots">';
-            $timeslots = cbse_courses_for_head($userId, $cbse_atts['pastdays'], $cbse_atts['futuredays']);
+            $coursesForHead = new CoursesForHead($userId, intval($cbse_atts['pastdays']), intval($cbse_atts['futuredays']));
+            $timeslots = $coursesForHead->getTimeslots();
             foreach ($timeslots as $timeslot)
             {
                 $dataDate = $timeslot->date;
@@ -199,4 +201,3 @@ final  class ShortcodeOverviewForCourseHead
     }
 }
 
-ShortcodeOverviewForCourseHead::getInstance();

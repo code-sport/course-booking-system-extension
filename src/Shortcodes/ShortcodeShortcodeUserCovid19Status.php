@@ -116,4 +116,3 @@ final class ShortcodeUserCovid19Status
     }
 }
 
-ShortcodeUserCovid19Status::getInstance();

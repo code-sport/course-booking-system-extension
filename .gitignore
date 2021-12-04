@@ -24,3 +24,5 @@ node_modules/
 
 # Dependencies which will be loaded on installation or update
 /dependencies/
+
+/vendor/

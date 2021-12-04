@@ -43,3 +43,17 @@ get on `wp-json/wp/v2/course-booking-system-extension/course/<ID>/date/<DATE:yyy
 Add the shortcode `[cbse_event_head_courses pastdays=14 futuredays=1]` to a page or post and in this the overview for
 the head of event will be shown. With`pastdays` you can specific how log in the past should be the data shown and
 with `futuredays` the same for the future.
+
+# Development
+https://tobier.de/wordpress-plugin-schreiben-mit-composer-und-autoload/
+
+## Dev
+
+- `composer update`
+- `composer install`
+- `composer dump-autoload -o`
+
+## Release
+
+- `composer install --no-dev`
+- `composer dump-autoload -o --no-dev`

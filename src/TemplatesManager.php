@@ -40,6 +40,3 @@ class TemplatesManager
         <?php
     }
 }
-
-$templates = new TemplatesManager();
-$templates->init();
