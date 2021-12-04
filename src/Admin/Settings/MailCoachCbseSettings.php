@@ -14,9 +14,9 @@ class MailCoachCbseSettings extends CbseSettings
         parent::__construct('cbse_coach_mail', 'cbse_coach_mail_options');
 
         //section name, form element name, callback for sanitization
-        register_setting($this->optionGroup, $this->optionName, array(
-            'sanitize_callback' => [$this, 'validateFrom']
-        ));
+        // register_setting($this->optionGroup, $this->optionName, array(
+        //     'sanitize_callback' => [$this, 'validateFrom']
+        // ));
     }
 
     /**
@@ -113,7 +113,7 @@ class MailCoachCbseSettings extends CbseSettings
         settings_fields($this->sectionHeader);
     }
 
-    public function validateFrom($input)
+    public function validateInput($input)
     {
         do_action('qm/debug', 'MailCoachCbseSettings->Validate {input}', ['input' => json_encode($input)]);
 

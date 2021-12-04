@@ -110,7 +110,7 @@ class GeneralCbseSettings extends CbseSettings
         settings_fields($this->sectionHeader);
     }
 
-    public function validate($input)
+    public function validateInput($input)
     {
         do_action('qm/debug', 'GeneralCbseSettings->Validate {input}', ['input' => json_encode($input),]);
         return $input;

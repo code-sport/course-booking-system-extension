@@ -62,7 +62,7 @@ class PdfCbseSettings extends CbseSettings
     }
 
 
-    public function validate($input)
+    public function validateInput($input)
     {
         do_action('qm/debug', 'PdfCbseSettings->Validate {input}', ['input' => json_encode($input),]);
 

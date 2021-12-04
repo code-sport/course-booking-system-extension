@@ -3,7 +3,6 @@
 namespace CBSE;
 
 use CBSE\Dto\CourseInfoDate;
-use DateTime;
 
 class DocumentationPdf extends CbsePdf
 {
@@ -62,7 +61,7 @@ class DocumentationPdf extends CbsePdf
 
     private function setMetaInformation()
     {
-        $courseInfoCategories = !empty($this->course->getEventCategories()) ?
+        $courseInfoCategories = (!empty($this->course->getEventCategories()) && !empty($this->course->getEventCategories()->event_categories)) ?
             implode(", ", $this->course->getEventCategories()->event_categories) : '';
         $dateString = $this->course->getCourseDateString();
         $courseInfoDateTime = $this->course->getCourseDateTimeString();
@@ -134,10 +133,10 @@ class DocumentationPdf extends CbsePdf
 
     private function courseInfo()
     {
-        $courseInfoCategories = !empty($this->course->getEventCategories()) ?
+        $courseInfoCategories = (!empty($this->course->getEventCategories()) && !empty($this->course->getEventCategories()->event_categories)) ?
             implode(", ", $this->course->getEventCategories()->event_categories) : '';
-        $courseInfoTags = !empty($this->course->getEventTags()) ? implode(", ", $this->course->getEventCategories
-        ()->event_categories) : '';
+        $courseInfoTags = ($this->course->getEventTags() != null && !empty($this->course->getEventTags())) ?
+            implode(", ", $this->course->getEventTags()) : '';
         $courseInfoDateTime = $this->course->getCourseDateTimeString();
         $userMeta = get_userdata($this->course->getSubstitutes()->user_id ?? $this->course->getTimeslot()->user_id);
         $userCovid19Status = new UserCovid19Status($userMeta->ID);
