@@ -5,7 +5,7 @@ namespace CBSE;
 use CBSE\Dto\CourseInfoDate;
 use DateTime;
 
-class DocumentationPdf extends CBSE_PDF
+class DocumentationPdf extends CbsePdf
 {
     private CourseInfoDate $course;
     private $generalOptions;
