@@ -22,7 +22,7 @@ class DocumentationCoach extends CronBase
     {
         parent::__construct('cbse_cron_documentation_coach_hook');
         //add_action($this->getHook(), [$this, 'quarterlyExec']);
-        define("TEST", true);
+        //define("TEST", true);
     }
 
     /**

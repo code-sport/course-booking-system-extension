@@ -2,6 +2,8 @@
 
 namespace CBSE\Dto;
 
+use DateTime;
+
 class CoursesInTime extends DtoBase
 {
     private DateTime $timeFrom;
