@@ -17,7 +17,7 @@ class UserCovid19Status
     {
         $this->status(get_the_author_meta('covid-19-status', $userId));
         $datetime = DateTime::createFromFormat('Y-m-d', get_the_author_meta('covid-19-status_date', $userId));
-        if ($datetime != false)
+        if ($datetime)
         {
             $this->date = $datetime;
         }
