@@ -63,7 +63,6 @@ class Covid19Status
         {
             $dateEnd = clone $date;
             $dateEnd->add($this->getValidTo());
-            echo $date->format('Y-M-d') . ' -> ' . $dateEnd->format('Y-M-d') . PHP_EOL;
             $validEnd = $today <= $dateEnd;
         }
         else
