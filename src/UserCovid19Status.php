@@ -2,76 +2,109 @@
 
 namespace CBSE;
 
-use CBSE\Dto\Covid19StatusItems;
+use CBSE\Model\Covid19Status;
+use DateInterval;
 use DateTime;
 
 class UserCovid19Status
 {
-    private string $status;
-    private string $date;
-    private Covid19StatusItems $covid19StatusItems;
+    private ?Covid19Status $status;
+    private bool $plusStatePossible = false;
+    private ?DateTime $date = null;
+
 
     public function __construct(int $userId)
     {
-        $this->status = get_the_author_meta('covid-19-status', $userId);
-        $this->date = get_the_author_meta('covid-19-status_date', $userId);
-        $this->covid19StatusItems = Covid19StatusItems::getInstance();
+        $this->status(get_the_author_meta('covid-19-status', $userId));
+        $datetime = DateTime::createFromFormat('Y-m-d', get_the_author_meta('covid-19-status_date', $userId));
+        if ($datetime != false)
+        {
+            $this->date = $datetime;
+        }
+    }
+
+    private function status(string $userStatus)
+    {
+        switch ($userStatus)
+        {
+            default:
+            case 'unknown';
+                $statusTemp = null;
+                break;
+            case 'tested';
+                $statusTemp = new Covid19Status(
+                    'tested',
+                    __('tested', CBSE_LANGUAGE_DOMAIN),
+                    null,
+                    new DateInterval('PT24H')
+                );
+                break;
+            case 'vaccinated';
+                $statusTemp = new Covid19Status(
+                    'vaccinated',
+                    __('vaccinated', CBSE_LANGUAGE_DOMAIN),
+                    new DateInterval('P14D'),
+                    new DateInterval('P9M')
+                );
+                $this->plusStatePossible = true;
+                break;
+            case 'vaccinated_updated';
+                $statusTemp = new Covid19Status(
+                    'vaccinated_updated',
+                    __('booster vaccinated', CBSE_LANGUAGE_DOMAIN),
+                    null,
+                    new DateInterval('P9M')
+                );
+                break;
+            case 'recovered';
+                $statusTemp = new Covid19Status(
+                    'recovered',
+                    __('recovered', CBSE_LANGUAGE_DOMAIN),
+                    new DateInterval('P28D'),
+                    new DateInterval('P6M')
+                );
+                $this->plusStatePossible = true;
+                break;
+        }
+
+        $this->status = $statusTemp;
     }
 
     public function getStatusOrAll(): string
     {
-        return __($this->getValidatedStatus(), CBSE_LANGUAGE_DOMAIN) ??
+        return $this->getValidatedStatus() ??
             UserCovid19Status::getAll();
     }
 
-    private function getValidatedStatus(): string
+    private function getValidatedStatus($default = null): ?string
     {
         if ($this->validate())
         {
-            return $this->status;
+            if ($this->isPlusStatus())
+            {
+                return __($this->status->getName(), CBSE_LANGUAGE_DOMAIN) . ' +';
+            }
+            else
+            {
+                return __($this->status->getName(), CBSE_LANGUAGE_DOMAIN);
+            }
         }
-        return '';
+        return $default;
     }
 
-    public function validate(): bool
+    private function validate(): bool
     {
-        $valid = false;
-        $dateTime = DateTime::createFromFormat('Y-m-d', $this->date);
-        switch ($this->status)
-        {
-            default:
-            case 'unknown';
-                break;
-            case 'tested';
-                $valid = $this->validateTest($dateTime);
-                break;
-            case 'vaccinated';
-                $valid = $this->validateVaccinated($dateTime);
-                break;
-
-            case 'recovered';
-                $valid = $this->validateRecovered($dateTime);
-                break;
-        }
-        return $valid;
+        return $this->date != null && $this->status->isValid($this->date);
     }
 
-    private function validateTest(DateTime $date): bool
+    /**
+     * @return bool
+     */
+    private function isPlusStatus(): bool
     {
-        $tested = $this->covid19StatusItems->getTested();
-        return $tested->isValid($date);
-    }
-
-    private function validateVaccinated(DateTime $date): bool
-    {
-        $vaccinated = $this->covid19StatusItems->getVaccinated();
-        return $vaccinated->isValid($date);
-    }
-
-    private function validateRecovered(DateTime $date): bool
-    {
-        $recovered = $this->covid19StatusItems->getRecovered();
-        return $recovered->isValid($date);
+        return $this->plusStatePossible
+            && ($this->date != null)
+            && Covid19Status::isInUpToInterval($this->date, new DateInterval('P6M'));
     }
 
     public static function getAll($separator = '|'): string
@@ -86,11 +119,11 @@ class UserCovid19Status
 
     public function getStatus(): string
     {
-        return $this->status;
+        return $this->status->getName();
     }
 
     public function getStatusOrEmpty(): string
     {
-        return __($this->getValidatedStatus(), CBSE_LANGUAGE_DOMAIN);
+        return $this->getValidatedStatus('');
     }
 }

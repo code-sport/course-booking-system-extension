@@ -20,6 +20,14 @@ class Covid19Status
         $this->validTo = $validTo;
     }
 
+    public static function isInUpToInterval(DateTime $dateCertificate, DateInterval $param): bool
+    {
+        $today = new DateTime("today");
+        $dateEnd = clone $dateCertificate;
+        $dateEnd->add($param);
+        return $today < $dateEnd;
+    }
+
     /**
      * @return string
      */
@@ -42,7 +50,8 @@ class Covid19Status
 
         if ($this->getValidFrom() != null)
         {
-            $dateStart = $date->add($this->getValidFrom());
+            $dateStart = clone $date;
+            $dateStart->add($this->getValidFrom());
             $validStart = $dateStart <= $today;
         }
         else
@@ -52,7 +61,9 @@ class Covid19Status
 
         if ($this->getValidTo() != null)
         {
-            $dateEnd = $date->add($this->getValidTo());
+            $dateEnd = clone $date;
+            $dateEnd->add($this->getValidTo());
+            echo $date->format('Y-M-d') . ' -> ' . $dateEnd->format('Y-M-d') . PHP_EOL;
             $validEnd = $today <= $dateEnd;
         }
         else
@@ -66,7 +77,7 @@ class Covid19Status
     /**
      * @return DateInterval
      */
-    public function getValidFrom(): DateInterval
+    public function getValidFrom(): ?DateInterval
     {
         return $this->validFrom;
     }
@@ -74,7 +85,7 @@ class Covid19Status
     /**
      * @return DateInterval
      */
-    public function getValidTo(): DateInterval
+    public function getValidTo(): ?DateInterval
     {
         return $this->validTo;
     }

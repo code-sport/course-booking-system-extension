@@ -49,6 +49,12 @@ class UserCovid19StatusSettings
                             <?php
                             _e('vaccinated', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
+                        <option value="vaccinated_updated"
+                            <?php
+                            echo ($selected == "vaccinated_updated") ? $selectedHtml : '' ?>>
+                            <?php
+                            _e('booster vaccinated', CBSE_LANGUAGE_DOMAIN) ?>
+                        </option>
                         <option value="recovered"
                             <?php
                             echo ($selected == "recovered") ? $selectedHtml : '' ?>>
