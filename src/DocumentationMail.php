@@ -56,7 +56,7 @@ class DocumentationMail extends Mail
     {
         $subject = $this->mailSettings['subject'];
         $subject .= " | {$this->course->getCourseDateTimeString()}";
-        $categories = !empty($this->course->getEventCategories()) ? implode(", ", $this->course->getEventCategories()) : '-';
+        $categories = $this->course->getEventCategoriesAsString('-');
         $subject .= " | {$categories}";
         $subject .= " | {$this->course->getEvent()->post_title}";
 

@@ -49,6 +49,12 @@ class UserCovid19StatusSettings
                             <?php
                             _e('vaccinated', CBSE_LANGUAGE_DOMAIN) ?>
                         </option>
+                        <option value="vaccinated_updated"
+                            <?php
+                            echo ($selected == "vaccinated_updated") ? $selectedHtml : '' ?>>
+                            <?php
+                            _e('booster vaccinated', CBSE_LANGUAGE_DOMAIN) ?>
+                        </option>
                         <option value="recovered"
                             <?php
                             echo ($selected == "recovered") ? $selectedHtml : '' ?>>
@@ -100,7 +106,8 @@ class UserCovid19StatusSettings
 
     public function saveUserProfile($userId)
     {
-        if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $userId))
+        $postData = $_POST;
+        if (empty($postData['_wpnonce']) || !wp_verify_nonce($postData['_wpnonce'], 'update-user_' . $userId))
         {
             return false;
         }
@@ -109,14 +116,13 @@ class UserCovid19StatusSettings
         {
             return false;
         }
-        update_user_meta($userId, 'covid-19-status', $_POST['covid-19-status']);
-        update_user_meta($userId, 'covid-19-status_date', $_POST['covid-19-status_date']);
+        update_user_meta($userId, 'covid-19-status', $postData['covid-19-status']);
+        update_user_meta($userId, 'covid-19-status_date', $postData['covid-19-status_date']);
     }
 
 
     /**
      * Check if the current user is a Manger
-     * TODO: Move into static class
      *
      * @return bool
      */
