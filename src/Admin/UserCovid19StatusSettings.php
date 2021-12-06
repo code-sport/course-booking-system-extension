@@ -98,10 +98,74 @@ class UserCovid19StatusSettings
                     </span>
                 </td>
             </tr>
+            <tr>
+                <th scope="row">
+                    <label for="covid-19-status_employee">
+                        <?php
+                        _e("employee", CBSE_LANGUAGE_DOMAIN); ?>
+                    </label>
+                </th>
+                <td>
+                    <?php
+                    // get test saved value
+                    $selected = get_the_author_meta('covid-19-status_employee', $user->ID);
+                    ?>
+                    <input
+                            type="checkbox"
+                            id="covid-19-status_employee"
+                            name="covid-19-status_employee"
+                            value="1"
+                        <?= ($selected == "1") ? 'checked="checked"' : '';
+                        $disabled ?>
+                    />
+                    <br/>
+                    <span class="description">
+                        <?php
+                        _e('Is this user an employee from the Budo-Club Karlsruhe?', CBSE_LANGUAGE_DOMAIN) ?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <label for="covid-19-status_top-athlete">
+                        <?php
+                        _e("top athlete", CBSE_LANGUAGE_DOMAIN); ?>
+                    </label>
+                </th>
+                <td>
+                    <?php
+                    // get test saved value
+                    $selected = get_the_author_meta('covid-19-status_top-athlete', $user->ID);
+                    ?>
+                    <input
+                            type="checkbox"
+                            id="covid-19-status_top-athlete"
+                            name="covid-19-status_top-athlete"
+                            value="1"
+                        <?= ($selected == "1") ? 'checked="checked"' : '';
+                        $disabled ?>
+                    />
+                    <br/>
+                    <span class="description">
+                        <?php
+                        _e('Is this user an top athlete?', CBSE_LANGUAGE_DOMAIN) ?>
+                    </span>
+                </td>
+            </tr>
         </table>
 
         <?php
 
+    }
+
+    /**
+     * Check if the current user is a Manger
+     *
+     * @return bool
+     */
+    private function isManager(): bool
+    {
+        return current_user_can('administrator') || current_user_can('shop_manager');
     }
 
     public function saveUserProfile($userId)
@@ -118,17 +182,8 @@ class UserCovid19StatusSettings
         }
         update_user_meta($userId, 'covid-19-status', $postData['covid-19-status']);
         update_user_meta($userId, 'covid-19-status_date', $postData['covid-19-status_date']);
-    }
-
-
-    /**
-     * Check if the current user is a Manger
-     *
-     * @return bool
-     */
-    private function isManager(): bool
-    {
-        return current_user_can('administrator') || current_user_can('shop_manager');
+        update_user_meta($userId, 'covid-19-status_employee', $postData['covid-19-status_employee']);
+        update_user_meta($userId, 'covid-19-status_top-athlete', $postData['covid-19-status_top-athlete']);
     }
 }
 
