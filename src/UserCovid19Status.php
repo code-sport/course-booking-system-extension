@@ -11,6 +11,7 @@ class UserCovid19Status
     private ?Covid19Status $status;
     private bool $plusStatePossible = false;
     private ?DateTime $date = null;
+    private int $userId;
 
 
     public function __construct(int $userId)
@@ -21,6 +22,7 @@ class UserCovid19Status
         {
             $this->date = $datetime;
         }
+        $this->userId = $userId;
     }
 
     private function status(string $userStatus)
@@ -78,7 +80,7 @@ class UserCovid19Status
 
     private function getValidatedStatus($default = null): ?string
     {
-        if ($this->validate())
+        if ($this->isValid())
         {
             if ($this->isPlusStatus())
             {
@@ -92,7 +94,7 @@ class UserCovid19Status
         return $default;
     }
 
-    private function validate(): bool
+    public function isValid(): bool
     {
         return $this->date != null && $this->status->isValid($this->date);
     }
@@ -125,5 +127,38 @@ class UserCovid19Status
     public function getStatusOrEmpty(): string
     {
         return $this->getValidatedStatus('');
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateFormatted(): string
+    {
+        if ($this->date)
+        {
+            return $this->date->format(get_option('date_format'));
+        }
+        return '';
+    }
+
+    public function getFlags(): ?string
+    {
+        $flags = array();
+
+        if (get_the_author_meta('covid-19-status_employee', $this->userId) == "1")
+        {
+            $flags[] = "E";
+        }
+        if (get_the_author_meta('covid-19-status_top-athlete', $this->userId) == "1")
+        {
+            $flags[] = "TA";
+        }
+
+        if (empty($flags))
+        {
+            return null;
+        }
+
+        return implode(',', $flags);
     }
 }

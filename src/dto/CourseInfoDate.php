@@ -74,33 +74,13 @@ class CourseInfoDate extends DtoBase
             $booking->nickname = $userMeta->nickname;
             $covid19Status = new UserCovid19Status($booking->user_id);
             $booking->covid19_status = $covid19Status->getStatusOrEmpty();
-            $booking->flags = $this->loadFlags($booking->user_id);
+            $booking->flags = $covid19Status->getFlags();
             $bookingList[] = $booking;
         }
 
         return $bookingList;
     }
 
-    private function loadFlags($userId): ?string
-    {
-        $flags = array();
-
-        if (get_the_author_meta('covid-19-status_employee', $userId) == "1")
-        {
-            $flags[] = "E";
-        }
-        if (get_the_author_meta('covid-19-status_top-athlete', $userId) == "1")
-        {
-            $flags[] = "TA";
-        }
-
-        if (empty($flags))
-        {
-            return null;
-        }
-
-        return implode(',', $flags);
-    }
 
     /**
      * @return array|WP_Post|null

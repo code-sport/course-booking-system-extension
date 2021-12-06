@@ -20,6 +20,7 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 
 use CBSE\Admin\Plugin;
 use CBSE\Admin\Settings;
+use CBSE\Admin\UserCovid19StatusOverview;
 use CBSE\Admin\UserCovid19StatusSettings;
 use CBSE\Ajax;
 use CBSE\Cron\DocumentationCoach;
@@ -51,6 +52,7 @@ if (is_admin())
     $settings = new Settings();
     $userCovid = new UserCovid19StatusSettings();
     $userInfo = new UserInformMethod();
+    UserCovid19StatusOverview::getInstance();
 }
 
 // Install and update
