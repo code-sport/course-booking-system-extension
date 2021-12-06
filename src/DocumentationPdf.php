@@ -205,11 +205,18 @@ class DocumentationPdf extends CbsePdf
         $this->SetTextColor(0);
         $this->SetFont('');
 
-        foreach ($this->course->getBookings() as $booking)
+        foreach ($this->course->getBookingsAlphabeticallySortedByLastName() as $booking)
         {
             $this->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
             $this->Cell($w[1], 10, trim($booking->lastName) . ", " . trim($booking->firstName), 1, 0, 'L', $fill);
-            $this->Cell($w[2], 10, __($booking->covid19_status, CBSE_LANGUAGE_DOMAIN), 1, 0, 'C', $fill);
+            $this->SetFont('', '', 8, '', true);
+            $status = __($booking->covid19_status, CBSE_LANGUAGE_DOMAIN);
+            if ($booking->flags)
+            {
+                $status .= " [$booking->flags]";
+            }
+            $this->Cell($w[2], 10, $status, 1, 0, 'C', $fill);
+            $this->SetFont('', '', 10, '', true);
             $this->Cell($w[3], 10, "", 1, 0, 'C', $fill);
             $this->Ln();
             $fill = !$fill;

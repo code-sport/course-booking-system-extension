@@ -74,12 +74,13 @@ class CourseInfoDate extends DtoBase
             $booking->nickname = $userMeta->nickname;
             $covid19Status = new UserCovid19Status($booking->user_id);
             $booking->covid19_status = $covid19Status->getStatusOrEmpty();
+            $booking->flags = $covid19Status->getFlags();
             $bookingList[] = $booking;
         }
-        usort($bookingList, fn($a, $b) => strcmp($a->last_name, $b->last_name));
 
         return $bookingList;
     }
+
 
     /**
      * @return array|WP_Post|null
@@ -111,6 +112,16 @@ class CourseInfoDate extends DtoBase
     public function getTimeslot()
     {
         return $this->timeslot;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBookingsAlphabeticallySortedByLastName(): array
+    {
+        $bookingList = $this->getBookings();
+        usort($bookingList, fn($a, $b) => strcmp($a->lastName, $b->lastName));
+        return $bookingList;
     }
 
     /**

@@ -27,16 +27,23 @@ elseif ($difference > 0)
     <p><?= __('Bookings', CBSE_LANGUAGE_DOMAIN) ?></p>
     <ol>
         <?php
-        foreach ($args['courseInfo']->getBookings() as $booking) { ?>
+        foreach ($args['courseInfo']->getBookings() as $booking)
+        { ?>
             <li><?= trim($booking->lastName) ?>, <?= trim($booking->firstName) ?>
                 <?php
                 if (!empty($booking->covid19_status)) : ?>
                     (<?php
                     _e($booking->covid19_status, CBSE_LANGUAGE_DOMAIN) ?>)
+                    <?php
+                    if ($booking->flags)
+                    {
+                        echo " [$booking->flags]";
+                    }
+                    ?>
                 <?php
                 endif; ?>
             </li>
-        <?php
+            <?php
         } ?>
     </ol>
 
