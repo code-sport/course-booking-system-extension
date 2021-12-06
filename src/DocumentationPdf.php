@@ -205,7 +205,7 @@ class DocumentationPdf extends CbsePdf
         $this->SetTextColor(0);
         $this->SetFont('');
 
-        foreach ($this->course->getBookings() as $booking)
+        foreach ($this->course->getBookingsAlphabeticallySortedByLastName() as $booking)
         {
             $this->Cell($w[0], 10, $bookingNumber, 1, 0, 'R', $fill);
             $this->Cell($w[1], 10, trim($booking->lastName) . ", " . trim($booking->firstName), 1, 0, 'L', $fill);

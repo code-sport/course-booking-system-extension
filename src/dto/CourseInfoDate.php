@@ -76,7 +76,6 @@ class CourseInfoDate extends DtoBase
             $booking->covid19_status = $covid19Status->getStatusOrEmpty();
             $bookingList[] = $booking;
         }
-        usort($bookingList, fn($a, $b) => strcmp($a->last_name, $b->last_name));
 
         return $bookingList;
     }
@@ -111,6 +110,16 @@ class CourseInfoDate extends DtoBase
     public function getTimeslot()
     {
         return $this->timeslot;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBookingsAlphabeticallySortedByLastName(): array
+    {
+        $bookingList = $this->getBookings();
+        usort($bookingList, fn($a, $b) => strcmp($a->lastName, $b->lastName));
+        return $bookingList;
     }
 
     /**

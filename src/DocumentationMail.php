@@ -84,9 +84,10 @@ class DocumentationMail extends Mail
         {
             $messageReplace = '';
             $bookingNumber = 1;
-            foreach ($this->course->getBookings() as $booking)
+            foreach ($this->course->getBookingsAlphabeticallySortedByLastName() as $booking)
             {
                 $messageReplace .= $bookingNumber . '. ' . trim($booking->lastName) . ', ' . trim($booking->firstName) . PHP_EOL;
+                $bookingNumber++;
             }
             $message = str_replace('%booking_names%', $messageReplace, $message);
         }
