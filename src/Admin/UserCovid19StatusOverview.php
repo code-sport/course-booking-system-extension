@@ -46,12 +46,12 @@ class UserCovid19StatusOverview
         return $column;
     }
 
-    public function columnRow($val, $column_name, $user_id)
+    public function columnRow($val, $columnName, $userId)
     {
-        switch ($column_name)
+        switch ($columnName)
         {
             case 'Covid19Status' :
-                return $this->getStatus($user_id);
+                return $this->getStatus($userId);
             default:
         }
         return $val;
