@@ -2,6 +2,8 @@
 
 namespace CBSE\Shortcode;
 
+use Exception;
+
 final class ShortcodeUserCovid19Status
 {
     protected static ?ShortcodeUserCovid19Status $instance = null;
