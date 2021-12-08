@@ -16,7 +16,7 @@ class GeneralCbseSettings extends CbseSettings
      */
     public function tabName(): string
     {
-        return __('General', 'course_booking_system_extension');
+        return __('General',CBSE_LANGUAGE_DOMAIN);
     }
 
     /**

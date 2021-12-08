@@ -15,6 +15,8 @@ class CoursesForHead extends DtoBase
         $this->pastDays = $pastDays;
         $this->futureDays = $futureDays;
 
+        do_action('qm/debug', "CoursesForHead -> userId: {$userId}, pastDays: {$pastDays}, futureDays: {$futureDays}");
+
         $this->loadFromDatabase();
     }
 
@@ -32,7 +34,7 @@ class CoursesForHead extends DtoBase
         $query .= " AND DATE(`" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date`) < (NOW() + INTERVAL %d DAY)";
         $query .= " GROUP BY  `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date`, `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`course_id`";
         $query .= " ORDER BY `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date` ASC, `" . $this->datebaseTableName('mp_timetable_data') . "`.`event_start` ASC;";
-        $this->timeslots = $wpdb->get_results($wpdb->prepare($query, $this->userId, $this->userId, $this->futureDays, $this->futureDays));
+        $this->timeslots = $wpdb->get_results($wpdb->prepare($query, $this->userId, $this->userId, $this->pastDays, $this->futureDays));
     }
 
     /**

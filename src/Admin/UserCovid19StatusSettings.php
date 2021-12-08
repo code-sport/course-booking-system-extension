@@ -121,7 +121,7 @@ class UserCovid19StatusSettings
                     <br/>
                     <span class="description">
                         <?php
-                        _e('Is this user an employee from the Budo-Club Karlsruhe?', CBSE_LANGUAGE_DOMAIN) ?>
+                        _e('Is this user an employee from this organization?', CBSE_LANGUAGE_DOMAIN) ?>
                     </span>
                 </td>
             </tr>
