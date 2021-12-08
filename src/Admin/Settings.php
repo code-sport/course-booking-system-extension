@@ -4,6 +4,7 @@ namespace CBSE\Admin;
 
 use CBSE\Admin\Settings\AutoPrintCbseSettings;
 use CBSE\Admin\Settings\GeneralCbseSettings;
+use CBSE\Admin\Settings\LicensesSettings;
 use CBSE\Admin\Settings\MailCoachCbseSettings;
 use CBSE\Admin\Settings\PdfCbseSettings;
 
@@ -13,6 +14,7 @@ class Settings
     private PdfCbseSettings $pdfCbseSettings;
     private MailCoachCbseSettings $mailCoachCbseSettings;
     private AutoPrintCbseSettings $autoPrintCbseSettings;
+    private LicensesSettings $licensesSettings;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class Settings
         $this->pdfCbseSettings = new PdfCbseSettings();
         $this->mailCoachCbseSettings = new MailCoachCbseSettings();
         $this->autoPrintCbseSettings = new AutoPrintCbseSettings();
+        $this->licensesSettings = new LicensesSettings();
     }
 
     /**
@@ -32,7 +35,7 @@ class Settings
     public function addSettingsPageInMenu()
     {
         add_options_page(
-            //Page Title
+        //Page Title
             __('Course Booking System Extension', CBSE_LANGUAGE_DOMAIN),
             //Menu Title
             __('Course Booking System Extension', CBSE_LANGUAGE_DOMAIN),
@@ -61,6 +64,9 @@ class Settings
                 break;
             case $this->autoPrintCbseSettings->tabKey():
                 $this->autoPrintCbseSettings->registerSettings();
+                break;
+            case $this->licensesSettings->tabKey():
+                $this->licensesSettings->registerSettings();
                 break;
         }
     }
@@ -100,6 +106,9 @@ class Settings
                     case $this->autoPrintCbseSettings->tabKey():
                         $this->autoPrintCbseSettings->renderSettingsPage();
                         break;
+                    case $this->licensesSettings->tabKey():
+                        $this->licensesSettings->renderSettingsPage();
+                        break;
                 }
 
                 //add_settings_section callback is displayed here. For every new section we need to call settings_fields.
@@ -107,7 +116,10 @@ class Settings
 
 
                 // Add the submit button to serialize the options
-                submit_button();
+                if ($this->getActiveTab() != $this->licensesSettings->tabKey())
+                {
+                    submit_button();
+                }
                 ?>
             </form>
         </div>
@@ -122,6 +134,7 @@ class Settings
         echo $this->pdfCbseSettings->getTabHtmlLink($activeTab);
         echo $this->mailCoachCbseSettings->getTabHtmlLink($activeTab);
         echo $this->autoPrintCbseSettings->getTabHtmlLink($activeTab);
+        echo $this->licensesSettings->getTabHtmlLink($activeTab);
     }
 
 

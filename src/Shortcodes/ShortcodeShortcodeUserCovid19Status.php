@@ -2,6 +2,9 @@
 
 namespace CBSE\Shortcode;
 
+use CBSE\UserCovid19Status;
+use Exception;
+
 final class ShortcodeUserCovid19Status
 {
     protected static ?ShortcodeUserCovid19Status $instance = null;
@@ -16,18 +19,11 @@ final class ShortcodeUserCovid19Status
     }
 
     /**
-     * prevent the instance from being cloned (which would create a second instance of it)
+     * Init
      */
-    private function __clone()
+    private function init()
     {
-    }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    public function __wakeup()
-    {
-        throw new Exception("Cannot unserialize singleton");
+        add_shortcode('cbse_user_covid19_status', array($this, "showShortcode"));
     }
 
     /**
@@ -46,11 +42,11 @@ final class ShortcodeUserCovid19Status
     }
 
     /**
-     * Init
+     * prevent from being unserialized (which would create a second instance of it)
      */
-    private function init()
+    public function __wakeup()
     {
-        add_shortcode('cbse_user_covid19_status', array($this, "showShortcode"));
+        throw new Exception("Cannot unserialize singleton");
     }
 
     /**
@@ -70,10 +66,9 @@ final class ShortcodeUserCovid19Status
 
         if (is_user_logged_in())
         {
-            $userId = get_current_user_id();
-            $covid19Status = esc_attr(get_the_author_meta('covid-19-status', $userId));
-            $covid19StatusDate = esc_attr(get_the_author_meta('covid-19-status_date', $userId));
-            $dateString = date(get_option('date_format'), strtotime($covid19StatusDate));
+            $userCovid19Status = new UserCovid19Status(get_current_user_id());
+            $covid19Status = $userCovid19Status->getStatus();
+            $covid19StatusDate = $userCovid19Status->getDateFormatted();
 
             if (empty($covid19Status))
             {
@@ -90,10 +85,17 @@ final class ShortcodeUserCovid19Status
                     break;
                 default:
                     $massage = __('Your deposited Covid-19-Status is %s from %s.', CBSE_LANGUAGE_DOMAIN);
-                    $o .= wp_sprintf($massage, $covid19Status, $dateString);
+                    $o .= wp_sprintf($massage, $covid19Status, $covid19StatusDate);
             }
 
             $o .= '</p>';
+
+            if (!$userCovid19Status->isValid())
+            {
+                $o .= '<p style="color: red;">';
+                $o .= __('Your status is invalid. Please check it and renew it.', CBSE_LANGUAGE_DOMAIN);
+                $o .= '</p>';
+            }
         }
 
         // enclosing tags
@@ -113,6 +115,13 @@ final class ShortcodeUserCovid19Status
         // return output
         return $o;
 
+    }
+
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+    private function __clone()
+    {
     }
 }
 
