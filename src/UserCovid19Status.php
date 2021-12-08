@@ -147,11 +147,11 @@ class UserCovid19Status
 
         if (get_the_author_meta('covid-19-status_employee', $this->userId) == "1")
         {
-            $flags[] = "E";
+            $flags[] = __("E", CBSE_LANGUAGE_DOMAIN);
         }
         if (get_the_author_meta('covid-19-status_top-athlete', $this->userId) == "1")
         {
-            $flags[] = "TA";
+            $flags[] = __("TA", CBSE_LANGUAGE_DOMAIN);
         }
 
         if (empty($flags))
