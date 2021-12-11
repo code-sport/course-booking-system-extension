@@ -24,7 +24,7 @@ class DocumentationMail extends Mail
         $user = get_userdata($userId);
 
         $to = $this->getTo($user);
-        $subject = $this->getSubject();
+        $subject = $this->getSubject($this->mailSettings['subject']);
         $message = $this->getMessage($user);
         $headers = $this->getHeaders();
         $docuPDF = new DocumentationPdf($this->course);
@@ -37,11 +37,11 @@ class DocumentationMail extends Mail
         return $mailSent;
     }
 
-    public function sentToPritner(array $mailadresses): bool
+    public function sentToPrinter(array $mailadresses): bool
     {
 
         $to = $mailadresses;
-        $subject = $this->getSubject();
+        $subject = $this->getSubject('PRINT');
         $message = '';
         $headers = $this->getHeaders();
         $docuPDF = new DocumentationPdf($this->course);
@@ -67,9 +67,9 @@ class DocumentationMail extends Mail
     /**
      * Email subject
      */
-    private function getSubject(): string
+    private function getSubject($prefix): string
     {
-        $subject = $this->mailSettings['subject'];
+        $subject = $prefix;
         $subject .= " | {$this->course->getCourseDateTimeString()}";
         $categories = $this->course->getEventCategoriesAsString('-');
         $subject .= " | {$categories}";

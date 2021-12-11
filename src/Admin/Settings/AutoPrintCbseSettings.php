@@ -42,7 +42,8 @@ class AutoPrintCbseSettings extends CbseSettings
         //last field section is optional.
         $this->registerSettingsForTags();
         add_settings_field('cron_enable', __('Cron Enable', CBSE_LANGUAGE_DOMAIN), [$this, 'cronEnable'], 'course_booking_system_extension', $this->sectionHeader);
-        add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this, 'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
+        /* TODO: add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this,
+        'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader); */
     }
 
     private function registerSettingsForTags()

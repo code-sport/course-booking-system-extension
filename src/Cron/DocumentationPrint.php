@@ -71,7 +71,7 @@ class DocumentationPrint extends CronBase
                 if (!empty($printerMails))
                 {
                     $documentationMail = new DocumentationMail($courseInfo);
-                    $documentationMail->sentToUser(array_column($printerMails, 'mail'));
+                    $documentationMail->sentToPrinter(array_column($printerMails, 'mail'));
                 }
 
             }
