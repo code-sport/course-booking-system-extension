@@ -2,6 +2,9 @@
 
 namespace CBSE\Admin\Settings;
 
+use CBSE\Cron\DocumentationPrint;
+use DateTime;
+
 class AutoPrintCbseSettings extends CbseSettings
 {
     private string $sectionHeader = 'cbse_auto_print';
@@ -74,9 +77,12 @@ class AutoPrintCbseSettings extends CbseSettings
         }
 
         $validatedInput['emails'] = $emails;
-        $validatedInput['cron_enable'] = $input['cron_enable'];
+        $validatedInput['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
         $validatedInput['cron_before_time_hour'] = $input['cron_before_time_hour'];
         $validatedInput['cron_before_time_minute'] = $input['cron_before_time_minute'];
+
+        $cron = DocumentationPrint::getInstance();
+        $cron->switch(boolval($validatedInput['cron_enable']));
 
         return $validatedInput;
     }
@@ -104,14 +110,14 @@ class AutoPrintCbseSettings extends CbseSettings
         $value = esc_attr($this->getOptions('cron_enable') ?? 1);
         $html = '<input type="checkbox" id="cron_enable" name="cbse_auto_print_options[cron_enable]" value="1"' . checked(1, $value, false) . '/>';
         $html .= '<label for="cron_enable">' . __('Sends the head of course a mail with the participants.', CBSE_LANGUAGE_DOMAIN) . '</label>';
-        /*$cron = DocumentationCoach::getInstance();
+        $cron = DocumentationPrint::getInstance();
         if ($cron->isActivated())
         {
             $dateLastRun = new DateTime();
             $dateLastRun->setTimestamp($cron->getLastRun());
             $dateLastRun->setTimezone(wp_timezone());
             $html .= '<p>' . __('Cron is active.', CBSE_LANGUAGE_DOMAIN) . ' ' . sprintf(__('Last run was: %s %s', CBSE_LANGUAGE_DOMAIN), $dateLastRun->format(get_option('date_format')), $dateLastRun->format(get_option('time_format'))) . '</p>';
-        }*/
+        }
 
         echo $html;
     }
