@@ -37,17 +37,48 @@ class AutoPrintCbseSettings extends CbseSettings
 
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
-        /*add_settings_field('email', __('Tags to print', CBSE_LANGUAGE_DOMAIN), [$this, 'tagsForPrint'],
-        'course_booking_system_extension', $this->sectionHeader);*/
+        $this->registerSettingsForTags();
         add_settings_field('cron_enable', __('Cron Enable', CBSE_LANGUAGE_DOMAIN), [$this, 'cronEnable'], 'course_booking_system_extension', $this->sectionHeader);
         add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this, 'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
     }
 
-    public function validateInput($input)
+    private function registerSettingsForTags()
+    {
+        $tags = get_tags(array('taxonomy' => 'mp-event_tag', 'orderby' => 'name', 'hide_empty' => false));
+        $values = $this->getOptions('emails');
+        foreach ($tags as $tag)
+        {
+            $value = array_filter($values, function ($v, $k) use ($tag)
+            {
+                return $v['id'] == $tag->term_id;
+            }, ARRAY_FILTER_USE_BOTH);
+            $args = array('tag' => $tag, 'value' => $value);
+            add_settings_field("email_{$tag->term_id}", $tag->name, [$this, 'tagForPrint'], 'course_booking_system_extension', $this->sectionHeader, $args);
+        }
+    }
+
+    public function validateInput($input): array
     {
         do_action('qm/debug', 'AutoPrintCbseSettings->Validate {input}', ['input' => json_encode($input)]);
 
-        // TODO: Implement Validate() method.
+        $emails = array();
+        $tagsIds = preg_filter('/^email_(.*)/', '$1', array_keys($input));
+
+        foreach ($tagsIds as $tagId)
+        {
+            $mails = explode(',', $input["email_{$tagId}"]);
+            foreach ($mails as $mail)
+            {
+                $emails[] = array('id' => $tagId, 'mail' => $mail);
+            }
+        }
+
+        $validatedInput['emails'] = $emails;
+        $validatedInput['cron_enable'] = $input['cron_enable'];
+        $validatedInput['cron_before_time_hour'] = $input['cron_before_time_hour'];
+        $validatedInput['cron_before_time_minute'] = $input['cron_before_time_minute'];
+
+        return $validatedInput;
     }
 
     public function sectionAutoPrint()
@@ -59,19 +90,13 @@ class AutoPrintCbseSettings extends CbseSettings
         echo $text;
     }
 
-    public function tagsForPrint()
+    public function tagForPrint(array $args)
     {
-        $tags = get_tags(array('taxonomy' => 'mp-event_tag', 'orderby' => 'name', 'hide_empty' => false));
-        echo '<ul>';
-        foreach ($tags as $tag)
-        {
-            echo '<li>';
-            echo "<label for=\"email_{$tag->term_id}\">{$tag->name} </label>";
-            echo "<input type=\"email\" id=\"email_{$tag->term_id}\" name=\"email[{$tag->term_id}]\">";
-            echo '</li>';
-
-        }
-        echo '</ul>';
+        $tag = $args['tag'];
+        $values = $args['value'] ?? '';
+        $value = implode(',', array_column($values, 'mail'));
+        echo "<input type=\"email\" id=\"email_{$tag->term_id}\" name=\"cbse_auto_print_options[email_{$tag->term_id}]\" value=\"$value\">";
+        echo "<p class='description'>" . $tag->description . "</p>";
     }
 
     public function cronEnable()
