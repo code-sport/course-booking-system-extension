@@ -41,8 +41,7 @@ class LicensesSettings extends CbseSettings
      */
     public function renderSettingsPage()
     {
-        add_settings_section($this->sectionHeader, __('Licenses', CBSE_LANGUAGE_DOMAIN), [$this, 'sectionLicenses'], 'course_booking_system_extension');
-
+        settings_fields($this->sectionHeader);
     }
 
     /**

@@ -19,9 +19,7 @@ abstract class CbseSettings
         add_option($this->optionName, array());
 
         //section name, form element name, callback for sanitization
-        register_setting($this->optionGroup, $this->optionName, array(
-            'sanitize_callback' => [$this, 'validateInput']
-        ));
+        register_setting($this->optionGroup, $this->optionName, array('sanitize_callback' => [$this, 'validateInput']));
     }
 
     public abstract function validateInput($input);
@@ -53,7 +51,7 @@ abstract class CbseSettings
      */
     public function getTabHtmlLink($tabKey): string
     {
-        return "<a class=\"nav-tab {$this->isTabActive($tabKey)} \" href=\"{$this->getAdminUrl()}\">{$this->tabName()}</a>" ;
+        return "<a class=\"nav-tab {$this->isTabActive($tabKey)} \" href=\"{$this->getAdminUrl()}\">{$this->tabName()}</a>";
     }
 
     public function isTabActive($tabKey): string
