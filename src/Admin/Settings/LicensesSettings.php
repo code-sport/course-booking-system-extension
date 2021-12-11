@@ -33,7 +33,8 @@ class LicensesSettings extends CbseSettings
 
     private function getLiscenses(): array
     {
-        return array(array('Name' => 'tecnickcom/tcpdf', 'License' => 'LGPL-3.0-only', 'Url' => 'https://tcpdf.org/'));
+        return array(array('Name' => 'tecnickcom/tcpdf', 'License' => 'LGPL-3.0-only', 'Url' => 'https://tcpdf.org/'),
+            array('Name' => 'Analog', 'License' => 'MIT License', 'Url' => 'https://github.com/jbroadway/analog'));
     }
 
     /**
