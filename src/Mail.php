@@ -8,5 +8,5 @@ abstract class Mail
     {
     }
 
-    abstract public function sent(): bool;
+    abstract public function sentToUser(int $userId): bool;
 }

@@ -7,26 +7,25 @@ use CBSE\Dto\CourseInfoDate;
 class DocumentationMail extends Mail
 {
     private CourseInfoDate $course;
-    private $user;
     private $mailSettings;
 
     /**
      * @param CourseInfoDate $courseInfoDate
-     * @param int            $userId
      */
-    public function __construct(CourseInfoDate $courseInfoDate, int $userId)
+    public function __construct(CourseInfoDate $courseInfoDate)
     {
         parent::__construct();
         $this->course = $courseInfoDate;
-        $this->user = get_userdata($userId);
         $this->mailSettings = get_option('cbse_coach_mail_options');
     }
 
-    public function sent(): bool
+    public function sentToUser(int $userId): bool
     {
-        $to = $this->getTo();
+        $user = get_userdata($userId);
+
+        $to = $this->getTo($user);
         $subject = $this->getSubject();
-        $message = $this->getMessage();
+        $message = $this->getMessage($user);
         $headers = $this->getHeaders();
         $docuPDF = new DocumentationPdf($this->course);
         $docuPDF->generatePdf();
@@ -35,6 +34,22 @@ class DocumentationMail extends Mail
         $mailSent = wp_mail($to, $subject, $message, $headers, $attachments);
         $docuPDF->unlink();
 
+        return $mailSent;
+    }
+
+    public function sentToPritner(array $mailadresses): bool
+    {
+
+        $to = $mailadresses;
+        $subject = $this->getSubject();
+        $message = '';
+        $headers = $this->getHeaders();
+        $docuPDF = new DocumentationPdf($this->course);
+        $docuPDF->generatePdf();
+        $attachments = array($docuPDF->getPdfFile());
+
+        $mailSent = wp_mail($to, $subject, $message, $headers, $attachments);
+        $docuPDF->unlink();
 
         return $mailSent;
     }
@@ -44,9 +59,9 @@ class DocumentationMail extends Mail
      *
      * @return string|array
      */
-    private function getTo()
+    private function getTo($user)
     {
-        return $this->user->user_email;
+        return $user->user_email;
     }
 
     /**
@@ -68,11 +83,11 @@ class DocumentationMail extends Mail
      *
      * @return string
      */
-    private function getMessage(): string
+    private function getMessage($user): string
     {
         $message = $this->mailSettings['message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", CBSE_LANGUAGE_DOMAIN);
-        $message = str_replace('%first_name%', $this->user->firstName, $message);
-        $message = str_replace('%last_name%', $this->user->lastName, $message);
+        $message = str_replace('%first_name%', $user->firstName, $message);
+        $message = str_replace('%last_name%', $user->lastName, $message);
         $message = str_replace('%course_date%', $this->course->getCourseDateString(), $message);
         $message = str_replace('%course_start%', $this->course->getCourseStartTimeString(), $message);
         $message = str_replace('%course_end%', $this->course->getCourseEndTimeString(), $message);

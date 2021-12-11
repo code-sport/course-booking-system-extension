@@ -87,9 +87,9 @@ class DocumentationCoach extends CronBase
             if ($autoInformWay == 'email')
             {
                 $date = DateTime::createFromFormat('Y-m-d', $course->date);
-                $course = new CourseInfoDate($course->course_id, $date);
-                $documentationMail = new DocumentationMail($course, $userId);
-                $documentationMail->sent();
+                $courseInfo = new CourseInfoDate($course->course_id, $date);
+                $documentationMail = new DocumentationMail($courseInfo);
+                $documentationMail->sentToUser($userId);
             }
         }
     }

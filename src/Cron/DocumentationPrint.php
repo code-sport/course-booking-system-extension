@@ -2,6 +2,10 @@
 
 namespace CBSE\Cron;
 
+use CBSE\DocumentationMail;
+use CBSE\Dto\CourseInfoDate;
+use CBSE\Dto\CoursesInTime;
+use CBSE\Helper\ArrayHelper;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -49,19 +53,41 @@ class DocumentationPrint extends CronBase
         $dateTo = clone $dateNow;
         $dateTo->add($interval);
 
-        $courses = cbse_courses_in_time($dateFrom, $dateTo);
+        $coursesInTime = new CoursesInTime($dateFrom, $dateTo);
+        $courses = $coursesInTime->getCourses();
 
         foreach ($courses as $course)
         {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
-            $autoPrint = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-inform', $userId);
+            $autoPrintUser = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-inform', $userId);
 
-            if ($autoPrint)
+
+            if ($autoPrintUser)
             {
-                //TODO cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, $userId);
+                $date = DateTime::createFromFormat('Y-m-d', $course->date);
+                $courseInfo = new CourseInfoDate($course->course_id, $date);
+                $printerMails = $this->getPrinterMailAddresses($courseInfo);
+
+                if (!empty($printerMails))
+                {
+                    $documentationMail = new DocumentationMail($courseInfo);
+                    $documentationMail->sentToUser(array_column($printerMails, 'mail'));
+                }
+
             }
 
         }
+    }
+
+    private function getPrinterMailAddresses(CourseInfoDate $course): array
+    {
+        $printOptionsEmails = get_option('cbse_auto_print_options')['emails'];
+        $eventTagIds = ArrayHelper::Column($course->getEventTags(), 'term_id');
+
+        return array_filter($printOptionsEmails, function ($v, $k) use ($eventTagIds)
+        {
+            return in_array($v['id'], $eventTagIds);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     /**

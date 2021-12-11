@@ -55,7 +55,7 @@ class UserInformMethod
                 <th scope="row">
                     <label for="cbse_auto_print">
                         <?php
-                        _e("Auto inform via", CBSE_LANGUAGE_DOMAIN); ?>
+                        _e("Autoprint", CBSE_LANGUAGE_DOMAIN); ?>
                     </label>
                 </th>
                 <td>

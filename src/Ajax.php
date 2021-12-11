@@ -50,8 +50,8 @@ class Ajax
         $courseId = intval(sanitize_key($_POST['course_id']));
         $date = DateTime::createFromFormat('Y-m-d', sanitize_key($_POST['date']));
         $course = new CourseInfoDate($courseId, $date);
-        $documentationMail = new DocumentationMail($course, get_current_user_id());
-        $sent = $documentationMail->sent();
+        $documentationMail = new DocumentationMail($course);
+        $sent = $documentationMail->sentToUser(get_current_user_id());
         $args = array('course_id' => $courseId,
             'date' => $date, 'sent' => $sent,
             'sent_message' => __('Please check your mails')
