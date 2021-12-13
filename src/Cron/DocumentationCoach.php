@@ -2,6 +2,7 @@
 
 namespace CBSE\Cron;
 
+use Analog\Analog;
 use CBSE\DocumentationMail;
 use CBSE\Dto\CourseInfoDate;
 use CBSE\Dto\CoursesInTime;
@@ -63,6 +64,8 @@ class DocumentationCoach extends CronBase
         $dateFrom->add($interval);
         $dateTo = clone $dateNow;
         $dateTo->add($interval);
+
+        Analog::log('Cron for coach mail runs at ' . $dateNow->format('c'));
 
         if (defined('TEST'))
         {
