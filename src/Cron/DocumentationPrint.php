@@ -47,7 +47,7 @@ class DocumentationPrint extends CronBase
 
     protected function work(DateTime $dateLastRun, DateTime $dateNow)
     {
-        $interval = new DateInterval('PT15M');
+        $interval = new DateInterval('PT20M');
 
         $dateFrom = clone $dateLastRun;
         $dateFrom->add($interval);
