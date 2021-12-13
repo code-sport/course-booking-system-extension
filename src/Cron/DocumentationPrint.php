@@ -2,6 +2,7 @@
 
 namespace CBSE\Cron;
 
+use Analog\Analog;
 use CBSE\DocumentationMail;
 use CBSE\Dto\CourseInfoDate;
 use CBSE\Dto\CoursesInTime;
@@ -52,6 +53,8 @@ class DocumentationPrint extends CronBase
         $dateFrom->add($interval);
         $dateTo = clone $dateNow;
         $dateTo->add($interval);
+
+        Analog::log('Cron for auto print runs at ' . $dateNow->format('c'));
 
         $coursesInTime = new CoursesInTime($dateFrom, $dateTo);
         $courses = $coursesInTime->getCourses();

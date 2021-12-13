@@ -81,6 +81,10 @@ class CourseInfoDate extends DtoBase
         return $bookingList;
     }
 
+    public function __toString()
+    {
+        return "CourseInfoDate: ID {$this->courseId}\n";
+    }
 
     /**
      * @return array|WP_Post|null
