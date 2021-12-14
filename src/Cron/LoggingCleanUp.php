@@ -3,8 +3,8 @@
 namespace CBSE\Cron;
 
 
+use CBSE\Exception\UnserializeSingletonException;
 use CBSE\Logging;
-use Exception;
 
 class LoggingCleanUp
 {
@@ -48,29 +48,30 @@ class LoggingCleanUp
 
     public function dailyExec()
     {
-        $deleteTime = 60 * 60 * 24 * 30; // 30 Tag
+        // 30 Tag
+        $deleteTime = 60 * 60 * 24 * 30;
         $loggingFOlder = Logging::getFolder();
         $logFiles = array_diff(scandir($loggingFOlder), array('.', '..'));
         $now = time();
 
         foreach ($logFiles as $logFile)
         {
-            if (is_file($logFile))
+            if (is_file($logFile) && $now - filemtime($logFile) >= $deleteTime)
             {
-                if ($now - filemtime($logFile) >= $deleteTime)
-                {
-                    unlink($logFile);
-                }
+                unlink($logFile);
             }
         }
     }
 
+
     /**
      * prevent from being unserialized (which would create a second instance of it)
+     *
+     * @throws UnserializeSingletonException
      */
     public function __wakeup()
     {
-        throw new Exception("Cannot unserialize singleton");
+        throw new UnserializeSingletonException();
     }
 
     /**

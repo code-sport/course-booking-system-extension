@@ -101,7 +101,7 @@ class DocumentationPrint extends CronBase
     private function getPrinterMailAddresses(CourseInfoDate $course): array
     {
         $printOptionsEmails = get_option('cbse_auto_print_options')['emails'];
-        $eventTagIds = ArrayHelper::Column($course->getEventTags(), 'term_id');
+        $eventTagIds = ArrayHelper::column($course->getEventTags(), 'term_id');
 
         return array_filter($printOptionsEmails, function ($v, $k) use ($eventTagIds)
         {

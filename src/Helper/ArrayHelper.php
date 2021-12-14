@@ -17,7 +17,7 @@ final class ArrayHelper
         return array_column($arrayFiltered, $filter);
     }
 
-    public static function Column(array $array, string $filter): array
+    public static function column(array $array, string $filter): array
     {
         return array_column($array, $filter);
     }

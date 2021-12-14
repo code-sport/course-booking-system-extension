@@ -5,7 +5,7 @@
 
 namespace CBSE\Api;
 
-use Exception;
+use CBSE\Exception\UnserializeSingletonException;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Response;
@@ -56,12 +56,12 @@ final class Api extends WP_REST_Controller
         register_rest_route($this->namespace, '/' . $this->restBase . '/event/(?P<id>\d+)/courses', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_courses_from_event'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
-        }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
+        }, 'required' => true),), 'permission_callback' => array($this, 'apiPermission')));
 
-        register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_basic'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'getCourseBasic'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
-        }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
+        }, 'required' => true),), 'permission_callback' => array($this, 'apiPermission')));
 
         register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_date_participants'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
@@ -69,7 +69,7 @@ final class Api extends WP_REST_Controller
         }, 'required' => true), 'date' => array('validate_callback' => function ($param, $request, $key)
         {
             return $this->cbse_is_date($param);
-        }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
+        }, 'required' => true),), 'permission_callback' => array($this, 'apiPermission')));
     }
 
     public function cbse_is_date($date)
@@ -110,48 +110,48 @@ final class Api extends WP_REST_Controller
         return new WP_REST_Response($courses);
     }
 
-    public function get_course_basic($data)
+    public function getCourseBasic($data)
     {
         global $wpdb;
-        $course_basic = (object)$wpdb->get_row($wpdb->prepare("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description`, `event_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $data['id']));
-        $date_booking = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_bookings` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
-        $date_waitlists = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_waitlists` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
-        $date_attendances = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_attendances` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
+        $courseBasic = (object)$wpdb->get_row($wpdb->prepare("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description`, `event_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $data['id']));
+        $dateBooking = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_bookings` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
+        $dateWaitlists = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_waitlists` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
+        $dateAttendances = $wpdb->get_results($wpdb->prepare("SELECT `date` FROM `" . $wpdb->prefix . "mp_timetable_attendances` WHERE `course_id` =  %d GROUP BY `date`;", $data['id']));
 
 
-        $course_basic->dates = array_unique(array_column(array_merge($date_attendances, $date_booking, $date_waitlists), 'date'));
+        $courseBasic->dates = array_unique(array_column(array_merge($dateAttendances, $dateBooking, $dateWaitlists), 'date'));
 
-        if (empty($course_basic->id))
+        if (empty($courseBasic->id))
         {
             return new WP_Error('no_course', 'Invalid course', array('status' => 404));
         }
 
 
-        return new WP_REST_Response($course_basic);
+        return new WP_REST_Response($courseBasic);
     }
 
     public function get_course_date_participants($data)
     {
         global $wpdb;
-        $course_basic = (object)$wpdb->get_row($wpdb->prepare("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description`, `event_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $data['id']));
-        $course_basic->date = $data['date'];
-        $course_basic->booking = $wpdb->get_results($wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_bookings` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
-        $course_basic->waitlists = $wpdb->get_results($wpdb->prepare("SELECT `waitlist_id`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_waitlists` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
-        $course_basic->attendances = $wpdb->get_results($wpdb->prepare("SELECT `attendance_id`, `attendance` as `user_id` FROM `" . $wpdb->prefix . "mp_timetable_attendances` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
+        $courseBasic = (object)$wpdb->get_row($wpdb->prepare("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description`, `event_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $data['id']));
+        $courseBasic->date = $data['date'];
+        $courseBasic->booking = $wpdb->get_results($wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_bookings` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
+        $courseBasic->waitlists = $wpdb->get_results($wpdb->prepare("SELECT `waitlist_id`, `user_id` FROM `" . $wpdb->prefix . "mp_timetable_waitlists` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
+        $courseBasic->attendances = $wpdb->get_results($wpdb->prepare("SELECT `attendance_id`, `attendance` as `user_id` FROM `" . $wpdb->prefix . "mp_timetable_attendances` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
         $substitutes = $wpdb->get_row($wpdb->prepare("SELECT `user_id` FROM `" . $wpdb->prefix . "mp_timetable_substitutes` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
-        $course_basic->substitutes = $substitutes->user_id ?? null;
-        $course_basic->notes = $wpdb->get_results($wpdb->prepare("SELECT `note_id`, `note` FROM `" . $wpdb->prefix . "mp_timetable_notes` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
+        $courseBasic->substitutes = $substitutes->user_id ?? null;
+        $courseBasic->notes = $wpdb->get_results($wpdb->prepare("SELECT `note_id`, `note` FROM `" . $wpdb->prefix . "mp_timetable_notes` WHERE `course_id` =  %d AND `date` = %s;", $data['id'], $data['date']));
 
-        if (empty($course_basic->id))
+        if (empty($courseBasic->id))
         {
             return new WP_Error('no_course', 'Invalid course', array('status' => 404));
         }
 
 
-        return new WP_REST_Response($course_basic);
+        return new WP_REST_Response($courseBasic);
     }
 
-    public function api_permission($request)
+    public function apiPermission($request)
     {
         if (is_user_logged_in())
         {
@@ -175,7 +175,7 @@ final class Api extends WP_REST_Controller
      */
     public function __wakeup()
     {
-        throw new Exception("Cannot unserialize singleton");
+        throw new UnserializeSingletonException();
     }
 
     /**
