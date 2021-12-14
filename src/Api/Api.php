@@ -3,11 +3,21 @@
  * Add rest api endpoint for course-booking-system-extension
  */
 
+namespace CBSE\Api;
+
+use Exception;
+use WP_Error;
+use WP_REST_Controller;
+use WP_REST_Response;
+use WP_REST_Server;
+
 /**
  * Class Category_List_Rest
  */
-class Course_Booking_System_Extension extends WP_REST_Controller
+final class Api extends WP_REST_Controller
 {
+    private static ?Api $instance = null;
+
     /**
      * The namespace.
      *
@@ -23,12 +33,19 @@ class Course_Booking_System_Extension extends WP_REST_Controller
 
     /**
      * Category_List_Rest constructor.
+     *
+     *  is not allowed to call from outside to prevent from creating multiple instances,
+     * to use the singleton, you have to obtain the instance from Api::getInstance() instead
      */
     public function __construct()
     {
-
         $this->namespace = 'wp/v2';
         $this->rest_base = 'course-booking-system-extension';
+
+        add_action('rest_api_init', function ()
+        {
+            $this->register_routes();
+        });
     }
 
     /**
@@ -65,6 +82,19 @@ class Course_Booking_System_Extension extends WP_REST_Controller
         {
             return false;
         }
+    }
+
+    /**
+     * gets the instance via lazy initialization (created on first usage)
+     */
+    public static function getInstance(): Api
+    {
+        if (Api::$instance === null)
+        {
+            Api::$instance = new Api();
+        }
+
+        return Api::$instance;
     }
 
     public function get_courses_from_event($data)
@@ -139,15 +169,19 @@ class Course_Booking_System_Extension extends WP_REST_Controller
             return new WP_Error('cbse_not-logged-in', __("You are not logged in.", 'cbse'), array('status' => 401));
         }
     }
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     */
+    public function __wakeup()
+    {
+        throw new Exception("Cannot unserialize singleton");
+    }
+
+    /**
+     * prevent the instance from being cloned (which would create a second instance of it)
+     */
+    private function __clone()
+    {
+    }
 }
-
-/**
- * Function to register our new routes from the controller.
- */
-add_action('rest_api_init', function ()
-{
-
-    $controller = new Course_Booking_System_Extension();
-    $controller->register_routes();
-
-});
