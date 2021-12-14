@@ -29,7 +29,7 @@ final class Api extends WP_REST_Controller
      *
      * @var string
      */
-    protected $rest_base;
+    protected $restBase;
 
     /**
      * Category_List_Rest constructor.
@@ -40,30 +40,30 @@ final class Api extends WP_REST_Controller
     public function __construct()
     {
         $this->namespace = 'wp/v2';
-        $this->rest_base = 'course-booking-system-extension';
+        $this->restBase = 'course-booking-system-extension';
 
         add_action('rest_api_init', function ()
         {
-            $this->register_routes();
+            $this->registerRoutes();
         });
     }
 
     /**
      * Register the routes for the objects of the controller.
      */
-    public function register_routes()
+    public function registerRoutes()
     {
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/event/(?P<id>\d+)/courses', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_courses_from_event'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, '/' . $this->restBase . '/event/(?P<id>\d+)/courses', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_courses_from_event'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
         }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
 
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/course/(?P<id>\d+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_basic'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_basic'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
         }, 'required' => true),), 'permission_callback' => array($this, 'api_permission')));
 
-        register_rest_route($this->namespace, '/' . $this->rest_base . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_date_participants'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_date_participants'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
         }, 'required' => true), 'date' => array('validate_callback' => function ($param, $request, $key)
