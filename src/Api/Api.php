@@ -53,7 +53,7 @@ final class Api extends WP_REST_Controller
      */
     public function registerRoutes()
     {
-        register_rest_route($this->namespace, '/' . $this->restBase . '/event/(?P<id>\d+)/courses', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_courses_from_event'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, '/' . $this->restBase . '/event/(?P<id>\d+)/courses', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'getCoursesFromEvent'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
         }, 'required' => true),), 'permission_callback' => array($this, 'apiPermission')));
@@ -63,25 +63,18 @@ final class Api extends WP_REST_Controller
             return is_numeric($param);
         }, 'required' => true),), 'permission_callback' => array($this, 'apiPermission')));
 
-        register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'get_course_date_participants'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, '/' . $this->restBase . '/course/(?P<id>\d+)/date/(?P<date>[^/]+)', array('methods' => WP_REST_Server::READABLE, 'callback' => array($this, 'getCourseDateParticipants'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
         }, 'required' => true), 'date' => array('validate_callback' => function ($param, $request, $key)
         {
-            return $this->cbse_is_date($param);
+            return $this->isDate($param);
         }, 'required' => true),), 'permission_callback' => array($this, 'apiPermission')));
     }
 
-    public function cbse_is_date($date)
+    public function isDate($date): bool
     {
-        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $date);
     }
 
     /**
@@ -97,7 +90,7 @@ final class Api extends WP_REST_Controller
         return Api::$instance;
     }
 
-    public function get_courses_from_event($data)
+    public function getCoursesFromEvent($data)
     {
         global $wpdb;
         $courses = $wpdb->get_results("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `event_id` = " . $data['id'] . ";");
@@ -130,7 +123,7 @@ final class Api extends WP_REST_Controller
         return new WP_REST_Response($courseBasic);
     }
 
-    public function get_course_date_participants($data)
+    public function getCourseDateParticipants($data)
     {
         global $wpdb;
         $courseBasic = (object)$wpdb->get_row($wpdb->prepare("SELECT `id`,`column_id`, `event_start`, `event_end`, `user_id`, `description`, `event_id` FROM `" . $wpdb->prefix . "mp_timetable_data` WHERE `id` = %d;", $data['id']));
