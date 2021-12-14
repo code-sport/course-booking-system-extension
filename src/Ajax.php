@@ -50,7 +50,7 @@ class Ajax
         $courseId = intval(sanitize_key($_POST['course_id']));
         $date = DateTime::createFromFormat('Y-m-d', sanitize_key($_POST['date']));
         $course = new CourseInfoDate($courseId, $date);
-        $documentationMail = new DocumentationMail($course);
+        $documentationMail = new DocumentationMail($course, get_option('cbse_coach_mail_options'));
         $sent = $documentationMail->sentToUser(get_current_user_id());
         $args = array('course_id' => $courseId,
             'date' => $date, 'sent' => $sent,

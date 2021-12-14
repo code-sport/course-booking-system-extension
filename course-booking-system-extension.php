@@ -23,6 +23,7 @@ use CBSE\Admin\Settings;
 use CBSE\Admin\UserCovid19StatusOverview;
 use CBSE\Admin\UserCovid19StatusSettings;
 use CBSE\Ajax;
+use CBSE\Api\Api;
 use CBSE\Cron\DocumentationCoach;
 use CBSE\Cron\DocumentationPrint;
 use CBSE\Shortcode\ShortcodeOverviewForCourseHead;
@@ -44,6 +45,7 @@ ShortcodeUserCovid19Status::getInstance();
 
 DocumentationCoach::getInstance();
 DocumentationPrint::getInstance();
+Api::getInstance();
 
 $templates = new TemplatesManager();
 $templates->init();

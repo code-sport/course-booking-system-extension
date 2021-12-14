@@ -41,9 +41,10 @@ class AutoPrintCbseSettings extends CbseSettings
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
         $this->registerSettingsForTags();
+        add_settings_field('subject', __('Subject', CBSE_LANGUAGE_DOMAIN), [$this, 'subject'], 'course_booking_system_extension', $this->sectionHeader);
         add_settings_field('cron_enable', __('Cron Enable', CBSE_LANGUAGE_DOMAIN), [$this, 'cronEnable'], 'course_booking_system_extension', $this->sectionHeader);
-        /* TODO: add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this,
-        'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader); */
+        add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this,
+            'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
     }
 
     private function registerSettingsForTags()
@@ -61,6 +62,14 @@ class AutoPrintCbseSettings extends CbseSettings
         }
     }
 
+    public function subject()
+    {
+        $value = esc_attr($this->getOptions('subject') ?? __('Auto print - Sports operation documentation',
+                CBSE_LANGUAGE_DOMAIN));
+        echo "<input id='subject' name='cbse_auto_print_options[subject]' type='text' value='" . $value . "' />";
+        echo "<p class='description'>" . __('Prefix of the subject', CBSE_LANGUAGE_DOMAIN) . "</p>";
+    }
+
     public function validateInput($input): array
     {
         do_action('qm/debug', 'AutoPrintCbseSettings->Validate {input}', ['input' => json_encode($input)]);
@@ -73,11 +82,15 @@ class AutoPrintCbseSettings extends CbseSettings
             $mails = explode(',', $input["email_{$tagId}"]);
             foreach ($mails as $mail)
             {
-                $emails[] = array('id' => $tagId, 'mail' => $mail);
+                if (is_email($mail))
+                {
+                    $emails[] = array('id' => $tagId, 'mail' => $mail);
+                }
             }
         }
 
         $validatedInput['emails'] = $emails;
+        $validatedInput['subject'] = $input['subject'];
         $validatedInput['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
         $validatedInput['cron_before_time_hour'] = $input['cron_before_time_hour'];
         $validatedInput['cron_before_time_minute'] = $input['cron_before_time_minute'];
@@ -126,7 +139,7 @@ class AutoPrintCbseSettings extends CbseSettings
     public function cronBeforeTime()
     {
         $valueHours = esc_attr($this->getOptions('cron_before_time_hour') ?? 0);
-        $valueMinutes = esc_attr($this->getOptions('cron_before_time_minute') ?? 15);
+        $valueMinutes = esc_attr($this->getOptions('cron_before_time_minute') ?? 20);
         echo "<input id='cron_before_time_hour' name='cbse_auto_print_options[cron_before_time_hour]' type='number' min='0' max='23' value='" . $valueHours . "' />" . __('Hour', CBSE_LANGUAGE_DOMAIN);
         echo "<input id='cron_before_time_minute' name='cbse_auto_print_options[cron_before_time_minute]' type='number' min='0' max='59' value='" . $valueMinutes . "' />" . __('Minute', CBSE_LANGUAGE_DOMAIN);
     }

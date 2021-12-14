@@ -65,7 +65,7 @@ class DocumentationCoach extends CronBase
         $dateTo = clone $dateNow;
         $dateTo->add($interval);
 
-        Analog::log('Cron for coach mail runs at ' . $dateNow->format('c'));
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - runs at ' . $dateNow->format('c') . ' for interval ' . $interval->format('%H:%I'));
 
         if (defined('TEST'))
         {
@@ -91,7 +91,7 @@ class DocumentationCoach extends CronBase
             {
                 $date = DateTime::createFromFormat('Y-m-d', $course->date);
                 $courseInfo = new CourseInfoDate($course->course_id, $date);
-                $documentationMail = new DocumentationMail($courseInfo);
+                $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_coach_mail_options'));
                 $documentationMail->sentToUser($userId);
             }
         }

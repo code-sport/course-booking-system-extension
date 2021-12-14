@@ -4,7 +4,7 @@ namespace CBSE\Helper;
 
 final class ArrayHelper
 {
-    public static function excludeAndColumn(array $array, string $exclude, string $filter) : array
+    public static function excludeAndColumn(array $array, string $exclude, string $filter): array
     {
         $excludes = explode(',', $exclude);
         $arrayFiltered = array_filter($array, function ($val) use ($excludes)
@@ -19,7 +19,6 @@ final class ArrayHelper
 
     public static function Column(array $array, string $filter): array
     {
-        $values = $array->to_array();
-        return array_column($values, $filter);
+        return array_column($array, $filter);
     }
 }

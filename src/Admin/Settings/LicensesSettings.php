@@ -15,6 +15,16 @@ class LicensesSettings extends CbseSettings
 
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function renderSettingsPage()
+    {
+        // settings_fields($this->sectionHeader);
+
+        $this->sectionLicenses();
+    }
+
     public function sectionLicenses()
     {
         $text = '<p>';
@@ -22,7 +32,7 @@ class LicensesSettings extends CbseSettings
         $text .= '</p>';
 
         $text .= '<ul>';
-        foreach ($this->getLiscenses() as $license)
+        foreach ($this->getLicences() as $license)
         {
             $text .= "<li><a href='{$license['Url']}'>{$license['Name']} ({$license['License']})</a> </li>";
         }
@@ -31,18 +41,9 @@ class LicensesSettings extends CbseSettings
         echo $text;
     }
 
-    private function getLiscenses(): array
+    private function getLicences(): array
     {
-        return array(array('Name' => 'tecnickcom/tcpdf', 'License' => 'LGPL-3.0-only', 'Url' => 'https://tcpdf.org/'),
-            array('Name' => 'Analog', 'License' => 'MIT License', 'Url' => 'https://github.com/jbroadway/analog'));
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function renderSettingsPage()
-    {
-        settings_fields($this->sectionHeader);
+        return array(array('Name' => 'tecnickcom/tcpdf', 'License' => 'LGPL-3.0-only', 'Url' => 'https://tcpdf.org/'), array('Name' => 'Analog', 'License' => 'MIT License', 'Url' => 'https://github.com/jbroadway/analog'));
     }
 
     /**

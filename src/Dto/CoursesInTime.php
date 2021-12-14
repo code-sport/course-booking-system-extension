@@ -13,10 +13,11 @@ class CoursesInTime extends DtoBase
 
     public function __construct(DateTime $timeFrom, DateTime $timeTo)
     {
-        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $timeFrom->format('c') . '-' . $timeTo->format('c'));
         $this->timeFrom = $timeFrom;
         $this->timeTo = $timeTo;
         $this->loadFromDatabase();
+
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $timeFrom->format('c') . '-' . $timeTo->format('c') . ' -> ' . count($this->courses));
     }
 
     private function loadFromDatabase()

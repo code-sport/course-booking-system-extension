@@ -97,6 +97,7 @@ class UserInformMethod
             return false;
         }
         update_user_meta($userId, 'cbse-auto-inform', $_POST['cbse-auto-inform']);
+        update_user_meta($userId, 'cbse-auto-print', $_POST['cbse-auto-print']);
     }
 
 

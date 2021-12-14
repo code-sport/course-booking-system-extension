@@ -2,6 +2,7 @@
 
 namespace CBSE;
 
+use Analog;
 use CBSE\Dto\CourseInfoDate;
 
 class DocumentationMail extends Mail
@@ -12,11 +13,12 @@ class DocumentationMail extends Mail
     /**
      * @param CourseInfoDate $courseInfoDate
      */
-    public function __construct(CourseInfoDate $courseInfoDate)
+    public function __construct(CourseInfoDate $courseInfoDate, $mailSettings)
     {
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $courseInfoDate->getCourseId());
         parent::__construct();
         $this->course = $courseInfoDate;
-        $this->mailSettings = get_option('cbse_coach_mail_options');
+        $this->mailSettings = $mailSettings;
     }
 
     public function sentToUser(int $userId): bool
@@ -26,23 +28,6 @@ class DocumentationMail extends Mail
         $to = $this->getTo($user);
         $subject = $this->getSubject($this->mailSettings['subject']);
         $message = $this->getMessage($user);
-        $headers = $this->getHeaders();
-        $docuPDF = new DocumentationPdf($this->course);
-        $docuPDF->generatePdf();
-        $attachments = array($docuPDF->getPdfFile());
-
-        $mailSent = wp_mail($to, $subject, $message, $headers, $attachments);
-        $docuPDF->unlink();
-
-        return $mailSent;
-    }
-
-    public function sentToPrinter(array $mailadresses): bool
-    {
-
-        $to = $mailadresses;
-        $subject = $this->getSubject('PRINT');
-        $message = '';
         $headers = $this->getHeaders();
         $docuPDF = new DocumentationPdf($this->course);
         $docuPDF->generatePdf();
@@ -118,5 +103,22 @@ class DocumentationMail extends Mail
     private function getHeaders()
     {
         return "";
+    }
+
+    public function sentToPrinter(array $mailadresses): bool
+    {
+
+        $to = $mailadresses;
+        $subject = $this->getSubject($this->mailSettings['subject']);
+        $message = '';
+        $headers = $this->getHeaders();
+        $docuPDF = new DocumentationPdf($this->course);
+        $docuPDF->generatePdf();
+        $attachments = array($docuPDF->getPdfFile());
+
+        $mailSent = wp_mail($to, $subject, $message, $headers, $attachments);
+        $docuPDF->unlink();
+
+        return $mailSent;
     }
 }
