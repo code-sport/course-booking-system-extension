@@ -53,10 +53,14 @@ class AutoPrintCbseSettings extends CbseSettings
         $values = $this->getOptions('emails');
         foreach ($tags as $tag)
         {
-            $value = array_filter($values, function ($v, $k) use ($tag)
+            $value = null;
+            if (!empty($values))
             {
-                return $v['id'] == $tag->term_id;
-            }, ARRAY_FILTER_USE_BOTH);
+                $value = array_filter($values, function ($v, $k) use ($tag)
+                {
+                    return $v['id'] == $tag->term_id;
+                }, ARRAY_FILTER_USE_BOTH);
+            }
             $args = array('tag' => $tag, 'value' => $value);
             add_settings_field("email_{$tag->term_id}", $tag->name, [$this, 'tagForPrint'], 'course_booking_system_extension', $this->sectionHeader, $args);
         }
@@ -114,7 +118,11 @@ class AutoPrintCbseSettings extends CbseSettings
     {
         $tag = $args['tag'];
         $values = $args['value'] ?? '';
-        $value = implode(',', array_column($values, 'mail'));
+        $value = '';
+        if (!empty($values))
+        {
+            $value = implode(',', array_column($values, 'mail'));
+        }
         echo "<input type=\"email\" id=\"email_{$tag->term_id}\" name=\"cbse_auto_print_options[email_{$tag->term_id}]\" value=\"$value\">";
         echo "<p class='description'>" . $tag->description . "</p>";
     }
