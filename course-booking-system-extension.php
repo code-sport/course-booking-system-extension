@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.2.2
+ * Version: 0.3.0
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
@@ -23,6 +23,7 @@ use CBSE\Admin\Settings;
 use CBSE\Admin\UserCovid19StatusOverview;
 use CBSE\Admin\UserCovid19StatusSettings;
 use CBSE\Ajax;
+use CBSE\Api\Api;
 use CBSE\Cron\DocumentationCoach;
 use CBSE\Cron\DocumentationPrint;
 use CBSE\Shortcode\ShortcodeOverviewForCourseHead;
@@ -34,6 +35,8 @@ defined('ABSPATH') || exit;
 define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 const CBSE_LANGUAGE_DOMAIN = 'course-booking-system-extension';
 
+CBSE\Logging::init();
+
 
 $ajax = new Ajax();
 
@@ -42,6 +45,7 @@ ShortcodeUserCovid19Status::getInstance();
 
 DocumentationCoach::getInstance();
 DocumentationPrint::getInstance();
+Api::getInstance();
 
 $templates = new TemplatesManager();
 $templates->init();

@@ -81,6 +81,10 @@ class CourseInfoDate extends DtoBase
         return $bookingList;
     }
 
+    public function __toString()
+    {
+        return "CourseInfoDate: ID {$this->courseId}\n";
+    }
 
     /**
      * @return array|WP_Post|null
@@ -209,9 +213,9 @@ class CourseInfoDate extends DtoBase
 
     public function getEventTagsAsString(string $default = ''): string
     {
-        if ($this->getEventTags() != null && !empty($this->getEventTags()))
+        if ($this->getEventTagsByName() != null && !empty($this->getEventTagsByName()))
         {
-            return implode(", ", $this->getEventTags());
+            return implode(", ", $this->getEventTagsByName());
         }
         else
         {
@@ -222,7 +226,7 @@ class CourseInfoDate extends DtoBase
     /**
      * @return false|WP_Error|WP_Term[]
      */
-    public function getEventTags()
+    public function getEventTagsByName()
     {
         $exclude = get_option('cbse_general_options')['tags_exclude'];
         if ($exclude != '0' && is_array($this->eventTags))
@@ -233,6 +237,14 @@ class CourseInfoDate extends DtoBase
         {
             return null;
         }
+    }
+
+    /**
+     * @return false|WP_Error|WP_Term[]
+     */
+    public function getEventTags()
+    {
+        return $this->eventTags;
     }
 
 

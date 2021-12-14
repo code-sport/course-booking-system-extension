@@ -41,14 +41,14 @@ class MailCoachCbseSettings extends CbseSettings
     public function registerSettings()
     {
         //section name, display name, callback to print description of section, page to which section is attached.
-        add_settings_section($this->sectionHeader, __('Coach Mails', 'course_booking_system_extension'), [$this, 'sectionCoachMailText'], 'course_booking_system_extension');
+        add_settings_section($this->sectionHeader, __('Coach Mails', CBSE_LANGUAGE_DOMAIN), [$this, 'sectionCoachMailText'], 'course_booking_system_extension');
 
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
-        add_settings_field('subject', __('Subject', 'course_booking_system_extension'), [$this, 'subject'], 'course_booking_system_extension', $this->sectionHeader);
-        add_settings_field('message', __('Message', 'course_booking_system_extension'), [$this, 'message'], 'course_booking_system_extension', $this->sectionHeader);
-        add_settings_field('cron_enable', __('Cron Enable', 'course_booking_system_extension'), [$this, 'cronEnable'], 'course_booking_system_extension', $this->sectionHeader);
-        add_settings_field('cron_before_time', __('Cron Sent before course', 'course_booking_system_extension'), [$this, 'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
+        add_settings_field('subject', __('Subject', CBSE_LANGUAGE_DOMAIN), [$this, 'subject'], 'course_booking_system_extension', $this->sectionHeader);
+        add_settings_field('message', __('Message', CBSE_LANGUAGE_DOMAIN), [$this, 'message'], 'course_booking_system_extension', $this->sectionHeader);
+        add_settings_field('cron_enable', __('Cron Enable', CBSE_LANGUAGE_DOMAIN), [$this, 'cronEnable'], 'course_booking_system_extension', $this->sectionHeader);
+        add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this, 'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
     }
 
     public function sectionCoachMailText()
@@ -116,8 +116,6 @@ class MailCoachCbseSettings extends CbseSettings
     public function validateInput($input)
     {
         do_action('qm/debug', 'MailCoachCbseSettings->Validate {input}', ['input' => json_encode($input)]);
-
-        var_dump($input);
 
         $cron = DocumentationCoach::getInstance();
         $input['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;

@@ -2,6 +2,7 @@
 
 namespace CBSE;
 
+use Analog\Analog;
 use CBSE\Dto\CourseInfoDate;
 
 class DocumentationPdf extends CbsePdf
@@ -12,6 +13,9 @@ class DocumentationPdf extends CbsePdf
 
     public function __construct(CourseInfoDate $courseInfoDate)
     {
+        $logMessage = get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $courseInfoDate->__toString() . '[' .
+            get_current_user_id() . ']';
+        Analog::log($logMessage);
         parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $this->course = $courseInfoDate;
         $this->generalOptions = get_option('cbse_general_options');

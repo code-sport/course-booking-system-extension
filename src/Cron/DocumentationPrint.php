@@ -2,6 +2,11 @@
 
 namespace CBSE\Cron;
 
+use Analog\Analog;
+use CBSE\DocumentationMail;
+use CBSE\Dto\CourseInfoDate;
+use CBSE\Dto\CoursesInTime;
+use CBSE\Helper\ArrayHelper;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -40,28 +45,68 @@ class DocumentationPrint extends CronBase
         throw new Exception("Cannot unserialize singleton");
     }
 
+
     protected function work(DateTime $dateLastRun, DateTime $dateNow)
     {
-        $interval = new DateInterval('PT15M');
+        $options = get_option('cbse_auto_print_options');
+        $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)
+        $options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 0;
+        $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 &&
+        (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 20;
+
+        try
+        {
+            $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
+        } catch (Exception $e)
+        {
+            $interval = new DateInterval('PT20M');
+        }
 
         $dateFrom = clone $dateLastRun;
         $dateFrom->add($interval);
         $dateTo = clone $dateNow;
         $dateTo->add($interval);
 
-        $courses = cbse_courses_in_time($dateFrom, $dateTo);
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Runs at ' . $dateNow->format('c') . ' for interval ' . $interval->format('%H:%I'));
+
+        $coursesInTime = new CoursesInTime($dateFrom, $dateTo);
+        $courses = $coursesInTime->getCourses();
 
         foreach ($courses as $course)
         {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
-            $autoPrint = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-inform', $userId);
+            $autoPrintUser = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-print', $userId);
 
-            if ($autoPrint)
+            Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Course: ' .
+                $course->course_id . ' print: ' . $autoPrintUser);
+
+            if ($autoPrintUser)
             {
-                //TODO cbse_sent_mail_with_course_date_bookings($course->course_id, $course->date, $userId);
+                $date = DateTime::createFromFormat('Y-m-d', $course->date);
+                $courseInfo = new CourseInfoDate($course->course_id, $date);
+                $printerMails = $this->getPrinterMailAddresses($courseInfo);
+                Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - print on: ' . implode(', ', $printerMails));
+
+                if (!empty($printerMails))
+                {
+                    $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_auto_print_options'));
+                    $documentationMail->sentToPrinter(array_column($printerMails, 'mail'));
+                }
+
             }
 
         }
+    }
+
+    private function getPrinterMailAddresses(CourseInfoDate $course): array
+    {
+        $printOptionsEmails = get_option('cbse_auto_print_options')['emails'];
+        $eventTagIds = ArrayHelper::column($course->getEventTags(), 'term_id');
+
+        return array_filter($printOptionsEmails, function ($v, $k) use ($eventTagIds)
+        {
+            return in_array($v['id'], $eventTagIds);
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     /**

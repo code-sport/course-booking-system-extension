@@ -65,7 +65,6 @@ class UserCovid19Status
                     new DateInterval('P28D'),
                     new DateInterval('P6M')
                 );
-                $this->plusStatePossible = true;
                 break;
         }
 

@@ -116,7 +116,7 @@ class Settings
 
 
                 // Add the submit button to serialize the options
-                if ($this->getActiveTab() != $this->licensesSettings->tabKey())
+                if (!$this->licensesSettings->isTab($this->getActiveTab()))
                 {
                     submit_button();
                 }

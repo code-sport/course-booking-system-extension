@@ -2,6 +2,7 @@
 
 namespace CBSE\Cron;
 
+use Analog\Analog;
 use CBSE\DocumentationMail;
 use CBSE\Dto\CourseInfoDate;
 use CBSE\Dto\CoursesInTime;
@@ -64,6 +65,8 @@ class DocumentationCoach extends CronBase
         $dateTo = clone $dateNow;
         $dateTo->add($interval);
 
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - runs at ' . $dateNow->format('c') . ' for interval ' . $interval->format('%H:%I'));
+
         if (defined('TEST'))
         {
             $intervalString = $interval->format('%H:%I:%S');
@@ -87,9 +90,9 @@ class DocumentationCoach extends CronBase
             if ($autoInformWay == 'email')
             {
                 $date = DateTime::createFromFormat('Y-m-d', $course->date);
-                $course = new CourseInfoDate($course->course_id, $date);
-                $documentationMail = new DocumentationMail($course, $userId);
-                $documentationMail->sent();
+                $courseInfo = new CourseInfoDate($course->course_id, $date);
+                $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_coach_mail_options'));
+                $documentationMail->sentToUser($userId);
             }
         }
     }

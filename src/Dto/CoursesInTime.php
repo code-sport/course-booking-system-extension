@@ -2,6 +2,7 @@
 
 namespace CBSE\Dto;
 
+use Analog\Analog;
 use DateTime;
 
 class CoursesInTime extends DtoBase
@@ -15,6 +16,8 @@ class CoursesInTime extends DtoBase
         $this->timeFrom = $timeFrom;
         $this->timeTo = $timeTo;
         $this->loadFromDatabase();
+
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $timeFrom->format('c') . '-' . $timeTo->format('c') . ' -> ' . count($this->courses));
     }
 
     private function loadFromDatabase()
@@ -33,8 +36,8 @@ class CoursesInTime extends DtoBase
         $query .= " GROUP BY `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date`, `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`course_id`";
         $query .= " ORDER BY `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date` ASC, `" . $this->datebaseTableName('mp_timetable_data') . "`.`event_start` ASC;";
         $this->courses = $wpdb->get_results($wpdb->prepare($query, $this->timeFrom->format('Y-m-d H:i:s'),
-        $this->timeTo->format
-    ('Y-m-d H:i:s')));
+            $this->timeTo->format
+            ('Y-m-d H:i:s')));
     }
 
     /**

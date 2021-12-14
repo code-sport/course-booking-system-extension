@@ -24,19 +24,19 @@ class PdfCbseSettings extends CbseSettings
     public function registerSettings()
     {
         //section name, display name, callback to print description of section, page to which section is attached.
-        add_settings_section($this->sectionHeader, __('Header of PDF', 'course_booking_system_extension'), [$this, 'sectionPdfHeaderText'], 'course_booking_system_extension');
+        add_settings_section($this->sectionHeader, __('Header of PDF', CBSE_LANGUAGE_DOMAIN), [$this, 'sectionPdfHeaderText'], 'course_booking_system_extension');
 
 
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
         add_settings_field('header_image_attachment_id',
-            __('Image Attachment ID', 'course_booking_system_extension'),
+            __('Image Attachment ID', CBSE_LANGUAGE_DOMAIN),
             [$this, 'headerImage'],
             'course_booking_system_extension',
             $this->sectionHeader);
 
         add_settings_field('title',
-            __('Title', 'course_booking_system_extension'),
+            __('Title', CBSE_LANGUAGE_DOMAIN),
             [$this, 'title'],
             'course_booking_system_extension',
             $this->sectionHeader);
