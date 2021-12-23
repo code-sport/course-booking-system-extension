@@ -8,9 +8,9 @@ use CBSE\Cron\LoggingCleanUp;
 
 final class Logging
 {
-    public static function init()
+    public static function init(string $file)
     {
-        $folder = self::getFolder();
+        $folder = self::getFolder($file);
         $logFile = implode(DIRECTORY_SEPARATOR, array($folder, date('Y-m-d', time()) . '.log'));
         $folder = dirname($logFile);
         if (!file_exists($folder))
@@ -22,9 +22,16 @@ final class Logging
         LoggingCleanUp::getInstance();
     }
 
-    public static function getFolder(): string
+    public static function getFolder(string $file): string
     {
-        return realpath(implode(DIRECTORY_SEPARATOR, array(plugin_dir_path(__FILE__), '..', 'logs')));
+        $pluginDir = plugin_dir_path($file);
+        $folderPath = implode(DIRECTORY_SEPARATOR, array($pluginDir, 'logs'));
+        $folderRealPath = realpath($folderPath);
+        if ($folderRealPath !== false)
+        {
+            return $folderRealPath;
+        }
+        return $folderPath;
     }
 }
 

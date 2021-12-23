@@ -4,6 +4,7 @@ namespace CBSE;
 
 use Analog;
 use CBSE\Dto\CourseInfoDate;
+use WP_User;
 
 class DocumentationMail extends Mail
 {
@@ -70,11 +71,11 @@ class DocumentationMail extends Mail
      *
      * @return string
      */
-    private function getMessage($user): string
+    private function getMessage(WP_User $user): string
     {
         $message = $this->mailSettings['message'] ?? __("Hi %first_name%,\n\nplease note the file in the attachment.\n\nRegards\nYour IT.", CBSE_LANGUAGE_DOMAIN);
-        $message = str_replace('%first_name%', $user->firstName, $message);
-        $message = str_replace('%last_name%', $user->lastName, $message);
+        $message = str_replace('%first_name%', $user->first_name, $message);
+        $message = str_replace('%last_name%', $user->last_name, $message);
         $message = str_replace('%course_date%', $this->course->getCourseDateString(), $message);
         $message = str_replace('%course_start%', $this->course->getCourseStartTimeString(), $message);
         $message = str_replace('%course_end%', $this->course->getCourseEndTimeString(), $message);
