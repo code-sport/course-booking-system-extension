@@ -75,24 +75,27 @@ class DocumentationPrint extends CronBase
         foreach ($courses as $course)
         {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
-            $autoPrintUser = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-print', $userId);
-
-            Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Course: ' .
-                $course->course_id . ' print: ' . $autoPrintUser);
-
-            if ($autoPrintUser)
+            if (get_userdata($userId) !== false)
             {
-                $date = DateTime::createFromFormat('Y-m-d', $course->date);
-                $courseInfo = new CourseInfoDate($course->course_id, $date);
-                $printerMails = $this->getPrinterMailAddresses($courseInfo);
-                Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - print on: ' . implode(', ', $printerMails));
+                $autoPrintUser = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-print', $userId);
 
-                if (!empty($printerMails))
+                Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Course: ' .
+                    $course->course_id . ' print: ' . $autoPrintUser);
+
+                if ($autoPrintUser)
                 {
-                    $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_auto_print_options'));
-                    $documentationMail->sentToPrinter(array_column($printerMails, 'mail'));
-                }
+                    $date = DateTime::createFromFormat('Y-m-d', $course->date);
+                    $courseInfo = new CourseInfoDate($course->course_id, $date);
+                    $printerMails = $this->getPrinterMailAddresses($courseInfo);
+                    Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - print on: ' . implode(', ', $printerMails));
 
+                    if (!empty($printerMails))
+                    {
+                        $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_auto_print_options'));
+                        $documentationMail->sentToPrinter(array_column($printerMails, 'mail'));
+                    }
+
+                }
             }
 
         }

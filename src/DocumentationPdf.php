@@ -140,6 +140,11 @@ class DocumentationPdf extends CbsePdf
         $courseInfoTags = $this->course->getEventTagsAsString();
         $courseInfoDateTime = $this->course->getCourseDateTimeString();
         $userMeta = get_userdata($this->course->getSubstitutes()->user_id ?? $this->course->getTimeslot()->user_id);
+        $userDisplayName = '______________________________________________________________';
+        if($userMeta !== false)
+        {
+            $userDisplayName = "{$userMeta->last_name}, {$userMeta->first_name}";
+        }
         $userCovid19Status = new UserCovid19Status($userMeta->ID);
 
         $w = array(55, 125);
@@ -169,7 +174,7 @@ class DocumentationPdf extends CbsePdf
             $this->Ln();
         }
         $this->Cell($w[0], 6, __('Responsible coach', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);
-        $this->Cell($w[1], 6, "{$userMeta->last_name}, {$userMeta->first_name} ({$userCovid19Status->getStatusOrAll()})", 0, 0, 'L', false);
+        $this->Cell($w[1], 6, "{$userDisplayName} ({$userCovid19Status->getStatusOrAll()})", 0, 0, 'L', false);
         $this->Ln();
         $this->Ln();
         $this->Cell($w[0], 6, __('Signature coach', CBSE_LANGUAGE_DOMAIN) . ':', 0, 0, 'L', false);

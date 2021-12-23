@@ -25,6 +25,8 @@ class DocumentationMail extends Mail
     {
         $user = get_userdata($userId);
 
+        //TODO: handle if user === false
+
         $to = $this->getTo($user);
         $subject = $this->getSubject($this->mailSettings['subject']);
         $message = $this->getMessage($user);
@@ -105,10 +107,10 @@ class DocumentationMail extends Mail
         return "";
     }
 
-    public function sentToPrinter(array $mailadresses): bool
+    public function sentToPrinter(array $mailaddresses): bool
     {
 
-        $to = $mailadresses;
+        $to = $mailaddresses;
         $subject = $this->getSubject($this->mailSettings['subject']);
         $message = '';
         $headers = $this->getHeaders();

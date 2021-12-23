@@ -80,19 +80,22 @@ class DocumentationCoach extends CronBase
         foreach ($courses as $course)
         {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
-            $autoInformWay = empty(get_the_author_meta('cbse-auto-inform', $userId)) ? 'email' : get_the_author_meta('cbse-auto-inform', $userId);
-
-            if (defined('TEST'))
+            if (get_userdata($userId) !== false)
             {
-                wp_mail(get_option('admin_email'), 'CronTest', "UserId: $userId\nInformway Way: $autoInformWay " . ($autoInformWay == 'email'));
-            }
+                $autoInformWay = empty(get_the_author_meta('cbse-auto-inform', $userId)) ? 'email' : get_the_author_meta('cbse-auto-inform', $userId);
 
-            if ($autoInformWay == 'email')
-            {
-                $date = DateTime::createFromFormat('Y-m-d', $course->date);
-                $courseInfo = new CourseInfoDate($course->course_id, $date);
-                $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_coach_mail_options'));
-                $documentationMail->sentToUser($userId);
+                if (defined('TEST'))
+                {
+                    wp_mail(get_option('admin_email'), 'CronTest', "UserId: $userId\nInformway Way: $autoInformWay " . ($autoInformWay == 'email'));
+                }
+
+                if ($autoInformWay == 'email')
+                {
+                    $date = DateTime::createFromFormat('Y-m-d', $course->date);
+                    $courseInfo = new CourseInfoDate($course->course_id, $date);
+                    $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_coach_mail_options'));
+                    $documentationMail->sentToUser($userId);
+                }
             }
         }
     }
