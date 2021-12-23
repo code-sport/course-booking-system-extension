@@ -50,11 +50,11 @@ class DocumentationCoach extends CronBase
     protected function work(DateTime $dateLastRun, DateTime $dateNow)
     {
         $options = get_option('cbse_coach_mail');
-        $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)$options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 2;
-        $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 && (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 0;
 
         try
         {
+            $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)$options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 2;
+            $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 && (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 0;
             $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
         } catch (Exception $e)
         {

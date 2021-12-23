@@ -22,8 +22,12 @@ class Ajax
     {
         global $post;
         if (
-            !(shortcode_exists('cbse_event_head_courses')
-                && has_shortcode($post->post_content, 'cbse_event_head_courses'))
+            $post == null
+            ||
+            !(
+                shortcode_exists('cbse_event_head_courses')
+                && has_shortcode($post->post_content, 'cbse_event_head_courses')
+            )
         )
         {
             return;
