@@ -9,23 +9,17 @@ class Covid19Status
 {
     private string $id;
     private string $name;
-    private ?DateInterval $validFrom = null;
-    private ?DateInterval $validTo = null;
+    private ?DateInterval $validFrom;
+    private ?DateInterval $validTo;
+    private ?DateInterval $plusValidTo;
 
-    public function __construct(string $id, string $name, ?DateInterval $validFrom, ?DateInterval $validTo)
+    public function __construct(string $id, string $name, ?DateInterval $validFrom, ?DateInterval $validTo, ?DateInterval $plusValidTo)
     {
         $this->id = $id;
         $this->name = $name;
         $this->validFrom = $validFrom;
         $this->validTo = $validTo;
-    }
-
-    public static function isInUpToInterval(DateTime $dateCertificate, DateInterval $param): bool
-    {
-        $today = new DateTime("today");
-        $dateEnd = clone $dateCertificate;
-        $dateEnd->add($param);
-        return $today < $dateEnd;
+        $this->plusValidTo = $plusValidTo;
     }
 
     /**
@@ -87,5 +81,30 @@ class Covid19Status
     public function getValidTo(): ?DateInterval
     {
         return $this->validTo;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPlusStatus(DateTime $date): bool
+    {
+        return ($this->getPlusValidTo() != null)
+            && Covid19Status::isInUpToInterval($date, $this->getPlusValidTo());
+    }
+
+    /**
+     * @return DateInterval|null
+     */
+    public function getPlusValidTo(): ?DateInterval
+    {
+        return $this->plusValidTo;
+    }
+
+    public static function isInUpToInterval(DateTime $dateCertificate, DateInterval $param): bool
+    {
+        $today = new DateTime("today");
+        $dateEnd = clone $dateCertificate;
+        $dateEnd->add($param);
+        return $today < $dateEnd;
     }
 }

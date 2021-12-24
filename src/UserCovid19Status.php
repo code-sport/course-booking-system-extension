@@ -9,7 +9,6 @@ use DateTime;
 class UserCovid19Status
 {
     private ?Covid19Status $status;
-    private bool $plusStatePossible = false;
     private ?DateTime $date = null;
     private int $userId;
 
@@ -38,7 +37,8 @@ class UserCovid19Status
                     'tested',
                     __('tested', CBSE_LANGUAGE_DOMAIN),
                     null,
-                    new DateInterval('PT24H')
+                    new DateInterval('PT24H'),
+                    null
                 );
                 break;
             case 'vaccinated';
@@ -46,16 +46,17 @@ class UserCovid19Status
                     'vaccinated',
                     __('vaccinated', CBSE_LANGUAGE_DOMAIN),
                     new DateInterval('P14D'),
-                    new DateInterval('P9M')
+                    new DateInterval('P9M'),
+                    new DateInterval('P3M')
                 );
-                $this->plusStatePossible = true;
                 break;
             case 'vaccinated_updated';
                 $statusTemp = new Covid19Status(
                     'vaccinated_updated',
                     __('booster vaccinated', CBSE_LANGUAGE_DOMAIN),
                     null,
-                    new DateInterval('P9M')
+                    new DateInterval('P9M'),
+                    null
                 );
                 break;
             case 'recovered';
@@ -63,7 +64,8 @@ class UserCovid19Status
                     'recovered',
                     __('recovered', CBSE_LANGUAGE_DOMAIN),
                     new DateInterval('P28D'),
-                    new DateInterval('P6M')
+                    new DateInterval('P6M'),
+                    new DateInterval('P3M')
                 );
                 break;
         }
@@ -98,14 +100,9 @@ class UserCovid19Status
         return $this->date != null && $this->status->isValid($this->date);
     }
 
-    /**
-     * @return bool
-     */
     private function isPlusStatus(): bool
     {
-        return $this->plusStatePossible
-            && ($this->date != null)
-            && Covid19Status::isInUpToInterval($this->date, new DateInterval('P6M'));
+        return $this->date != null && $this->status->isPlusStatus($this->date);
     }
 
     public static function getAll($separator = '|'): string
