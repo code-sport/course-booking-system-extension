@@ -17,7 +17,7 @@ class Covid19Settings extends CbseSettings
      */
     public function tabName(): string
     {
-        return __('Covid 19', CBSE_LANGUAGE_DOMAIN);
+        return __('Covid-19', CBSE_LANGUAGE_DOMAIN);
     }
 
     /**
@@ -34,7 +34,7 @@ class Covid19Settings extends CbseSettings
     public function registerSettings()
     {
         //section name, display name, callback to print description of section, page to which section is attached.
-        add_settings_section($this->sectionHeader, __('Covid 19', CBSE_LANGUAGE_DOMAIN), [$this, 'covid19General'], 'course_booking_system_extension');
+        add_settings_section($this->sectionHeader, __('Covid-19', CBSE_LANGUAGE_DOMAIN), [$this, 'covid19General'], 'course_booking_system_extension');
 
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
