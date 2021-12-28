@@ -66,69 +66,59 @@ class Covid19Settings extends CbseSettings
     /* vaccinated */
     public function vaccinatedStatusValidFrom()
     {
-        $value = esc_attr($this->getOptions('vaccinated_status_valid_from') ?? 'P14D');
-        echo "<input id='vaccinated_status_valid_from' name='cbse_covid19_options[vaccinated_status_valid_from]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
+        $this->showSettingField('vaccinated_status_valid_from', 'P14D');
+    }
+
+    private function showSettingField(string $setting, string $default)
+    {
+        $value = esc_attr($this->getOptions($setting) ?? $default);
+        echo "<input id='{$setting}' name='cbse_covid19_options[{$setting}]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
         echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
     }
 
     public function vaccinatedStatusValidTo()
     {
-        $value = esc_attr($this->getOptions('vaccinated_status_valid_to') ?? 'P9M');
-        echo "<input id='vaccinated_status_valid_to' name='cbse_covid19_options[vaccinated_status_valid_to]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
-    }
-
-    public function vaccinatedPlusStatusValidTo()
-    {
-        $value = esc_attr($this->getOptions('vaccinated_plus_status_valid_to') ?? 'P3M');
-        echo "<input id='vaccinated_plus_status_valid_to' name='cbse_covid19_options[vaccinated_plus_status_valid_to]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
+        $this->showSettingField('vaccinated_status_valid_to', 'P9M');
     }
 
     /* vaccinated_updated*/
+
+    public function vaccinatedPlusStatusValidTo()
+    {
+        $this->showSettingField('vaccinated_plus_status_valid_to', 'P3M');
+    }
+
     public function vaccinatedUpdatedStatusValidFrom()
     {
-        $value = esc_attr($this->getOptions('vaccinated_updated_status_valid_from') ?? 'P0D');
-        echo "<input id='vaccinated_updated_status_valid_from' name='cbse_covid19_options[vaccinated_updated_status_valid_from]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
+        $this->showSettingField('vaccinated_updated_status_valid_from', '');
     }
 
     public function vaccinatedUpdatedStatusValidTo()
     {
-        $value = esc_attr($this->getOptions('vaccinated_updated_status_valid_to') ?? 'P9M');
-        echo "<input id='vaccinated_updated_status_valid_to' name='cbse_covid19_options[vaccinated_updated_status_valid_to]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
-    }
-
-    public function vaccinatedUpdatedPlusStatusValidTo()
-    {
-        $value = esc_attr($this->getOptions('vaccinated_updated_plus_status_valid_to') ?? '');
-        echo "<input id='vaccinated_updated_plus_status_valid_to' name='cbse_covid19_options[vaccinated_updated_plus_status_valid_to]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
+        $this->showSettingField('vaccinated_updated_status_valid_to', 'P9M');
     }
 
     /* recovered */
+
+    public function vaccinatedUpdatedPlusStatusValidTo()
+    {
+        $this->showSettingField('vaccinated_updated_plus_status_valid_to', '');
+    }
+
     public function recoveredStatusValidFrom()
     {
-        $value = esc_attr($this->getOptions('recovered_status_valid_from') ?? 'P28D');
-        echo "<input id='recovered_status_valid_from' name='cbse_covid19_options[recovered_status_valid_from]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
+        $this->showSettingField('recovered_status_valid_from', 'P28D');
     }
 
     public function recoveredStatusValidTo()
     {
-        $value = esc_attr($this->getOptions('recovered_status_valid_to') ?? 'P6M');
-        echo "<input id='recovered_status_valid_to' name='cbse_covid19_options[recovered_status_valid_to]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
+        $this->showSettingField('recovered_status_valid_to', 'P6M');
     }
 
     public function recoveredPlusStatusValidTo()
     {
-        $value = esc_attr($this->getOptions('recovered_plus_status_valid_to') ?? 'P3M');
-        echo "<input id='recovered_plus_status_valid_to' name='cbse_covid19_options[recovered_plus_status_valid_to]' type='text' value='" . $value . "'   pattern='((P([1-9]|[1-9][0-9])(W|D|M|H)|PT([1-9]|[1-9][0-9])H)|^$)' />";
-        echo "<p class='description'>" . __('Based on DateInterval::__construct', CBSE_LANGUAGE_DOMAIN) . "</p>";
+        $this->showSettingField('recovered_plus_status_valid_to', 'P3M');
     }
-    
 
     /**
      * @inheritDoc
