@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE\Admin;
+namespace CBSE\Admin\User\Admin\User\User;
 
-use CBSE\UserCovid19Status;
+use CBSE\Admin\User\UserCovid19Status;
 use Exception;
 
 class UserCovid19StatusOverview

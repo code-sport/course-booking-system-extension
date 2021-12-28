@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin;
+namespace CBSE\Admin\User\Admin\User;
 
 class UserCovid19StatusSettings
 {

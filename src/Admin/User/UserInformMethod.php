@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE;
+namespace CBSE\Admin\User;
 
 class UserInformMethod
 {

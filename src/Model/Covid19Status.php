@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Model;
+namespace CBSE\Admin\User\Model;
 
 use DateInterval;
 use DateTime;

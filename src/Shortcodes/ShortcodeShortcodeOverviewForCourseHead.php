@@ -1,9 +1,9 @@
 <?php
 
-namespace CBSE\Shortcode;
+namespace CBSE\Admin\User\Shortcode;
 
-use CBSE\Dto\CourseInfoDate;
-use CBSE\Dto\CoursesForHead;
+use CBSE\Admin\User\Dto\CourseInfoDate;
+use CBSE\Admin\User\Dto\CoursesForHead;
 use DateTime;
 use Exception;
 

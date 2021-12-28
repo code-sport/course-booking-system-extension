@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE\Admin\Settings;
+namespace CBSE\Admin\User\Admin\User\User\Settings;
 
-use CBSE\Cron\DocumentationCoach;
+use CBSE\Admin\User\Cron\DocumentationCoach;
 use DateTime;
 
 class MailCoachCbseSettings extends CbseSettings

@@ -3,7 +3,7 @@
 namespace CBSE;
 
 use Analog;
-use CBSE\Dto\CourseInfoDate;
+use CBSE\Admin\User\Dto\CourseInfoDate;
 use WP_User;
 
 class DocumentationMail extends Mail

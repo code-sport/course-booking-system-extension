@@ -18,18 +18,18 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 
 //require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
 
-use CBSE\Admin\Plugin;
-use CBSE\Admin\Settings;
-use CBSE\Admin\UserCovid19StatusOverview;
-use CBSE\Admin\UserCovid19StatusSettings;
+use CBSE\Admin\User\Admin\Plugin;
+use CBSE\Admin\User\Admin\Settings;
+use CBSE\Admin\User\Admin\User\User\UserCovid19StatusOverview;
+use CBSE\Admin\User\Admin\User\UserCovid19StatusSettings;
+use CBSE\Admin\User\Api\Api;
+use CBSE\Admin\User\Cron\DocumentationCoach;
+use CBSE\Admin\User\Cron\DocumentationPrint;
+use CBSE\Admin\User\Shortcode\ShortcodeOverviewForCourseHead;
+use CBSE\Admin\User\Shortcode\ShortcodeUserCovid19Status;
+use CBSE\Admin\User\UserInformMethod;
 use CBSE\Ajax;
-use CBSE\Api\Api;
-use CBSE\Cron\DocumentationCoach;
-use CBSE\Cron\DocumentationPrint;
-use CBSE\Shortcode\ShortcodeOverviewForCourseHead;
-use CBSE\Shortcode\ShortcodeUserCovid19Status;
 use CBSE\TemplatesManager;
-use CBSE\UserInformMethod;
 
 defined('ABSPATH') || exit;
 define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));

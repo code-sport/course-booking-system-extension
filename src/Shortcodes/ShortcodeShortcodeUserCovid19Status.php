@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE\Shortcode;
+namespace CBSE\Admin\User\Shortcode;
 
-use CBSE\UserCovid19Status;
+use CBSE\Admin\User\UserCovid19Status;
 use Exception;
 
 final class ShortcodeUserCovid19Status

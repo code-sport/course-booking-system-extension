@@ -1,10 +1,10 @@
 <?php
 
-namespace CBSE\Cron;
+namespace CBSE\Admin\User\Cron;
 
 
-use CBSE\Exception\UnserializeSingletonException;
-use CBSE\Logging;
+use CBSE\Admin\User\Exception\UnserializeSingletonException;
+use CBSE\Admin\User\Logging;
 
 class LoggingCleanUp
 {
