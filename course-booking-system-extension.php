@@ -19,6 +19,7 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 //require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
 
 use CBSE\Admin\Plugin;
+use CBSE\Admin\Settings;
 use CBSE\Admin\User\UserCovid19StatusOverview;
 use CBSE\Admin\User\UserCovid19StatusSettings;
 use CBSE\Admin\User\UserInformMethod;
