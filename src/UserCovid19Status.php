@@ -2,7 +2,7 @@
 
 namespace CBSE;
 
-use CBSE\Admin\User\Model\Covid19Status;
+use CBSE\Model\Covid19Status;
 use DateInterval;
 use DateTime;
 use Exception;

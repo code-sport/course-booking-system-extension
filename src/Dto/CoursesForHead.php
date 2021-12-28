@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin\User\Dto;
+namespace CBSE\Dto;
 
 class CoursesForHead extends DtoBase
 {

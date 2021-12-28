@@ -1,12 +1,11 @@
 <?php
 
-namespace CBSE\Admin\User\Cron;
+namespace CBSE\Cron;
 
 use Analog\Analog;
-use CBSE\Admin\User\DocumentationMail;
-use CBSE\Admin\User\Dto\CourseInfoDate;
-use CBSE\Admin\User\Dto\CoursesInTime;
-use CBSE\Admin\User\Helper\ArrayHelper;
+use CBSE\Dto\CourseInfoDate;
+use CBSE\Dto\CoursesInTime;
+use CBSE\Helper\ArrayHelper;
 use DateInterval;
 use DateTime;
 use Exception;

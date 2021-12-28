@@ -2,7 +2,7 @@
 
 //defined('TEST');
 
-namespace CBSE\Admin\User\Cron;
+namespace CBSE\Cron;
 
 use DateTime;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin\User\Admin\User\User\Settings;
+namespace CBSE\Admin\Settings;
 
 class PdfCbseSettings extends CbseSettings
 {

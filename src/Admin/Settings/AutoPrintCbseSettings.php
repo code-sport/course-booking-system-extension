@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE\Admin\User\Admin\User\User\Settings;
+namespace CBSE\Admin\Settings;
 
-use CBSE\Admin\User\Cron\DocumentationPrint;
+use CBSE\Cron\DocumentationPrint;
 use DateTime;
 
 class AutoPrintCbseSettings extends CbseSettings

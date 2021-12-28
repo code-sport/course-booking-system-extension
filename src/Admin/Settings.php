@@ -1,13 +1,13 @@
 <?php
 
-namespace CBSE\Admin\User\Admin;
+namespace CBSE\Admin;
 
-use CBSE\Admin\User\Admin\User\User\Settings\AutoPrintCbseSettings;
-use CBSE\Admin\User\Admin\User\User\Settings\Covid19Settings;
-use CBSE\Admin\User\Admin\User\User\Settings\GeneralCbseSettings;
-use CBSE\Admin\User\Admin\User\User\Settings\LicensesSettings;
-use CBSE\Admin\User\Admin\User\User\Settings\MailCoachCbseSettings;
-use CBSE\Admin\User\Admin\User\User\Settings\PdfCbseSettings;
+use CBSE\Admin\Settings\AutoPrintCbseSettings;
+use CBSE\Admin\Settings\Covid19Settings;
+use CBSE\Admin\Settings\GeneralCbseSettings;
+use CBSE\Admin\Settings\LicensesSettings;
+use CBSE\Admin\Settings\MailCoachCbseSettings;
+use CBSE\Admin\Settings\PdfCbseSettings;
 
 class Settings
 {

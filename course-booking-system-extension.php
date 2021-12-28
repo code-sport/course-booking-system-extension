@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.3.2
+ * Version: 0.3.3
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
@@ -18,17 +18,16 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 
 //require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
 
-use CBSE\Admin\User\Admin\Plugin;
-use CBSE\Admin\User\Admin\Settings;
-use CBSE\Admin\User\Admin\User\User\UserCovid19StatusOverview;
-use CBSE\Admin\User\Admin\User\UserCovid19StatusSettings;
-use CBSE\Admin\User\Api\Api;
-use CBSE\Admin\User\Cron\DocumentationCoach;
-use CBSE\Admin\User\Cron\DocumentationPrint;
-use CBSE\Admin\User\Shortcode\ShortcodeOverviewForCourseHead;
-use CBSE\Admin\User\Shortcode\ShortcodeUserCovid19Status;
+use CBSE\Admin\Plugin;
+use CBSE\Admin\User\UserCovid19StatusOverview;
+use CBSE\Admin\User\UserCovid19StatusSettings;
 use CBSE\Admin\User\UserInformMethod;
 use CBSE\Ajax;
+use CBSE\Api\Api;
+use CBSE\Cron\DocumentationCoach;
+use CBSE\Cron\DocumentationPrint;
+use CBSE\Shortcodes\ShortcodeOverviewForCourseHead;
+use CBSE\Shortcodes\ShortcodeUserCovid19Status;
 use CBSE\TemplatesManager;
 
 defined('ABSPATH') || exit;

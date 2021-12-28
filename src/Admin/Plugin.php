@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin\User\Admin;
+namespace CBSE\Admin;
 
 class Plugin
 {

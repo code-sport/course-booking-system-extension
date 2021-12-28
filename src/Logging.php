@@ -4,7 +4,7 @@ namespace CBSE;
 
 
 use Analog;
-use CBSE\Admin\User\Cron\LoggingCleanUp;
+use CBSE\Cron\LoggingCleanUp;
 
 final class Logging
 {
@@ -19,7 +19,7 @@ final class Logging
         }
         Analog::handler(Analog\Handler\File::init($logFile));
 
-        LoggingCleanUp::getInstance();
+        LoggingCleanUp::getInstance($file);
     }
 
     public static function getFolder(string $file): string

@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin\User\Admin\User\User;
+namespace CBSE\Admin\User;
 
 use CBSE\UserCovid19Status;
 use Exception;

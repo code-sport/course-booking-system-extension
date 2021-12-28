@@ -1,21 +1,23 @@
 <?php
 
-namespace CBSE\Admin\User\Cron;
+namespace CBSE\Cron;
 
 
-use CBSE\Admin\User\Exception\UnserializeSingletonException;
-use CBSE\Admin\User\Logging;
+use CBSE\Exception\UnserializeSingletonException;
+use CBSE\Logging;
 
 class LoggingCleanUp
 {
     private static ?LoggingCleanUp $instance = null;
     private string $hook;
+    private string $file;
 
     /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
-     */
-    private function __construct()
+     *
+     * @param string $file*/
+    private function __construct(string $file)
     {
         $this->hook = 'cbse_cleanup_logs';
         add_filter('cron_schedules', [$this, 'addCronDailyInterval']);
@@ -25,16 +27,16 @@ class LoggingCleanUp
         {
             wp_schedule_event(time(), 'daily', $this->hook);
         }
-    }
+        $this->file = $file;}
 
     /**
      * gets the instance via lazy initialization (created on first usage)
      */
-    public static function getInstance(): LoggingCleanUp
+    public static function getInstance($file): LoggingCleanUp
     {
         if (static::$instance === null)
         {
-            static::$instance = new LoggingCleanUp();
+            static::$instance = new LoggingCleanUp($file);
         }
 
         return static::$instance;
@@ -50,8 +52,8 @@ class LoggingCleanUp
     {
         // 30 Tag
         $deleteTime = 60 * 60 * 24 * 30;
-        $loggingFOlder = Logging::getFolder();
-        $logFiles = array_diff(scandir($loggingFOlder), array('.', '..'));
+        $loggingFolder = Logging::getFolder($this->file);
+        $logFiles = array_diff(scandir($loggingFolder), array('.', '..'));
         $now = time();
 
         foreach ($logFiles as $logFile)

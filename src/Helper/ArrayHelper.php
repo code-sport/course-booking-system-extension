@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin\User\Helper;
+namespace CBSE\Helper;
 
 final class ArrayHelper
 {

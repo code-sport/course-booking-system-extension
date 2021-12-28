@@ -3,9 +3,9 @@
  * Add rest api endpoint for course-booking-system-extension
  */
 
-namespace CBSE\Admin\User\Api;
+namespace CBSE\Api;
 
-use CBSE\Admin\User\Exception\UnserializeSingletonException;
+use CBSE\Exception\UnserializeSingletonException;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Response;
