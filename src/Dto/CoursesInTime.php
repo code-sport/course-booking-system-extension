@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Dto;
+namespace CBSE\Admin\User\Dto;
 
 use Analog\Analog;
 use DateTime;

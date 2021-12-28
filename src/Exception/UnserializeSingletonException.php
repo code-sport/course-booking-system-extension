@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Exception;
+namespace CBSE\Admin\User\Exception;
 
 use Exception;
 

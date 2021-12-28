@@ -1,16 +1,18 @@
 <?php
 
-namespace CBSE\Admin;
+namespace CBSE\Admin\User\Admin;
 
-use CBSE\Admin\Settings\AutoPrintCbseSettings;
-use CBSE\Admin\Settings\GeneralCbseSettings;
-use CBSE\Admin\Settings\LicensesSettings;
-use CBSE\Admin\Settings\MailCoachCbseSettings;
-use CBSE\Admin\Settings\PdfCbseSettings;
+use CBSE\Admin\User\Admin\User\User\Settings\AutoPrintCbseSettings;
+use CBSE\Admin\User\Admin\User\User\Settings\Covid19Settings;
+use CBSE\Admin\User\Admin\User\User\Settings\GeneralCbseSettings;
+use CBSE\Admin\User\Admin\User\User\Settings\LicensesSettings;
+use CBSE\Admin\User\Admin\User\User\Settings\MailCoachCbseSettings;
+use CBSE\Admin\User\Admin\User\User\Settings\PdfCbseSettings;
 
 class Settings
 {
     private GeneralCbseSettings $generalCbseSettings;
+    private Covid19Settings $covid19Settings;
     private PdfCbseSettings $pdfCbseSettings;
     private MailCoachCbseSettings $mailCoachCbseSettings;
     private AutoPrintCbseSettings $autoPrintCbseSettings;
@@ -23,6 +25,7 @@ class Settings
 
 
         $this->generalCbseSettings = new GeneralCbseSettings();
+        $this->covid19Settings = new Covid19Settings();
         $this->pdfCbseSettings = new PdfCbseSettings();
         $this->mailCoachCbseSettings = new MailCoachCbseSettings();
         $this->autoPrintCbseSettings = new AutoPrintCbseSettings();
@@ -55,6 +58,9 @@ class Settings
             default:
             case $this->generalCbseSettings->tabKey():
                 $this->generalCbseSettings->registerSettings();
+                break;
+            case $this->covid19Settings->tabKey():
+                $this->covid19Settings->registerSettings();
                 break;
             case $this->pdfCbseSettings->tabKey():
                 $this->pdfCbseSettings->registerSettings();
@@ -97,6 +103,9 @@ class Settings
                     case $this->generalCbseSettings->tabKey():
                         $this->generalCbseSettings->renderSettingsPage();
                         break;
+                    case $this->covid19Settings->tabKey():
+                        $this->covid19Settings->renderSettingsPage();
+                        break;
                     case $this->pdfCbseSettings->tabKey():
                         $this->pdfCbseSettings->renderSettingsPage();
                         break;
@@ -131,6 +140,7 @@ class Settings
         $activeTab = $this->getActiveTab();
 
         echo $this->generalCbseSettings->getTabHtmlLink($activeTab);
+        echo $this->covid19Settings->getTabHtmlLink($activeTab);
         echo $this->pdfCbseSettings->getTabHtmlLink($activeTab);
         echo $this->mailCoachCbseSettings->getTabHtmlLink($activeTab);
         echo $this->autoPrintCbseSettings->getTabHtmlLink($activeTab);

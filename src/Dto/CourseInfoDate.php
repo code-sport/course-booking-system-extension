@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE\Dto;
+namespace CBSE\Admin\User\Dto;
 
-use CBSE\Helper\ArrayHelper;
+use CBSE\Admin\User\Helper\ArrayHelper;
 use CBSE\UserCovid19Status;
 use DateTime;
 use WP_Error;

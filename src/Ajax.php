@@ -4,7 +4,7 @@
 
 namespace CBSE;
 
-use CBSE\Dto\CourseInfoDate;
+use CBSE\Admin\User\Dto\CourseInfoDate;
 use DateTime;
 
 class Ajax

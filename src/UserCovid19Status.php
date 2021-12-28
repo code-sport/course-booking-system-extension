@@ -2,9 +2,10 @@
 
 namespace CBSE;
 
-use CBSE\Model\Covid19Status;
+use CBSE\Admin\User\Model\Covid19Status;
 use DateInterval;
 use DateTime;
+use Exception;
 
 class UserCovid19Status
 {
@@ -45,27 +46,27 @@ class UserCovid19Status
                 $statusTemp = new Covid19Status(
                     'vaccinated',
                     __('vaccinated', CBSE_LANGUAGE_DOMAIN),
-                    new DateInterval('P14D'),
-                    new DateInterval('P9M'),
-                    new DateInterval('P3M')
+                    $this->loadCovid19StatusSetting('vaccinated_status_valid_from'),
+                    $this->loadCovid19StatusSetting('vaccinated_status_valid_to'),
+                    $this->loadCovid19StatusSetting('vaccinated_plus_status_valid_to')
                 );
                 break;
             case 'vaccinated_updated';
                 $statusTemp = new Covid19Status(
                     'vaccinated_updated',
                     __('booster vaccinated', CBSE_LANGUAGE_DOMAIN),
-                    null,
-                    new DateInterval('P9M'),
-                    null
+                    $this->loadCovid19StatusSetting('vaccinated_updated_status_valid_from'),
+                    $this->loadCovid19StatusSetting('vaccinated_updated_status_valid_to'),
+                    $this->loadCovid19StatusSetting('vaccinated_updated_plus_status_valid_to')
                 );
                 break;
             case 'recovered';
                 $statusTemp = new Covid19Status(
                     'recovered',
                     __('recovered', CBSE_LANGUAGE_DOMAIN),
-                    new DateInterval('P28D'),
-                    new DateInterval('P6M'),
-                    new DateInterval('P3M')
+                    $this->loadCovid19StatusSetting('recovered_status_valid_from'),
+                    $this->loadCovid19StatusSetting('recovered_status_valid_to'),
+                    $this->loadCovid19StatusSetting('recovered_plus_status_valid_to')
                 );
                 break;
         }
@@ -73,10 +74,28 @@ class UserCovid19Status
         $this->status = $statusTemp;
     }
 
+    private function loadCovid19StatusSetting(string $setting): ?DateInterval
+    {
+        $covid19Options = get_option('cbse_covid19_options');
+
+        if (array_key_exists($setting, $covid19Options))
+        {
+            try
+            {
+                return new DateInterval($covid19Options[$setting]);
+            } catch (Exception $e)
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     public function getStatusOrAll(): string
     {
         return $this->getValidatedStatus() ??
-            UserCovid19Status::getAll();
+            static::getAll();
     }
 
     private function getValidatedStatus($default = null): ?string

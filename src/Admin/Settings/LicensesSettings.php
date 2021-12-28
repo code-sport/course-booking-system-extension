@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin\Settings;
+namespace CBSE\Admin\User\Admin\User\User\Settings;
 
 class LicensesSettings extends CbseSettings
 {

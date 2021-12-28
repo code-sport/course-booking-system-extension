@@ -3,7 +3,7 @@
 namespace CBSE;
 
 use Analog\Analog;
-use CBSE\Dto\CourseInfoDate;
+use CBSE\Admin\User\Dto\CourseInfoDate;
 
 class DocumentationPdf extends CbsePdf
 {

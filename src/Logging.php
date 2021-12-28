@@ -4,7 +4,7 @@ namespace CBSE;
 
 
 use Analog;
-use CBSE\Cron\LoggingCleanUp;
+use CBSE\Admin\User\Cron\LoggingCleanUp;
 
 final class Logging
 {

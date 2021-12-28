@@ -1,6 +1,6 @@
 <?php
 
-namespace CBSE\Admin;
+namespace CBSE\Admin\User\Admin\User\User;
 
 use CBSE\UserCovid19Status;
 use Exception;
@@ -62,7 +62,7 @@ class UserCovid19StatusOverview
         $statusFromUser = new UserCovid19Status($userId);
         $style = '';
 
-        if(!$statusFromUser->isValid())
+        if (!$statusFromUser->isValid())
         {
             $style .= 'color: red;';
         }
@@ -70,7 +70,7 @@ class UserCovid19StatusOverview
         $content = "<p style='$style'>{$statusFromUser->getStatusOrEmpty()}<br />";
         $content .= "{$statusFromUser->getDateFormatted()}</p>";
 
-        if($statusFromUser->getFlags())
+        if ($statusFromUser->getFlags())
         {
             $content .= "<p>{$statusFromUser->getFlags()}</p>";
         }
