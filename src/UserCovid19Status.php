@@ -76,15 +76,16 @@ class UserCovid19Status
 
     private function loadCovid19StatusSetting(string $setting): ?DateInterval
     {
-        $Covid19Options = get_option('cbse_covid19_options');
+        $covid19Options = get_option('cbse_covid19_options');
 
-        if (array_key_exists($setting, $Covid19Options))
+        if (array_key_exists($setting, $covid19Options))
         {
             try
             {
-                return new DateInterval($Covid19Options[$setting]);
+                return new DateInterval($covid19Options[$setting]);
             } catch (Exception $e)
             {
+                return null;
             }
         }
 
