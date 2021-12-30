@@ -2,6 +2,8 @@
 
 namespace CBSE\Admin\User;
 
+use Analog;
+
 class UserCovid19StatusSettings
 {
     public function __construct()
@@ -168,7 +170,7 @@ class UserCovid19StatusSettings
         return current_user_can('administrator') || current_user_can('shop_manager');
     }
 
-    public function saveUserProfile($userId)
+    public function saveUserProfile($userId): bool
     {
         $postData = $_POST;
         if (empty($postData['_wpnonce']) || !wp_verify_nonce($postData['_wpnonce'], 'update-user_' . $userId))
@@ -180,10 +182,27 @@ class UserCovid19StatusSettings
         {
             return false;
         }
-        update_user_meta($userId, 'covid-19-status', $postData['covid-19-status']);
-        update_user_meta($userId, 'covid-19-status_date', $postData['covid-19-status_date']);
-        update_user_meta($userId, 'covid-19-status_employee', $postData['covid-19-status_employee']);
-        update_user_meta($userId, 'covid-19-status_top-athlete', $postData['covid-19-status_top-athlete']);
+
+        $this->updateUserMetaAndLog($userId, 'covid-19-status', $postData['covid-19-status']);
+        $this->updateUserMetaAndLog($userId, 'covid-19-status_date', $postData['covid-19-status_date']);
+        $this->updateUserMetaAndLog($userId, 'covid-19-status_employee', $postData['covid-19-status_employee']);
+        $this->updateUserMetaAndLog($userId, 'covid-19-status_top-athlete', $postData['covid-19-status_top-athlete']);
+
+        return true;
+    }
+
+    private function updateUserMetaAndLog(int $user_id, string $meta_key, $meta_value): void
+    {
+        $previous = get_user_meta($user_id, $meta_key, true);
+
+        if ($previous != $meta_value)
+        {
+            Analog::info(get_current_user_id() . ' updated ' . $user_id . ' on ' . $meta_key . ' with ' . $meta_value .
+                ' it was ' . $previous);
+        }
+
+        update_user_meta($user_id, $meta_key, $meta_value, $previous);
+
     }
 }
 
