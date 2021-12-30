@@ -5,6 +5,7 @@
 namespace CBSE\Cron;
 
 use DateTime;
+use Exception;
 
 abstract class CronBase
 {
@@ -103,6 +104,31 @@ abstract class CronBase
     public function getHook()
     {
         return $this->hook;
+    }
+
+    /***
+     * Inform Admin about an error.
+     *
+     * @param Exception $e             Exception which occurs
+     * @param           $object        on which be worked on.
+     *                                 this will be serialized
+     *
+     * @return void
+     */
+    protected function informAdmin(Exception $e, $object)
+    {
+        $to = get_option('admin_email');
+        $subject = __('Fatal error in the cronjob with the auto print documentation', CBSE_LANGUAGE_DOMAIN);
+        $body = $subject . PHP_EOL;
+        $body .= PHP_EOL;
+        $body .= $e;
+        $body .= PHP_EOL;
+        $body .= PHP_EOL;
+        $body .= '---------------------------------------------------------------------------------' . PHP_EOL;
+        $body .= PHP_EOL;
+        $body .= json_encode($object);
+
+        return wp_mail($to, $subject, $body);
     }
 }
 

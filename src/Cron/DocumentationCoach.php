@@ -3,6 +3,7 @@
 namespace CBSE\Cron;
 
 use Analog\Analog;
+use CBSE\DocumentationMail;
 use CBSE\Dto\CourseInfoDate;
 use CBSE\Dto\CoursesInTime;
 use DateInterval;
@@ -78,15 +79,18 @@ class DocumentationCoach extends CronBase
 
         foreach ($courses as $course)
         {
+            $this->workOnCourse($course);
+        }
+    }
+
+    private function workOnCourse($course): void
+    {
+        try
+        {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
             if (get_userdata($userId) !== false)
             {
                 $autoInformWay = empty(get_the_author_meta('cbse-auto-inform', $userId)) ? 'email' : get_the_author_meta('cbse-auto-inform', $userId);
-
-                if (defined('TEST'))
-                {
-                    wp_mail(get_option('admin_email'), 'CronTest', "UserId: $userId\nInformway Way: $autoInformWay " . ($autoInformWay == 'email'));
-                }
 
                 if ($autoInformWay == 'email')
                 {
@@ -96,6 +100,11 @@ class DocumentationCoach extends CronBase
                     $documentationMail->sentToUser($userId);
                 }
             }
+        } catch (Exception $e)
+        {
+            Analog::alert(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $course->course_id . ' - ' . $course->date);
+            Analog::alert($e);
+            $this->informAdmin($e, $course);
         }
     }
 

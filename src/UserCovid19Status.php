@@ -12,9 +12,10 @@ class UserCovid19Status
     private ?Covid19Status $status;
     private ?DateTime $date = null;
     private int $userId;
+    private DateTime $courseDate;
 
 
-    public function __construct(int $userId)
+    public function __construct(int $userId, DateTime $courseDate)
     {
         $this->status(get_the_author_meta('covid-19-status', $userId));
         $datetime = DateTime::createFromFormat('Y-m-d', get_the_author_meta('covid-19-status_date', $userId));
@@ -23,6 +24,7 @@ class UserCovid19Status
             $this->date = $datetime;
         }
         $this->userId = $userId;
+        $this->courseDate = $courseDate;
     }
 
     private function status(string $userStatus)
@@ -116,12 +118,12 @@ class UserCovid19Status
 
     public function isValid(): bool
     {
-        return $this->date != null && $this->status->isValid($this->date);
+        return $this->date != null && $this->status->isValid($this->date, $this->courseDate);
     }
 
     private function isPlusStatus(): bool
     {
-        return $this->date != null && $this->status->isPlusStatus($this->date);
+        return $this->date != null && $this->status->isPlusStatus($this->date, $this->courseDate);
     }
 
     public static function getAll($separator = '|'): string
