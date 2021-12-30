@@ -104,7 +104,7 @@ class DocumentationCoach extends CronBase
         {
             Analog::alert(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $course->course_id . ' - ' . $course->date);
             Analog::alert($e);
-            $this->informAdmin($e, $course);
+            $this->informAdmin($e, $course, __('Fatal error in the cronjob with the coach documentation', CBSE_LANGUAGE_DOMAIN));
         }
     }
 

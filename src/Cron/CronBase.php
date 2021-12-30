@@ -115,10 +115,9 @@ abstract class CronBase
      *
      * @return void
      */
-    protected function informAdmin(Exception $e, $object)
+    protected function informAdmin(Exception $e, $object, $subject)
     {
         $to = get_option('admin_email');
-        $subject = __('Fatal error in the cronjob with the auto print documentation', CBSE_LANGUAGE_DOMAIN);
         $body = $subject . PHP_EOL;
         $body .= PHP_EOL;
         $body .= $e;
