@@ -191,17 +191,17 @@ class UserCovid19StatusSettings
         return true;
     }
 
-    private function updateUserMetaAndLog(int $user_id, string $meta_key, $meta_value): void
+    private function updateUserMetaAndLog(int $userId, string $metaKey, $metaValue): void
     {
-        $previous = get_user_meta($user_id, $meta_key, true);
+        $previous = get_user_meta($userId, $metaKey, true);
 
-        if ($previous != $meta_value)
+        if ($previous != $metaValue)
         {
-            Analog::info(get_current_user_id() . ' updated ' . $user_id . ' on ' . $meta_key . ' with ' . $meta_value .
+            Analog::info(get_current_user_id() . ' updated ' . $userId . ' on ' . $metaKey . ' with ' . $metaValue .
                 ' it was ' . $previous);
         }
 
-        update_user_meta($user_id, $meta_key, $meta_value, $previous);
+        update_user_meta($userId, $metaKey, $metaValue, $previous);
 
     }
 }
