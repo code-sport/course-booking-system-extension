@@ -3,6 +3,7 @@
 namespace CBSE\Admin\User;
 
 use CBSE\UserCovid19Status;
+use DateTime;
 use Exception;
 
 class UserCovid19StatusOverview
@@ -59,7 +60,7 @@ class UserCovid19StatusOverview
 
     private function getStatus(int $userId): string
     {
-        $statusFromUser = new UserCovid19Status($userId);
+        $statusFromUser = new UserCovid19Status($userId, new DateTime('now'));
         $style = '';
 
         if (!$statusFromUser->isValid())
