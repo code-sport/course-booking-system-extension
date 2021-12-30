@@ -145,7 +145,7 @@ class DocumentationPdf extends CbsePdf
         {
             $userDisplayName = "{$userMeta->last_name}, {$userMeta->first_name}";
         }
-        $userCovid19Status = new UserCovid19Status($userMeta->ID);
+        $userCovid19Status = new UserCovid19Status($userMeta->ID, $this->course->getCourseDate());
 
         $w = array(55, 125);
         $this->Ln();

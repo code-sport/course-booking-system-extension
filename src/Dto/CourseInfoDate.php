@@ -46,8 +46,7 @@ class CourseInfoDate extends DtoBase
     private function loadTimeslots()
     {
         global $wpdb;
-        return $wpdb->get_row(
-            $wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_data') . "` WHERE `id` = %d;", $this->courseId));
+        return $wpdb->get_row($wpdb->prepare("SELECT `column_id`, `event_id`, `event_start`, `event_end`, `description`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_data') . "` WHERE `id` = %d;", $this->courseId));
     }
 
     /**
@@ -56,15 +55,13 @@ class CourseInfoDate extends DtoBase
     private function loadSubstitutes()
     {
         global $wpdb;
-        return $wpdb->get_row(
-            $wpdb->prepare("SELECT `user_id` FROM `" . $this->datebaseTableName('mp_timetable_substitutes') . "` WHERE `course_id` = %d AND `date` = '%s';", $this->courseId, $this->date->format('Y-m-d')));
+        return $wpdb->get_row($wpdb->prepare("SELECT `user_id` FROM `" . $this->datebaseTableName('mp_timetable_substitutes') . "` WHERE `course_id` = %d AND `date` = '%s';", $this->courseId, $this->date->format('Y-m-d')));
     }
 
     private function loadBookings(): array
     {
         global $wpdb;
-        $bookingsRaw = $wpdb->get_results(
-            $wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_bookings') . "` WHERE `course_id` =  %d AND `date` = %s;", $this->courseId, $this->date->format('Y-m-d')));
+        $bookingsRaw = $wpdb->get_results($wpdb->prepare("SELECT `booking_id`, `user_id` FROM `" . $this->datebaseTableName('mp_timetable_bookings') . "` WHERE `course_id` =  %d AND `date` = %s;", $this->courseId, $this->date->format('Y-m-d')));
         $bookingList = array();
         foreach ($bookingsRaw as $booking)
         {
@@ -72,13 +69,18 @@ class CourseInfoDate extends DtoBase
             $booking->firstName = $userMeta->first_name;
             $booking->lastName = $userMeta->last_name;
             $booking->nickname = $userMeta->nickname;
-            $covid19Status = new UserCovid19Status($booking->user_id);
+            $covid19Status = new UserCovid19Status($booking->user_id, $this->getCourseDate());
             $booking->covid19_status = $covid19Status->getStatusOrEmpty();
             $booking->flags = $covid19Status->getFlags();
             $bookingList[] = $booking;
         }
 
         return $bookingList;
+    }
+
+    public function getCourseDate(): DateTime
+    {
+        return $this->date;
     }
 
     public function __toString()
@@ -159,11 +161,6 @@ class CourseInfoDate extends DtoBase
         return date(get_option('time_format'), strtotime($this->timeslot->event_end));
     }
 
-    public function getCourseDate(): DateTime
-    {
-        return $this->date;
-    }
-
     /**
      * @return int
      */
@@ -190,9 +187,7 @@ class CourseInfoDate extends DtoBase
 
     public function getEventCategoriesAsString($default = ''): string
     {
-        return ($this->getEventCategories() != null
-            && !empty($this->getEventCategories())) ?
-            implode(", ", $this->getEventCategories()) : $default;
+        return ($this->getEventCategories() != null && !empty($this->getEventCategories())) ? implode(", ", $this->getEventCategories()) : $default;
     }
 
     /**
