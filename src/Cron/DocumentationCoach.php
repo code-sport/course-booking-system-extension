@@ -88,7 +88,7 @@ class DocumentationCoach extends CronBase
         try
         {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
-            if (get_userdata($userId) != false)
+            if (get_userdata($userId) !== false)
             {
                 $autoInformWay = empty(get_the_author_meta('cbse-auto-inform', $userId)) ? 'email' : get_the_author_meta('cbse-auto-inform', $userId);
 
