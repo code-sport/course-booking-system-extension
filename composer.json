@@ -19,6 +19,7 @@
   ],
   "require": {
     "tecnickcom/tcpdf": "^6.4.2",
-    "analog/analog": "^1.0"
+    "analog/analog": "^1.0",
+    "ext-json": "*"
   }
 }
