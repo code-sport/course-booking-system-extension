@@ -3,6 +3,7 @@
 namespace CBSE\Shortcodes;
 
 use CBSE\UserCovid19Status;
+use DateTime;
 use Exception;
 
 final class ShortcodeUserCovid19Status
@@ -66,7 +67,7 @@ final class ShortcodeUserCovid19Status
 
         if (is_user_logged_in())
         {
-            $userCovid19Status = new UserCovid19Status(get_current_user_id());
+            $userCovid19Status = new UserCovid19Status(get_current_user_id(), new DateTime('now'));
             $covid19Status = $userCovid19Status->getStatus();
             $covid19StatusDate = $userCovid19Status->getDateFormatted();
 
