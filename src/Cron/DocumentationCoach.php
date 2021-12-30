@@ -104,24 +104,8 @@ class DocumentationCoach extends CronBase
         {
             Analog::alert(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $course->course_id . ' - ' . $course->date);
             Analog::alert($e);
-            $this->informAdmin($course, $e);
+            $this->informAdmin($e, $course);
         }
-    }
-
-    private function informAdmin($course, Exception $e)
-    {
-        $to = get_option('admin_email');
-        $subject = __('Fatal error in the cronjob with the documentation for coach', CBSE_LANGUAGE_DOMAIN);
-        $body = $subject . PHP_EOL;
-        $body .= PHP_EOL;
-        $body .= $e;
-        $body .= PHP_EOL;
-        $body .= PHP_EOL;
-        $body .= '---------------------------------------------------------------------------------' . PHP_EOL;
-        $body .= PHP_EOL;
-        $body .= json_encode($course);
-
-        wp_mail($to, $subject, $body);
     }
 
     /**

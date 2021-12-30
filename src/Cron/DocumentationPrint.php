@@ -3,6 +3,7 @@
 namespace CBSE\Cron;
 
 use Analog\Analog;
+use CBSE\DocumentationMail;
 use CBSE\Dto\CourseInfoDate;
 use CBSE\Dto\CoursesInTime;
 use CBSE\Helper\ArrayHelper;
@@ -48,10 +49,8 @@ class DocumentationPrint extends CronBase
     protected function work(DateTime $dateLastRun, DateTime $dateNow)
     {
         $options = get_option('cbse_auto_print_options');
-        $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)
-        $options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 0;
-        $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 &&
-        (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 20;
+        $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)$options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 0;
+        $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 && (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 20;
 
         try
         {
@@ -73,13 +72,25 @@ class DocumentationPrint extends CronBase
 
         foreach ($courses as $course)
         {
+            $this->workOnCourse($course);
+        }
+    }
+
+    /**
+     * @param $course
+     *
+     * @return void
+     */
+    protected function workOnCourse($course): void
+    {
+        try
+        {
             $userId = ($course->substitutes_user_id ?? $course->user_id);
             if (get_userdata($userId) !== false)
             {
                 $autoPrintUser = empty(get_the_author_meta('cbse-auto-print', $userId)) ? 0 : get_the_author_meta('cbse-auto-print', $userId);
 
-                Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Course: ' .
-                    $course->course_id . ' print: ' . $autoPrintUser);
+                Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Course: ' . $course->course_id . ' print: ' . $autoPrintUser);
 
                 if ($autoPrintUser)
                 {
@@ -96,7 +107,11 @@ class DocumentationPrint extends CronBase
 
                 }
             }
-
+        } catch (Exception $e)
+        {
+            Analog::alert(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $course->course_id . ' - ' . $course->date);
+            Analog::alert($e);
+            $this->informAdmin($e, $course);
         }
     }
 
