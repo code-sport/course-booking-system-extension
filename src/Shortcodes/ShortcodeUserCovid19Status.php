@@ -75,8 +75,10 @@ final class ShortcodeUserCovid19Status
         if (is_user_logged_in())
         {
             $now = new DateTime('now');
+
             $userCovid19Status = new UserCovid19Status(get_current_user_id(), $now);
             $covid19Status = $userCovid19Status->getStatus()->getName();
+            $certificateDate = $userCovid19Status->getCertificateDate();
 
             if (empty($covid19Status))
             {
@@ -95,32 +97,32 @@ final class ShortcodeUserCovid19Status
                 $o .= '</p>';
             }
             $o .= '<table>';
-            if (!empty($userCovid19Status->getDateFormatted()))
+            if (!empty($userCovid19Status->getCertificateDateFormatted()))
             {
                 $o .= '<tr>';
                 $o .= '<td>' . __('Status date', CBSE_LANGUAGE_DOMAIN) . '</td>';
-                $o .= '<td>' . $userCovid19Status->getDateFormatted() . '</td>';
+                $o .= '<td>' . $userCovid19Status->getCertificateDateFormatted() . '</td>';
                 $o .= '</tr>';
             }
-            if (!empty($userCovid19Status->getStatus()->getValidFromFormatted($now)))
+            if (!empty($userCovid19Status->getStatus()->getValidFromFormatted($certificateDate)))
             {
                 $o .= '<tr>';
                 $o .= '<td>' . __('Valid from', CBSE_LANGUAGE_DOMAIN) . '</td>';
-                $o .= '<td>' . $userCovid19Status->getStatus()->getValidFromFormatted($now) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getStatus()->getValidFromFormatted($certificateDate) . '</td>';
                 $o .= '</tr>';
             }
-            if (!empty($userCovid19Status->getStatus()->getValidToFormatted($now)))
+            if (!empty($userCovid19Status->getStatus()->getValidToFormatted($certificateDate)))
             {
                 $o .= '<tr>';
                 $o .= '<td>' . __('Valid to', CBSE_LANGUAGE_DOMAIN) . '</td>';
-                $o .= '<td>' . $userCovid19Status->getStatus()->getValidToFormatted($now) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getStatus()->getValidToFormatted($certificateDate) . '</td>';
                 $o .= '</tr>';
             }
-            if (!empty($userCovid19Status->getStatus()->getPlusValidToFormatted($now)))
+            if (!empty($userCovid19Status->getStatus()->getPlusValidToFormatted($certificateDate)))
             {
                 $o .= '<tr>';
                 $o .= '<td>' . __('Plus valid to', CBSE_LANGUAGE_DOMAIN) . '</td>';
-                $o .= '<td>' . $userCovid19Status->getStatus()->getPlusValidToFormatted($now) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getStatus()->getPlusValidToFormatted($certificateDate) . '</td>';
                 $o .= '</tr>';
             }
             $o .= '</table>';

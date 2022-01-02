@@ -69,7 +69,7 @@ class UserCovid19StatusOverview
         }
 
         $content = "<p style='$style'>{$statusFromUser->getStatusOrEmpty()}<br />";
-        $content .= "{$statusFromUser->getDateFormatted()}</p>";
+        $content .= "{$statusFromUser->getCertificateDateFormatted()}</p>";
 
         if ($statusFromUser->getFlags())
         {

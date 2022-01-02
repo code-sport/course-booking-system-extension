@@ -115,7 +115,7 @@ class UserCovid19Status
     /**
      * @return DateTime
      */
-    public function getDateFormatted(): string
+    public function getCertificateDateFormatted(): string
     {
         if ($this->date)
         {
@@ -151,5 +151,13 @@ class UserCovid19Status
     public function getStatus(): ?Covid19Status
     {
         return $this->status;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getCertificateDate(): ?DateTime
+    {
+        return $this->date;
     }
 }
