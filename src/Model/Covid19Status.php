@@ -40,22 +40,18 @@ class Covid19Status
 
     public function isValid(DateTime $date, DateTime $courseDate): bool
     {
-        if ($this->getValidFrom() != null)
+        if ($this->getValidFrom($date) != null)
         {
-            $dateStart = clone $date;
-            $dateStart->add($this->getValidFrom());
-            $validStart = $dateStart <= $courseDate;
+            $validStart = Covid19Status::isAfterTime($courseDate, $this->getValidFrom($date));
         }
         else
         {
             $validStart = true;
         }
 
-        if ($this->getValidTo() != null)
+        if ($this->getValidTo($date) != null)
         {
-            $dateEnd = clone $date;
-            $dateEnd->add($this->getValidTo());
-            $validEnd = $courseDate <= $dateEnd;
+            $validEnd = Covid19Status::isInTime($courseDate, $this->getValidTo($date));
         }
         else
         {
@@ -66,42 +62,96 @@ class Covid19Status
     }
 
     /**
-     * @return DateInterval
+     * @param DateTime $date
+     *
+     * @return DateTime|null
      */
-    public function getValidFrom(): ?DateInterval
+    public function getValidFrom(DateTime $date): ?DateTime
     {
-        return $this->validFrom;
+        if ($this->validFrom)
+        {
+            $dateReturn = clone $date;
+            $dateReturn->add($this->validFrom);
+            return $dateReturn;
+        }
+        return null;
+    }
+
+    public static function isAfterTime(DateTime $timeCheck, DateTime $afterTime): bool
+    {
+        return $afterTime < $timeCheck;
     }
 
     /**
-     * @return DateInterval
+     * @param DateTime $date
+     *
+     * @return DateTime|null
      */
-    public function getValidTo(): ?DateInterval
+    public function getValidTo(DateTime $date): ?DateTime
     {
-        return $this->validTo;
+        if ($this->validTo)
+        {
+            $dateReturn = clone $date;
+            $dateReturn->add($this->validTo);
+            return $dateReturn;
+        }
+        return null;
+    }
+
+    public static function isInTime(DateTime $timeCheck, DateTime $dateEnd): bool
+    {
+        return $timeCheck <= $dateEnd;
+    }
+
+    public function getValidFromFormatted(DateTime $date): string
+    {
+        if ($this->getValidFrom($date))
+        {
+            return $this->getValidFrom($date)->format(get_option('date_format'));
+        }
+        return '';
+    }
+
+    public function getValidToFormatted(DateTime $date): string
+    {
+        if ($this->getValidTo($date))
+        {
+            return $this->getValidTo($date)->format(get_option('date_format'));
+        }
+        return '';
     }
 
     /**
+     * @param DateTime $date
+     * @param DateTime $courseDate
+     *
      * @return bool
      */
     public function isPlusStatus(DateTime $date, DateTime $courseDate): bool
     {
-        return ($this->getPlusValidTo() != null)
-            && Covid19Status::isInUpToInterval($date, $this->getPlusValidTo(), $courseDate);
+        return ($this->getPlusValidTo($date) != null) && Covid19Status::isInTime($courseDate, $this->getPlusValidTo($date));
     }
 
     /**
      * @return DateInterval|null
      */
-    public function getPlusValidTo(): ?DateInterval
+    public function getPlusValidTo(DateTime $date): ?DateTime
     {
-        return $this->plusValidTo;
+        if ($this->plusValidTo)
+        {
+            $dateReturn = clone $date;
+            $dateReturn->add($this->plusValidTo);
+            return $dateReturn;
+        }
+        return null;
     }
 
-    public static function isInUpToInterval(DateTime $dateCertificate, DateInterval $param, DateTime $courseDate): bool
+    public function getPlusValidToFormatted(DateTime $date): string
     {
-        $dateEnd = clone $dateCertificate;
-        $dateEnd->add($param);
-        return $courseDate < $dateEnd;
+        if ($this->getPlusValidTo($date))
+        {
+            return $this->getPlusValidTo($date)->format(get_option('date_format'));
+        }
+        return '';
     }
 }

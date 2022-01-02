@@ -36,40 +36,16 @@ class UserCovid19Status
                 $statusTemp = null;
                 break;
             case 'tested';
-                $statusTemp = new Covid19Status(
-                    'tested',
-                    __('tested', CBSE_LANGUAGE_DOMAIN),
-                    null,
-                    new DateInterval('PT24H'),
-                    null
-                );
+                $statusTemp = new Covid19Status('tested', __('tested', CBSE_LANGUAGE_DOMAIN), null, new DateInterval('PT24H'), null);
                 break;
             case 'vaccinated';
-                $statusTemp = new Covid19Status(
-                    'vaccinated',
-                    __('vaccinated', CBSE_LANGUAGE_DOMAIN),
-                    $this->loadCovid19StatusSetting('vaccinated_status_valid_from'),
-                    $this->loadCovid19StatusSetting('vaccinated_status_valid_to'),
-                    $this->loadCovid19StatusSetting('vaccinated_plus_status_valid_to')
-                );
+                $statusTemp = new Covid19Status('vaccinated', __('vaccinated', CBSE_LANGUAGE_DOMAIN), $this->loadCovid19StatusSetting('vaccinated_status_valid_from'), $this->loadCovid19StatusSetting('vaccinated_status_valid_to'), $this->loadCovid19StatusSetting('vaccinated_plus_status_valid_to'));
                 break;
             case 'vaccinated_updated';
-                $statusTemp = new Covid19Status(
-                    'vaccinated_updated',
-                    __('booster vaccinated', CBSE_LANGUAGE_DOMAIN),
-                    $this->loadCovid19StatusSetting('vaccinated_updated_status_valid_from'),
-                    $this->loadCovid19StatusSetting('vaccinated_updated_status_valid_to'),
-                    $this->loadCovid19StatusSetting('vaccinated_updated_plus_status_valid_to')
-                );
+                $statusTemp = new Covid19Status('vaccinated_updated', __('booster vaccinated', CBSE_LANGUAGE_DOMAIN), $this->loadCovid19StatusSetting('vaccinated_updated_status_valid_from'), $this->loadCovid19StatusSetting('vaccinated_updated_status_valid_to'), $this->loadCovid19StatusSetting('vaccinated_updated_plus_status_valid_to'));
                 break;
             case 'recovered';
-                $statusTemp = new Covid19Status(
-                    'recovered',
-                    __('recovered', CBSE_LANGUAGE_DOMAIN),
-                    $this->loadCovid19StatusSetting('recovered_status_valid_from'),
-                    $this->loadCovid19StatusSetting('recovered_status_valid_to'),
-                    $this->loadCovid19StatusSetting('recovered_plus_status_valid_to')
-                );
+                $statusTemp = new Covid19Status('recovered', __('recovered', CBSE_LANGUAGE_DOMAIN), $this->loadCovid19StatusSetting('recovered_status_valid_from'), $this->loadCovid19StatusSetting('recovered_status_valid_to'), $this->loadCovid19StatusSetting('recovered_plus_status_valid_to'));
                 break;
         }
 
@@ -96,8 +72,7 @@ class UserCovid19Status
 
     public function getStatusOrAll(): string
     {
-        return $this->getValidatedStatus() ??
-            static::getAll();
+        return $this->getValidatedStatus() ?? static::getAll();
     }
 
     private function getValidatedStatus($default = null): ?string
@@ -128,17 +103,8 @@ class UserCovid19Status
 
     public static function getAll($separator = '|'): string
     {
-        $all = array(
-            __('tested', CBSE_LANGUAGE_DOMAIN),
-            __('vaccinated', CBSE_LANGUAGE_DOMAIN),
-            __('recovered', CBSE_LANGUAGE_DOMAIN)
-        );
+        $all = array(__('tested', CBSE_LANGUAGE_DOMAIN), __('vaccinated', CBSE_LANGUAGE_DOMAIN), __('recovered', CBSE_LANGUAGE_DOMAIN));
         return implode($separator, $all);
-    }
-
-    public function getStatus(): string
-    {
-        return $this->status->getName();
     }
 
     public function getStatusOrEmpty(): string
@@ -177,5 +143,13 @@ class UserCovid19Status
         }
 
         return implode(',', $flags);
+    }
+
+    /**
+     * @return Covid19Status|null
+     */
+    public function getStatus(): ?Covid19Status
+    {
+        return $this->status;
     }
 }
