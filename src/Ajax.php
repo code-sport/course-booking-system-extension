@@ -21,6 +21,7 @@ class Ajax
     public function eventHeadCoursesEnqueue($hook)
     {
         global $post;
+        //TODO: https://wordpress.stackexchange.com/questions/165754/enqueue-scripts-styles-when-shortcode-is-present
         if (
             $post == null
             ||
