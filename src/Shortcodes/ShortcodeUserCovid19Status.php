@@ -25,6 +25,7 @@ final class ShortcodeUserCovid19Status
     private function init()
     {
         add_shortcode('cbse_user_covid19_status', array($this, "showShortcode"));
+        add_action('wp_enqueue_scripts', array($this, "addScripts"));
     }
 
     /**
@@ -40,6 +41,11 @@ final class ShortcodeUserCovid19Status
         }
 
         return ShortcodeUserCovid19Status::$instance;
+    }
+
+    public function addScripts()
+    {
+        wp_register_style('cbse_user_covid19_status_style', plugins_url('./assets/css/cbse_user_covid19.css', CBSE_PLUGIN_BASE_FILE));
     }
 
     /**
@@ -61,15 +67,16 @@ final class ShortcodeUserCovid19Status
      */
     public function showShortcode($atts = [], $content = null, $tag = '')
     {
+        wp_enqueue_style('cbse_user_covid19_status_style');
 
         // start box
         $o = '<div class="cbse-box">';
 
         if (is_user_logged_in())
         {
-            $userCovid19Status = new UserCovid19Status(get_current_user_id(), new DateTime('now'));
-            $covid19Status = $userCovid19Status->getStatus();
-            $covid19StatusDate = $userCovid19Status->getDateFormatted();
+            $now = new DateTime('now');
+            $userCovid19Status = new UserCovid19Status(get_current_user_id(), $now);
+            $covid19Status = $userCovid19Status->getStatus()->getName();
 
             if (empty($covid19Status))
             {
@@ -77,18 +84,8 @@ final class ShortcodeUserCovid19Status
             }
 
             $o .= '<p>';
-            switch ($covid19Status)
-            {
-                case 'tested':
-                case 'unknown':
-                    $massage = __('Your deposited Covid-19-Status is %s.', CBSE_LANGUAGE_DOMAIN);
-                    $o .= wp_sprintf($massage, $covid19Status);
-                    break;
-                default:
-                    $massage = __('Your deposited Covid-19-Status is %s from %s.', CBSE_LANGUAGE_DOMAIN);
-                    $o .= wp_sprintf($massage, $covid19Status, $covid19StatusDate);
-            }
-
+            $message = __('Your deposited Covid-19-Status is %s.', CBSE_LANGUAGE_DOMAIN);
+            $o .= wp_sprintf($message, $covid19Status);
             $o .= '</p>';
 
             if (!$userCovid19Status->isValid())
@@ -97,6 +94,36 @@ final class ShortcodeUserCovid19Status
                 $o .= __('Your status is invalid. Please check it and renew it.', CBSE_LANGUAGE_DOMAIN);
                 $o .= '</p>';
             }
+            $o .= '<table>';
+            if (!empty($userCovid19Status->getDateFormatted()))
+            {
+                $o .= '<tr>';
+                $o .= '<td>' . __('Status date', CBSE_LANGUAGE_DOMAIN) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getDateFormatted() . '</td>';
+                $o .= '</tr>';
+            }
+            if (!empty($userCovid19Status->getStatus()->getValidFromFormatted($now)))
+            {
+                $o .= '<tr>';
+                $o .= '<td>' . __('Valid from', CBSE_LANGUAGE_DOMAIN) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getStatus()->getValidFromFormatted($now) . '</td>';
+                $o .= '</tr>';
+            }
+            if (!empty($userCovid19Status->getStatus()->getValidToFormatted($now)))
+            {
+                $o .= '<tr>';
+                $o .= '<td>' . __('Valid to', CBSE_LANGUAGE_DOMAIN) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getStatus()->getValidToFormatted($now) . '</td>';
+                $o .= '</tr>';
+            }
+            if (!empty($userCovid19Status->getStatus()->getPlusValidToFormatted($now)))
+            {
+                $o .= '<tr>';
+                $o .= '<td>' . __('Plus valid to', CBSE_LANGUAGE_DOMAIN) . '</td>';
+                $o .= '<td>' . $userCovid19Status->getStatus()->getPlusValidToFormatted($now) . '</td>';
+                $o .= '</tr>';
+            }
+            $o .= '</table>';
         }
 
         // enclosing tags

@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.3.5
+ * Version: 0.3.6
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
@@ -34,6 +34,7 @@ use CBSE\TemplatesManager;
 defined('ABSPATH') || exit;
 define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 const CBSE_LANGUAGE_DOMAIN = 'course-booking-system-extension';
+const CBSE_PLUGIN_BASE_FILE = __FILE__;
 
 CBSE\Logging::init(__FILE__);
 
