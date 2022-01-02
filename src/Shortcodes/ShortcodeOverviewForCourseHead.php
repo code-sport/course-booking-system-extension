@@ -190,7 +190,7 @@ final class ShortcodeOverviewForCourseHead
 
     public function addScripts()
     {
-        wp_register_style('cbse_event_head_courses_style', plugins_url('../assets/css/cbse_event_head_courses.css', __FILE__));
+        wp_register_style('cbse_event_head_courses_style', plugins_url('./assets/css/cbse_event_head_courses.css', CBSE_PLUGIN_BASE_FILE));
     }
 
     /**
