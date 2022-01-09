@@ -1,8 +1,8 @@
 <?php
 
-namespace CBSE\Dto;
+namespace CBSE\Database;
 
-class DtoBase
+class DatabaseBase
 {
     protected function datebaseTableName($name): string
     {

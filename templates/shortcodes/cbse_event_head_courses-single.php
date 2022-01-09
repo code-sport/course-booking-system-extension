@@ -50,7 +50,7 @@ elseif ($difference > 0)
     <p>
         <span class="cbse-course-summary">
         (<?= $args['timeslot']->bookings ?> | <?= $args['timeslot']->waitings ?>
-                | <?= $args['courseInfo']->getEventMeta()->attendance ?>)
+                | <?= $args['courseInfo']->getEvent()->attendance ?>)
         </span>
         <button
                 type="button"

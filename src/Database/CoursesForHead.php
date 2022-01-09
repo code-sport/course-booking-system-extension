@@ -1,8 +1,10 @@
 <?php
 
-namespace CBSE\Dto;
+namespace CBSE\Database;
 
-class CoursesForHead extends DtoBase
+use function do_action;
+
+class CoursesForHead extends DatabaseBase
 {
     private int $userId;
     private int $pastDays;
@@ -23,7 +25,7 @@ class CoursesForHead extends DtoBase
     private function loadFromDatabase()
     {
         global $wpdb;
-        $query = "SELECT `id` AS `course_id`, `column_id`, `event_id`, `event_start`, `event_end`, `description`, `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date` as date, COUNT(`" . $this->datebaseTableName('mp_timetable_bookings') . "`.`booking_id`) AS bookings, COUNT(`" . $this->datebaseTableName('mp_timetable_waitlists') . "`.`waitlist_id`) AS waitings, `" . $this->datebaseTableName('mp_timetable_substitutes') . "`.`user_id` AS substitutes_user_id, `note`";
+        $query = "SELECT `id` AS `courseId`, `column_id` AS columnId, `event_id` as eventId, `event_start` AS eventStart, `event_end` as eventEnd, `description` AS eventDescription, `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date` as date, COUNT(`" . $this->datebaseTableName('mp_timetable_bookings') . "`.`booking_id`) AS bookings, COUNT(`" . $this->datebaseTableName('mp_timetable_waitlists') . "`.`waitlist_id`) AS waitings, `" . $this->datebaseTableName('mp_timetable_substitutes') . "`.`user_id` AS substitutes_user_id, `note`";
         $query .= " FROM `" . $this->datebaseTableName('mp_timetable_data') . "`";
         $query .= " JOIN `" . $this->datebaseTableName('mp_timetable_bookings') . "` ON `" . $this->datebaseTableName('mp_timetable_data') . "`.`id` = `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`course_id`";
         $query .= " LEFT JOIN `" . $this->datebaseTableName('mp_timetable_waitlists') . "` ON `" . $this->datebaseTableName('mp_timetable_data') . "`.`id` = `" . $this->datebaseTableName('mp_timetable_waitlists') . "`.`course_id` AND `" . $this->datebaseTableName('mp_timetable_bookings') . "`.`date` = `" . $this->datebaseTableName('mp_timetable_waitlists') . "`.`date`";

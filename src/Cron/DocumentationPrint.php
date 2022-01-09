@@ -3,9 +3,9 @@
 namespace CBSE\Cron;
 
 use Analog\Analog;
+use CBSE\Database\CourseInfoDate;
+use CBSE\Database\CoursesInTime;
 use CBSE\DocumentationMail;
-use CBSE\Dto\CourseInfoDate;
-use CBSE\Dto\CoursesInTime;
 use CBSE\Helper\ArrayHelper;
 use DateInterval;
 use DateTime;

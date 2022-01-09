@@ -2,8 +2,9 @@
 
 namespace CBSE\Shortcodes;
 
-use CBSE\Dto\CourseInfoDate;
-use CBSE\Dto\CoursesForHead;
+use CBSE\Database\CourseInfoDate;
+use CBSE\Database\CoursesForHead;
+use CBSE\Helper\UserHelper;
 use DateTime;
 use Exception;
 
@@ -141,11 +142,12 @@ final class ShortcodeOverviewForCourseHead
 
                 $args = array();
                 $args['timeslot'] = $timeslot;
-                $args['courseInfo'] = new CourseInfoDate($timeslot->course_id, DateTime::createFromFormat('Y-m-d', $dataDate));
+                $args['courseInfo'] = new CourseInfoDate($timeslot->courseId, DateTime::createFromFormat('Y-m-d',
+                    $dataDate));
 
-                $dataStartTime = $timeslot->date . ' ' . $args['timeslot']->event_start;
+                $dataStartTime = $timeslot->date . ' ' . $args['timeslot']->eventStart;
                 $dataStartDateTime = strtotime($dataStartTime);
-                $courseId = $timeslot->course_id;
+                $courseId = $timeslot->courseId;
 
                 $o .= "<li class='cbse_timeslot' data-startdate='$dataDate' data-starttime='$dataStartTime' data-startdatetime='$dataStartDateTime' date-courseid='$courseId'>";
                 ob_start();
@@ -185,7 +187,7 @@ final class ShortcodeOverviewForCourseHead
 
     private function getCoaches(): array
     {
-        return get_users(['role__in' => ['administrator', 'editor', 'author', 'contributor']]);
+        return get_users(['role__in' => UserHelper::USER_ROLES_FOR_COACH]);
     }
 
     public function addScripts()
