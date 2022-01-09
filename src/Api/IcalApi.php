@@ -31,27 +31,33 @@ class IcalApi
         $userId = $params['id'];
         $token = $params['token'];
 
-        if ($this->userHasToken($userId, $token))
+        if (get_userdata($userId) === false)
         {
-            $icalData = $this->loadDataForUser($userId);
-            switch ($this->format)
-            {
-                case 'json':
-                    $response = new WP_REST_Response($icalData, 200);
-                    break;
-                case 'ics':
-                    header('Content-Type: text/calendar; charset=utf-8');
-                    header('Content-Disposition: attachment; filename="my-courses.ics');
-                    echo $this->generateCalender($icalData);
-                    // See: https://stackoverflow.com/a/50023272/14815278
-                    exit();
-                default:
-                    $response = new WP_REST_Response('Format is missing', 500);
-            }
-            return $response;
+            return new WP_REST_Response(null, 404);
         }
 
-        return new WP_REST_Response(null, 401);
+        if (!$this->userHasToken($userId, $token))
+        {
+            return new WP_REST_Response(null, 401);
+        }
+        $icalData = $this->loadDataForUser($userId);
+        switch ($this->format)
+        {
+            case 'json':
+                $response = new WP_REST_Response($icalData, 200);
+                break;
+            case 'ics':
+                header('Content-Type: text/calendar; charset=utf-8');
+                header('Content-Disposition: attachment; filename="my-courses.ics');
+                echo $this->generateCalender($icalData);
+                // See: https://stackoverflow.com/a/50023272/14815278
+                exit();
+            default:
+                $response = new WP_REST_Response('Format is missing', 500);
+        }
+        return $response;
+
+
     }
 
     private function userHasToken(int $userId, string $token): bool
@@ -80,6 +86,7 @@ class IcalApi
 
     private function generateCalender(array $icalData): string
     {
+        $refreshIntervalInMinutes = 60;
         $calendar = Calendar::create(__('My courses', CBSE_LANGUAGE_DOMAIN))->timezone(DateTimeZoneHelper::FromWordPress());
         $events = array();
 
@@ -103,7 +110,7 @@ class IcalApi
 
         $calendar = $calendar->event($events);
 
-        return $calendar->refreshInterval(60)->get();
+        return $calendar->refreshInterval($refreshIntervalInMinutes)->get();
     }
 
     private function timeslotToEvent($timeslot): Event
@@ -113,7 +120,11 @@ class IcalApi
         $start = $courseInfo->getCourseStart();
         $end = $courseInfo->getCourseEnd();
         $property = TextProperty::create('CATEGORIES', __('Coach', CBSE_LANGUAGE_DOMAIN));
-        $description = $timeslot->description . PHP_EOL . PHP_EOL;
+        $description = '';
+        if (!empty($timeslot->description))
+        {
+            $description .= $timeslot->description . PHP_EOL . PHP_EOL;
+        }
         $description .= '----------------------------------' . PHP_EOL;
         $description .= __('Bookings', CBSE_LANGUAGE_DOMAIN) . PHP_EOL;
         $description .= '----------------------------------' . PHP_EOL . PHP_EOL;
@@ -125,7 +136,7 @@ class IcalApi
         }
         $description .= PHP_EOL;
 
-        $event = Event::create($tile)->startsAt($start)->endsAt($end)->description($description)->appendProperty($property);
+        $event = Event::create($tile)->startsAt($start)->endsAt($end)->description(str_replace("\r\n", "\n", $description))->appendProperty($property);
         return $event;
     }
 }
