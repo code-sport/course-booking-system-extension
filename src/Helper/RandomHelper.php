@@ -11,15 +11,15 @@ final class RandomHelper
      */
     public static function generateString(string $input, int $strength = 16): string
     {
-        $input_length = strlen($input);
-        $random_string = '';
+        $inputLength = strlen($input);
+        $randomString = '';
         for ($i = 0; $i < $strength; $i++)
         {
-            $random_character = $input[random_int(0, $input_length - 1)];
-            $random_string .= $random_character;
+            $randomCharacter = $input[random_int(0, $inputLength - 1)];
+            $randomString .= $randomCharacter;
         }
 
-        return $random_string;
+        return $randomString;
     }
 
     /**
@@ -27,14 +27,14 @@ final class RandomHelper
      */
     public static function secureString($length): string
     {
-        $random_string = '';
+        $randomString = '';
         for ($i = 0; $i < $length; $i++)
         {
             $number = random_int(0, 36);
             $character = base_convert($number, 10, 36);
-            $random_string .= $character;
+            $randomString .= $character;
         }
 
-        return $random_string;
+        return $randomString;
     }
 }

@@ -138,7 +138,6 @@ class IcalApi
         }
         $description .= PHP_EOL;
 
-        $event = Event::create($tile)->startsAt($start)->endsAt($end)->description(str_replace("\r\n", "\n", $description))->appendProperty($property);
-        return $event;
+        return Event::create($tile)->startsAt($start)->endsAt($end)->description(str_replace("\r\n", "\n", $description))->appendProperty($property);
     }
 }
