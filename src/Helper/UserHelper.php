@@ -12,9 +12,9 @@ final class UserHelper
         return !empty(array_intersect(self::USER_ROLES_FOR_COACH, self::getUserRolesByUserId($userId)));
     }
 
-    private static function getUserRolesByUserId(int $user_id): array
+    private static function getUserRolesByUserId(int $userId): array
     {
-        $user = get_userdata($user_id);
+        $user = get_userdata($userId);
         return empty($user) ? array() : $user->roles;
     }
 
