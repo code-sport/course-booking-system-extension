@@ -57,3 +57,10 @@ https://tobier.de/wordpress-plugin-schreiben-mit-composer-und-autoload/
 
 - `composer install --no-dev`
 - `composer dump-autoload -o --no-dev`
+
+# Dependencies
+
+Thanks go to the following librarians
+- [TCPDF](https://github.com/tecnickcom/TCPDF)
+- [Analog](https://github.com/jbroadway/analog)
+- [icalendar-generator](https://github.com/spatie/icalendar-generator)
