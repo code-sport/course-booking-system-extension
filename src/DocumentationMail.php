@@ -85,13 +85,7 @@ class DocumentationMail extends Mail
 
         if (strpos($message, '%booking_names%') !== false)
         {
-            $messageReplace = '';
-            $bookingNumber = 1;
-            foreach ($this->course->getBookingsAlphabeticallySortedByLastName() as $booking)
-            {
-                $messageReplace .= $bookingNumber . '. ' . trim($booking->lastName) . ', ' . trim($booking->firstName) . PHP_EOL;
-                $bookingNumber++;
-            }
+            $messageReplace = $this->getBookings();
             $message = str_replace('%booking_names%', $messageReplace, $message);
         }
 
@@ -113,7 +107,9 @@ class DocumentationMail extends Mail
 
         $to = $mailaddresses;
         $subject = $this->getSubject($this->mailSettings['subject']);
-        $message = '';
+        $message = __('Please print the attached file.') . PHP_EOL . PHP_EOL;
+        $message .= __('Bookings') . PHP_EOL;
+        $message .= $this->getBookings();
         $headers = $this->getHeaders();
         $docuPDF = new DocumentationPdf($this->course);
         $docuPDF->generatePdf();
@@ -123,5 +119,20 @@ class DocumentationMail extends Mail
         $docuPDF->unlink();
 
         return $mailSent;
+    }
+
+    /**
+     * @return string
+     */
+    private function getBookings(): string
+    {
+        $bookingsTextBlock = '';
+        $bookingNumber = 1;
+        foreach ($this->course->getBookingsAlphabeticallySortedByLastName() as $booking)
+        {
+            $bookingsTextBlock .= $bookingNumber . '. ' . trim($booking->lastName) . ', ' . trim($booking->firstName) . PHP_EOL;
+            $bookingNumber++;
+        }
+        return $bookingsTextBlock;
     }
 }
