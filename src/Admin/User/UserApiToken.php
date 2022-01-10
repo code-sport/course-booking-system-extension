@@ -4,6 +4,7 @@ namespace CBSE\Admin\User;
 
 use Analog\Analog;
 use CBSE\Helper\RandomHelper;
+use CBSE\Helper\UserHelper;
 use Exception;
 
 class UserApiToken
@@ -48,18 +49,22 @@ class UserApiToken
         ?>
         <h3><?= _e('Course Bookings System Extension API Token', CBSE_LANGUAGE_DOMAIN) ?></h3>
         <table class="form-table">
-            <tr>
-                <th scope="row">
-                    <label for="cbse_inform_method">
-                        <?php
-                        _e("Token", CBSE_LANGUAGE_DOMAIN); ?>
-                    </label>
-                </th>
-                <td>
-                    <input id="cbse_api_token" name="cbse-api-token" value="<?= $token ?>" readonly
-                           class="regular-text"/>
-                </td>
-            </tr>
+            <?php
+            if (UserHelper::isUserManager(get_current_user_id())): ?>
+                <tr>
+                    <th scope="row">
+                        <label for="cbse_inform_method">
+                            <?php
+                            _e("Token", CBSE_LANGUAGE_DOMAIN); ?>
+                        </label>
+                    </th>
+                    <td>
+                        <input id="cbse_api_token" name="cbse-api-token" value="<?= $token ?>" readonly
+                               class="regular-text"/>
+                    </td>
+                </tr>
+            <?php
+            endif; ?>
             <tr>
                 <th scope="row">
                     <label for="cbse_inform_method">
