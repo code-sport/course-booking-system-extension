@@ -53,7 +53,7 @@ class UserApiToken
             if (UserHelper::isUserManager(get_current_user_id())): ?>
                 <tr>
                     <th scope="row">
-                        <label for="cbse_inform_method">
+                        <label for="cbse_api_token">
                             <?php
                             _e("Token", CBSE_LANGUAGE_DOMAIN); ?>
                         </label>
@@ -67,7 +67,7 @@ class UserApiToken
             endif; ?>
             <tr>
                 <th scope="row">
-                    <label for="cbse_inform_method">
+                    <label for="cbse_ics">
                         <?php
                         _e("ics", CBSE_LANGUAGE_DOMAIN); ?>
                     </label>
@@ -85,7 +85,7 @@ class UserApiToken
             </tr>
             <tr>
                 <th scope="row">
-                    <label for="cbse_auto_print">
+                    <label for="cbse_renew_token">
                         <?php
                         _e("Renew Token", CBSE_LANGUAGE_DOMAIN); ?>
                     </label>
