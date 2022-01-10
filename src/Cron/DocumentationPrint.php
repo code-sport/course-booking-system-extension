@@ -3,9 +3,9 @@
 namespace CBSE\Cron;
 
 use Analog\Analog;
+use CBSE\Database\CourseInfoDate;
+use CBSE\Database\CoursesInTime;
 use CBSE\DocumentationMail;
-use CBSE\Dto\CourseInfoDate;
-use CBSE\Dto\CoursesInTime;
 use CBSE\Helper\ArrayHelper;
 use DateInterval;
 use DateTime;
@@ -97,7 +97,7 @@ class DocumentationPrint extends CronBase
                     $date = DateTime::createFromFormat('Y-m-d', $course->date);
                     $courseInfo = new CourseInfoDate($course->course_id, $date);
                     $printerMails = $this->getPrinterMailAddresses($courseInfo);
-                    Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - print on: ' . implode(', ', $printerMails));
+                    Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - print on: ' . implode(', ', array_column($printerMails, 'mail')));
 
                     if (!empty($printerMails))
                     {

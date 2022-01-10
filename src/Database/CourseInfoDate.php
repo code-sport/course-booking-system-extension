@@ -1,15 +1,21 @@
 <?php
 
-namespace CBSE\Dto;
+namespace CBSE\Database;
 
 use CBSE\Helper\ArrayHelper;
+use CBSE\Helper\DateTimeZoneHelper;
 use CBSE\UserCovid19Status;
+use DateInterval;
 use DateTime;
 use WP_Error;
 use WP_Post;
 use WP_Term;
+use function CBSE\Dto\get_option;
+use function get_post;
+use function get_the_terms;
+use function get_userdata;
 
-class CourseInfoDate extends DtoBase
+class CourseInfoDate extends DatabaseBase
 {
     private int $courseId;
     private DateTime $date;
@@ -31,11 +37,11 @@ class CourseInfoDate extends DtoBase
 
         $this->timeslot = $this->loadTimeslots();
         $this->event = get_post($this->timeslot->event_id);
-        $this->eventMeta = get_post($this->timeslot->event_id);
+        $this->eventMeta = get_post_meta($this->timeslot->event_id);
         $this->eventCategories = get_the_terms($this->timeslot->event_id, 'mp-event_category');
         $this->eventTags = get_the_terms($this->timeslot->event_id, 'mp-event_tag');
         $this->column = get_post($this->timeslot->column_id);
-        $this->columnMeta = get_post($this->timeslot->column_id);
+        $this->columnMeta = get_post_meta($this->timeslot->column_id);
         $this->substitutes = $this->loadSubstitutes();
         $this->bookings = $this->loadBookings();
     }
@@ -159,6 +165,24 @@ class CourseInfoDate extends DtoBase
     public function getCourseEndTimeString(): string
     {
         return date(get_option('time_format'), strtotime($this->timeslot->event_end));
+    }
+
+    public function getCourseEnd(): DateTime
+    {
+        $dateString = $this->date->format('Y-m-d');
+        $endDateTime = DateTime::createFromFormat('Y-m-d G:i:s', $dateString . ' ' . $this->timeslot->event_end, DateTimeZoneHelper::fromWordPress());
+        if ($endDateTime < $this->getCourseStart())
+        {
+            $endDateTime->add(new DateInterval('P1D'));
+        }
+
+        return $endDateTime;
+    }
+
+    public function getCourseStart(): DateTime
+    {
+        $dateString = $this->date->format('Y-m-d');
+        return DateTime::createFromFormat('Y-m-d G:i:s', $dateString . ' ' . $this->timeslot->event_start, DateTimeZoneHelper::fromWordPress());
     }
 
     /**

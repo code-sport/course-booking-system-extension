@@ -1,11 +1,11 @@
 <?php
 
-namespace CBSE\Dto;
+namespace CBSE\Database;
 
 use Analog\Analog;
 use DateTime;
 
-class CoursesInTime extends DtoBase
+class CoursesInTime extends DatabaseBase
 {
     private DateTime $timeFrom;
     private DateTime $timeTo;
