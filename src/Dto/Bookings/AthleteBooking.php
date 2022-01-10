@@ -25,8 +25,8 @@ class AthleteBooking
         $this->bookingId = $queryResult->bookingId;
         $this->courseId = $queryResult->courseId;
         $this->date = $queryResult->date;
-        $this->dateStart = DateTime::createFromFormat('Y-m-d G:i:s', $queryResult->date . ' ' . $queryResult->eventStart, DateTimeZoneHelper::FromWordPress());
-        $this->dateEnd = DateTime::createFromFormat('Y-m-d G:i:s', $queryResult->date . ' ' . $queryResult->eventEnd, DateTimeZoneHelper::FromWordPress());
+        $this->dateStart = DateTime::createFromFormat('Y-m-d G:i:s', $queryResult->date . ' ' . $queryResult->eventStart, DateTimeZoneHelper::fromWordPress());
+        $this->dateEnd = DateTime::createFromFormat('Y-m-d G:i:s', $queryResult->date . ' ' . $queryResult->eventEnd, DateTimeZoneHelper::fromWordPress());
         $this->columnId = $queryResult->columnId;
         $this->eventId = $queryResult->eventId;
         $this->eventStart = $queryResult->eventStart;

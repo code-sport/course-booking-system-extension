@@ -23,4 +23,3 @@ class AthleteBookings
         return $this->bookings;
     }
 }
-

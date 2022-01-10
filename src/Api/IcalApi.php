@@ -89,7 +89,7 @@ class IcalApi
     private function generateCalender(array $icalData): string
     {
         $refreshIntervalInMinutes = 60;
-        $calendar = Calendar::create(__('My courses', CBSE_LANGUAGE_DOMAIN))->timezone(DateTimeZoneHelper::FromWordPress());
+        $calendar = Calendar::create(__('My courses', CBSE_LANGUAGE_DOMAIN))->timezone(DateTimeZoneHelper::fromWordPress());
         $events = array();
 
         if (array_key_exists('bookings', $icalData))
