@@ -62,7 +62,9 @@ class IcalApi
 
     private function userHasToken(int $userId, string $token): bool
     {
-        return true; //TODO
+        $expectedToken = get_user_meta($userId, 'cbse_api_token', true);
+
+        return !empty($expectedToken) && strcasecmp($expectedToken, $token) === 0;
     }
 
     private function loadDataForUser($userId)
