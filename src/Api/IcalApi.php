@@ -62,12 +62,12 @@ class IcalApi
 
     private function userHasToken(int $userId, string $token): bool
     {
-        $expectedToken = get_user_meta($userId, 'cbse_api_token', true);
+        $expectedToken = get_user_meta($userId, 'cbse-api-token', true);
 
         return !empty($expectedToken) && strcasecmp($expectedToken, $token) === 0;
     }
 
-    private function loadDataForUser($userId)
+    private function loadDataForUser($userId): array
     {
         $pastDays = 90;
         $futureDays = 30;

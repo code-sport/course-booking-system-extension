@@ -20,6 +20,7 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 
 use CBSE\Admin\Plugin;
 use CBSE\Admin\Settings;
+use CBSE\Admin\User\UserApiToken;
 use CBSE\Admin\User\UserCovid19StatusOverview;
 use CBSE\Admin\User\UserCovid19StatusSettings;
 use CBSE\Admin\User\UserInformMethod;
@@ -58,6 +59,7 @@ if (is_admin())
     $userCovid = new UserCovid19StatusSettings();
     $userInfo = new UserInformMethod();
     UserCovid19StatusOverview::getInstance();
+    UserApiToken::getInstance();
 }
 
 // Install and update
