@@ -169,8 +169,8 @@ class CourseInfoDate extends DatabaseBase
 
     public function getCourseEnd(): DateTime
     {
-        $date = $this->date->format('Y-m-d');
-        $endDateTime = DateTime::createFromFormat('Y-m-d G:i:s', $date . ' ' . $this->timeslot->event_end, DateTimeZoneHelper::fromWordPress());
+        $dateString = $this->date->format('Y-m-d');
+        $endDateTime = DateTime::createFromFormat('Y-m-d G:i:s', $dateString . ' ' . $this->timeslot->event_end, DateTimeZoneHelper::fromWordPress());
         if ($endDateTime < $this->getCourseStart())
         {
             $endDateTime->add(new DateInterval('P1D'));
@@ -181,8 +181,8 @@ class CourseInfoDate extends DatabaseBase
 
     public function getCourseStart(): DateTime
     {
-        $date = $this->date->format('Y-m-d');
-        return DateTime::createFromFormat('Y-m-d G:i:s', $date . ' ' . $this->timeslot->event_start, DateTimeZoneHelper::fromWordPress());
+        $dateString = $this->date->format('Y-m-d');
+        return DateTime::createFromFormat('Y-m-d G:i:s', $dateString . ' ' . $this->timeslot->event_start, DateTimeZoneHelper::fromWordPress());
     }
 
     /**
