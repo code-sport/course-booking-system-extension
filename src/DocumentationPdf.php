@@ -13,8 +13,7 @@ class DocumentationPdf extends CbsePdf
 
     public function __construct(CourseInfoDate $courseInfoDate)
     {
-        $logMessage = get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $courseInfoDate->__toString() . '[' .
-            get_current_user_id() . ']';
+        $logMessage = get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $courseInfoDate->__toString() . '[' . get_current_user_id() . ']';
         Analog::log($logMessage);
         parent::__construct(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $this->course = $courseInfoDate;
@@ -42,8 +41,7 @@ class DocumentationPdf extends CbsePdf
 
     public function getPdfFile(): string
     {
-        return plugin_dir_path(__FILE__) . $this->course->getCourseId() . '_' . $this->course->getCourseDate()
-                ->format('Y-m-d') . '.pdf';
+        return plugin_dir_path(__FILE__) . $this->course->getCourseId() . '_' . $this->course->getCourseDate()->format('Y-m-d') . '.pdf';
     }
 
     public function generatePdf(): string
@@ -139,13 +137,14 @@ class DocumentationPdf extends CbsePdf
         $courseInfoCategories = $this->course->getEventCategoriesAsString();
         $courseInfoTags = $this->course->getEventTagsAsString();
         $courseInfoDateTime = $this->course->getCourseDateTimeString();
-        $userMeta = get_userdata($this->course->getSubstitutes()->user_id ?? $this->course->getTimeslot()->user_id);
+        $userId = $this->course->getCoachId();
+        $userMeta = get_userdata($userId);
         $userDisplayName = '______________________________________________________________';
-        if($userMeta !== false)
+        if ($userMeta !== false)
         {
             $userDisplayName = "{$userMeta->last_name}, {$userMeta->first_name}";
         }
-        $userCovid19Status = new UserCovid19Status($userMeta->ID, $this->course->getCourseDate());
+        $userCovid19Status = new UserCovid19Status($userId, $this->course->getCourseDate());
 
         $w = array(55, 125);
         $this->Ln();

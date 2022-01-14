@@ -2,6 +2,7 @@
 
 namespace CBSE\Database;
 
+use Analog;
 use CBSE\Helper\ArrayHelper;
 use CBSE\Helper\DateTimeZoneHelper;
 use CBSE\UserCovid19Status;
@@ -32,6 +33,7 @@ class CourseInfoDate extends DatabaseBase
 
     public function __construct(int $courseId, DateTime $date)
     {
+        Analog::debug(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . "courseId: $courseId, date: {$date->format('c')}");
         $this->courseId = $courseId;
         $this->date = $date;
 
@@ -119,14 +121,6 @@ class CourseInfoDate extends DatabaseBase
     }
 
     /**
-     * @return mixed
-     */
-    public function getTimeslot()
-    {
-        return $this->timeslot;
-    }
-
-    /**
      * @return array
      */
     public function getBookingsAlphabeticallySortedByLastName(): array
@@ -194,14 +188,6 @@ class CourseInfoDate extends DatabaseBase
     }
 
     /**
-     * @return mixed
-     */
-    public function getSubstitutes()
-    {
-        return $this->substitutes;
-    }
-
-    /**
      * @return array|WP_Post|null
      */
     public function getColumnMeta()
@@ -264,6 +250,36 @@ class CourseInfoDate extends DatabaseBase
     public function getEventTags()
     {
         return $this->eventTags;
+    }
+
+    public function getCoachId(): int
+    {
+        $substituteUserId = null;
+        if ($this->getSubstitutes())
+        {
+            $substituteUserId = $this->getSubstitutes()->user_id;
+        }
+
+        $timeslotUserId = $this->getTimeslot()->user_id;
+        Analog::debug(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . "substituteUserId: {$substituteUserId} ?? timeslotUserId: {$timeslotUserId}");
+
+        return $substituteUserId ?? $timeslotUserId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubstitutes()
+    {
+        return $this->substitutes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeslot()
+    {
+        return $this->timeslot;
     }
 
 
