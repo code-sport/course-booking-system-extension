@@ -55,7 +55,7 @@ elseif ($difference > 0)
         <button
                 type="button"
                 class="cbse cbse_participants_via_email"
-                data-button='<?= json_encode(array('course_id' => $args['timeslot']->course_id, 'date' => $args['timeslot']->date)) ?>'
+                data-button='<?= json_encode(array('courseId' => $args['timeslot']->courseId, 'date' => $args['timeslot']->date)) ?>'
         >
             <?= __('Participants via email', CBSE_LANGUAGE_DOMAIN) ?>
         </button>

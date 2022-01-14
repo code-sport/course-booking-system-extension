@@ -10,7 +10,7 @@ use DateTime;
 use WP_Error;
 use WP_Post;
 use WP_Term;
-use function CBSE\Dto\get_option;
+use function get_option;
 use function get_post;
 use function get_the_terms;
 use function get_userdata;

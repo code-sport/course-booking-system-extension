@@ -52,7 +52,7 @@ class Ajax
     public function participantsViaMail()
     {
         check_ajax_referer($this->action);
-        $courseId = intval(sanitize_key($_POST['course_id']));
+        $courseId = intval(sanitize_key($_POST['courseId']));
         $date = DateTime::createFromFormat('Y-m-d', sanitize_key($_POST['date']));
         $course = new CourseInfoDate($courseId, $date);
         $documentationMail = new DocumentationMail($course, get_option('cbse_coach_mail_options'));
