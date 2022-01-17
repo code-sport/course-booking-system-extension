@@ -230,7 +230,7 @@ class DocumentationPdf extends CbsePdf
             $fill = !$fill;
             $bookingNumber++;
         }
-        for ($i = $bookingNumber; $i <= $this->course->getEventMeta()->attendance; $i++)
+        for ($i = $bookingNumber; $i <= $this->course->getEvent()->attendance; $i++)
         {
             $this->Cell($w[0], 10, $i, 1, 0, 'R', $fill);
             $this->Cell($w[1], 10, "", 1, 0, 'L', $fill);
