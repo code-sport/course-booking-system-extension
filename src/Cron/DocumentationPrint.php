@@ -173,7 +173,7 @@ class DocumentationPrint extends CronBase
     private function generateDestinationFileName(CourseInfoDate $course, string $tagName): string
     {
         $fileName = $course->getCourseId() . '_' . $course->getCourseDate()->format('Y-m-d') . '.pdf';
-        $path = PathHelper::realPath(PathHelper::combine(plugin_dir_path(CBSE_PLUGIN_BASE_FILE), '..', 'cbse', 'auto-print', $tagName));
+        $path = PathHelper::realPath(PathHelper::combine(plugin_dir_path(CBSE_PLUGIN_BASE_FILE), '..', '..', 'cbse', 'auto-print', $tagName));
         if (!file_exists($path))
         {
             Analog::info('create folder: ' . $path);
@@ -183,7 +183,7 @@ class DocumentationPrint extends CronBase
             }
             //Add .htaccess so that no access from the internet is possible
             $htaccessSrc = PathHelper::combine(plugin_dir_path(CBSE_PLUGIN_BASE_FILE), 'templates', '.htaccess.txt');
-            $htaccessDest = PathHelper::combine($path . '.htaccess');
+            $htaccessDest = $path . DIRECTORY_SEPARATOR . '.htaccess';
             if (copy($htaccessSrc, $htaccessDest))
             {
                 Analog::warning('.htaccess could not copied.');
