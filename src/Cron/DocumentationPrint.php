@@ -6,7 +6,9 @@ use Analog\Analog;
 use CBSE\Database\CourseInfoDate;
 use CBSE\Database\CoursesInTime;
 use CBSE\DocumentationMail;
+use CBSE\DocumentationPdf;
 use CBSE\Helper\ArrayHelper;
+use CBSE\Helper\PathHelper;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -97,14 +99,32 @@ class DocumentationPrint extends CronBase
                     $date = DateTime::createFromFormat('Y-m-d', $course->date);
                     $courseInfo = new CourseInfoDate($course->course_id, $date);
                     $printerMails = $this->getPrinterMailAddresses($courseInfo);
-                    Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - print on: ' . implode(', ', array_column($printerMails, 'mail')));
+                    $saveOnFolders = $this->getSaveOnFolders($courseInfo);
 
                     if (!empty($printerMails))
                     {
+                        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $course->course_id . ' - ' . $course->date . ' - print on: ' . implode(', ', array_column($printerMails, 'mail')));
                         $documentationMail = new DocumentationMail($courseInfo, get_option('cbse_auto_print_options'));
                         $documentationMail->sentToPrinter(array_column($printerMails, 'mail'));
                     }
 
+                    if (!empty($saveOnFolders))
+                    {
+                        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - ' . $course->course_id . ' - ' . $course->date . ' - save on: ' . implode(', ', $saveOnFolders));
+                        $documentationPdf = new DocumentationPdf($courseInfo);
+                        $documentationPdf->generatePdf();
+                        foreach ($saveOnFolders as $saveOnFolder)
+                        {
+                            $src = $documentationPdf->getPdfFile();
+                            $dest = $this->generateDestinationFileName($courseInfo, $saveOnFolder);
+                            Analog::info('Copy from ' . $src . ' to ' . $dest);
+                            if (copy($src, $dest))
+                            {
+                                Analog::warning('Documentation could not copied');
+                            }
+                        }
+                        $documentationPdf->unlink();
+                    }
                 }
             }
         } catch (Exception $e)
@@ -117,13 +137,59 @@ class DocumentationPrint extends CronBase
 
     private function getPrinterMailAddresses(CourseInfoDate $course): array
     {
-        $printOptionsEmails = get_option('cbse_auto_print_options')['emails'];
         $eventTagIds = ArrayHelper::column($course->getEventTags(), 'term_id');
 
-        return array_filter($printOptionsEmails, function ($v, $k) use ($eventTagIds)
+        $emailAddresses = array();
+
+        foreach ($eventTagIds as $eventTagId)
         {
-            return in_array($v['id'], $eventTagIds);
-        }, ARRAY_FILTER_USE_BOTH);
+            $emailAddresses[] = get_term_meta($eventTagId, 'cbse_auto_print_mail', true);
+        }
+
+        return $emailAddresses;
+    }
+
+    private function getSaveOnFolders(CourseInfoDate $course): array
+    {
+        $eventTagIds = ArrayHelper::column($course->getEventTags(), 'term_id');
+
+        $folders = array();
+        foreach ($eventTagIds as $eventTagId)
+        {
+            if (get_term_meta($eventTagId, 'cbse_auto_print_folder', true) == 1)
+            {
+                $folders[] = $eventTagId;
+            }
+        }
+        return $folders;
+    }
+
+    /**
+     * @param CourseInfoDate $course
+     * @param string         $tagName
+     *
+     * @return string
+     */
+    private function generateDestinationFileName(CourseInfoDate $course, string $tagName): string
+    {
+        $fileName = $course->getCourseId() . '_' . $course->getCourseDate()->format('Y-m-d') . '.pdf';
+        $path = PathHelper::realPath(PathHelper::combine(plugin_dir_path(CBSE_PLUGIN_BASE_FILE), '..', 'cbse', 'auto-print', $tagName));
+        if (!file_exists($path))
+        {
+            Analog::info('create folder: ' . $path);
+            if (mkdir($path, 0777, true))
+            {
+                Analog::warning('Folder ' . $path . ' could not be created.');
+            }
+            //Add .htaccess so that no access from the internet is possible
+            $htaccessSrc = PathHelper::combine(plugin_dir_path(CBSE_PLUGIN_BASE_FILE), 'templates', '.htaccess.txt');
+            $htaccessDest = PathHelper::combine($path . '.htaccess');
+            if (copy($htaccessSrc, $htaccessDest))
+            {
+                Analog::warning('.htaccess could not copied.');
+            }
+        }
+        return PathHelper::realPath(PathHelper::combine($path, $fileName));
     }
 
     /**

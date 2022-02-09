@@ -18,6 +18,7 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 
 //require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
 
+use CBSE\Admin\MpEventTagAutoGeneration;
 use CBSE\Admin\Plugin;
 use CBSE\Admin\Settings;
 use CBSE\Admin\User\UserApiToken;
@@ -60,6 +61,7 @@ if (is_admin())
     $userInfo = new UserInformMethod();
     UserCovid19StatusOverview::getInstance();
     UserApiToken::getInstance();
+    MpEventTagAutoGeneration::getInstance();
 }
 
 // Install and update

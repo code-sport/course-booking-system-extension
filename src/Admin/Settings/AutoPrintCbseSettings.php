@@ -40,36 +40,14 @@ class AutoPrintCbseSettings extends CbseSettings
 
         //setting name, display name, callback to print form element, page in which field is displayed, section to which it belongs.
         //last field section is optional.
-        $this->registerSettingsForTags();
         add_settings_field('subject', __('Subject', CBSE_LANGUAGE_DOMAIN), [$this, 'subject'], 'course_booking_system_extension', $this->sectionHeader);
         add_settings_field('cron_enable', __('Cron Enable', CBSE_LANGUAGE_DOMAIN), [$this, 'cronEnable'], 'course_booking_system_extension', $this->sectionHeader);
-        add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this,
-            'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
-    }
-
-    private function registerSettingsForTags()
-    {
-        $tags = get_tags(array('taxonomy' => 'mp-event_tag', 'orderby' => 'name', 'hide_empty' => false));
-        $values = $this->getOptions('emails');
-        foreach ($tags as $tag)
-        {
-            $value = null;
-            if (!empty($values))
-            {
-                $value = array_filter($values, function ($v, $k) use ($tag)
-                {
-                    return $v['id'] == $tag->term_id;
-                }, ARRAY_FILTER_USE_BOTH);
-            }
-            $args = array('tag' => $tag, 'value' => $value);
-            add_settings_field("email_{$tag->term_id}", $tag->name, [$this, 'tagForPrint'], 'course_booking_system_extension', $this->sectionHeader, $args);
-        }
+        add_settings_field('cron_before_time', __('Cron Sent before course', CBSE_LANGUAGE_DOMAIN), [$this, 'cronBeforeTime'], 'course_booking_system_extension', $this->sectionHeader);
     }
 
     public function subject()
     {
-        $value = esc_attr($this->getOptions('subject') ?? __('Auto print - Sports operation documentation',
-                CBSE_LANGUAGE_DOMAIN));
+        $value = esc_attr($this->getOptions('subject') ?? __('Auto print - Sports operation documentation', CBSE_LANGUAGE_DOMAIN));
         echo "<input id='subject' name='cbse_auto_print_options[subject]' type='text' value='" . $value . "' />";
         echo "<p class='description'>" . __('Prefix of the subject', CBSE_LANGUAGE_DOMAIN) . "</p>";
     }
@@ -78,22 +56,6 @@ class AutoPrintCbseSettings extends CbseSettings
     {
         do_action('qm/debug', 'AutoPrintCbseSettings->Validate {input}', ['input' => json_encode($input)]);
 
-        $emails = array();
-        $tagsIds = preg_filter('/^email_(.*)/', '$1', array_keys($input));
-
-        foreach ($tagsIds as $tagId)
-        {
-            $mails = explode(',', $input["email_{$tagId}"]);
-            foreach ($mails as $mail)
-            {
-                if (is_email($mail))
-                {
-                    $emails[] = array('id' => $tagId, 'mail' => $mail);
-                }
-            }
-        }
-
-        $validatedInput['emails'] = $emails;
         $validatedInput['subject'] = $input['subject'];
         $validatedInput['cron_enable'] = isset($input['cron_enable']) ? 1 : 0;
         $validatedInput['cron_before_time_hour'] = $input['cron_before_time_hour'];
@@ -112,19 +74,6 @@ class AutoPrintCbseSettings extends CbseSettings
         $text .= '</p>';
 
         echo $text;
-    }
-
-    public function tagForPrint(array $args)
-    {
-        $tag = $args['tag'];
-        $values = $args['value'] ?? '';
-        $value = '';
-        if (!empty($values))
-        {
-            $value = implode(',', array_column($values, 'mail'));
-        }
-        echo "<input type=\"email\" id=\"email_{$tag->term_id}\" name=\"cbse_auto_print_options[email_{$tag->term_id}]\" value=\"$value\">";
-        echo "<p class='description'>" . $tag->description . "</p>";
     }
 
     public function cronEnable()

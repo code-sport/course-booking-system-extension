@@ -5,6 +5,7 @@ namespace CBSE;
 
 use Analog;
 use CBSE\Cron\LoggingCleanUp;
+use CBSE\Helper\PathHelper;
 
 final class Logging
 {
@@ -26,12 +27,7 @@ final class Logging
     {
         $pluginDir = plugin_dir_path($file);
         $folderPath = implode(DIRECTORY_SEPARATOR, array($pluginDir, 'logs'));
-        $folderRealPath = realpath($folderPath);
-        if ($folderRealPath !== false)
-        {
-            return $folderRealPath;
-        }
-        return $folderPath;
+        return PathHelper::realPath($folderPath);
     }
 }
 

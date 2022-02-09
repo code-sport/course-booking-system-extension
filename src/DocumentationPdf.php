@@ -4,6 +4,7 @@ namespace CBSE;
 
 use Analog\Analog;
 use CBSE\Database\CourseInfoDate;
+use Exception;
 
 class DocumentationPdf extends CbsePdf
 {
@@ -42,6 +43,7 @@ class DocumentationPdf extends CbsePdf
     public function getPdfFile(): string
     {
         return plugin_dir_path(__FILE__) . $this->course->getCourseId() . '_' . $this->course->getCourseDate()->format('Y-m-d') . '.pdf';
+        
     }
 
     public function generatePdf(): string
@@ -241,4 +243,6 @@ class DocumentationPdf extends CbsePdf
         }
 
     }
+
+
 }
