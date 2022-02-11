@@ -19,7 +19,7 @@ class AutoPrintCbseSettings extends CbseSettings
      */
     public function tabName(): string
     {
-        return __('Auto Print via Mail', 'course_booking_system_extension');
+        return __('Auto Print', 'course_booking_system_extension');
     }
 
     /**
