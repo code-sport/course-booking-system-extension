@@ -26,7 +26,7 @@ class PathHelper
     }
 
     /***
-     * See https://stackoverflow.com/a/10488552/14815278
+     * See https://www.php.net/manual/de/function.realpath.php#84012
      *
      * @param string $path
      *
@@ -34,17 +34,24 @@ class PathHelper
      */
     public static function realPath(string $path): string
     {
-        $from = $path;
-        while ($to = realpath($from) and $to !== $from)
+        $pathString = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $pathString), 'strlen');
+        $absolutes = array();
+        foreach ($parts as $part)
         {
-            $from = $to;
+            if ('.' == $part)
+            {
+                continue;
+            }
+            if ('..' == $part)
+            {
+                array_pop($absolutes);
+            }
+            else
+            {
+                $absolutes[] = $part;
+            }
         }
-        if (!$to)
-        {
-            Analog::debug('PathHelper::realPath | ' . $path);
-            return $path;
-        }
-        Analog::debug('PathHelper::realPath | ' . $path . ' => ' . $to);
-        return $to;
+        return implode(DIRECTORY_SEPARATOR, $absolutes);
     }
 }
