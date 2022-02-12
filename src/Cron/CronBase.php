@@ -129,5 +129,23 @@ abstract class CronBase
 
         return wp_mail($to, $subject, $body);
     }
+
+    protected function getTimeFromOption(array $options, string $key, int $upperLimit, int $defaultValue): int
+    {
+        $retVal = $defaultValue;
+        if (array_key_exists($key, $options))
+        {
+            $itemValue = $options[$key];
+            if (is_numeric($itemValue))
+            {
+                $item = (int)$itemValue;
+                if ($item > 0 && $item < $upperLimit)
+                {
+                    $retVal = $item;
+                }
+            }
+        }
+        return $retVal;
+    }
 }
 
