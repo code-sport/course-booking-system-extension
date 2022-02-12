@@ -58,6 +58,7 @@ class DocumentationCoach extends CronBase
             $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
         } catch (Exception $e)
         {
+            Analog::error($e);
             $interval = new DateInterval('PT2H');
         }
         $dateFrom = clone $dateLastRun;

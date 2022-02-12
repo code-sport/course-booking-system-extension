@@ -71,6 +71,7 @@ class DocumentationPrint extends CronBase
 
         $coursesInTime = new CoursesInTime($dateFrom, $dateTo);
         $courses = $coursesInTime->getCourses();
+        Analog::log(get_class($this) . ' - ' . __FUNCTION__ . ' - Run on ' . count($courses) . ' courses');
 
         foreach ($courses as $course)
         {
@@ -138,20 +139,22 @@ class DocumentationPrint extends CronBase
     private function getPrinterMailAddresses(CourseInfoDate $course): array
     {
         $eventTagIds = ArrayHelper::column($course->getEventTags(), 'term_id');
+        Analog::debug('term ids for print: ' . implode(',', $eventTagIds));
 
         $emailAddresses = array();
 
         foreach ($eventTagIds as $eventTagId)
         {
-            $emailAddresses[] = get_term_meta($eventTagId, 'cbse_auto_print_mail', true);
+            $emailAddresses[] = array('mail' => get_term_meta($eventTagId, 'cbse_auto_print_mail', true));
         }
-
+        Analog::debug('getPrinterMailAddresses: ' . implode(',', $emailAddresses));
         return $emailAddresses;
     }
 
     private function getSaveOnFolders(CourseInfoDate $course): array
     {
         $eventTagIds = ArrayHelper::column($course->getEventTags(), 'term_id');
+        Analog::debug('term ids for save in disk: ' . implode(',', $eventTagIds));
 
         $folders = array();
         foreach ($eventTagIds as $eventTagId)
@@ -161,6 +164,7 @@ class DocumentationPrint extends CronBase
                 $folders[] = $eventTagId;
             }
         }
+        Analog::debug('getSaveOnFolders: ' . implode(',', $folders));
         return $folders;
     }
 
@@ -174,7 +178,7 @@ class DocumentationPrint extends CronBase
     {
         $fileName = $course->getCourseId() . '_' . $course->getCourseDate()->format('Y-m-d') . '.pdf';
         $path = PathHelper::realPath(PathHelper::combine(plugin_dir_path(CBSE_PLUGIN_BASE_FILE), '..', '..', 'cbse', 'auto-print', $tagName));
-        if (!file_exists($path))
+        if (!is_dir($path))
         {
             Analog::info('create folder: ' . $path);
             if (mkdir($path, 0777, true))

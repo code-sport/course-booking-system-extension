@@ -53,7 +53,7 @@ class MpEventTagAutoGeneration
 
         if (isset($_POST['cbse_auto_print_folder']))
         {
-            $cbse_auto_print_folder_new_value = $_POST['cbse_auto_print_folder'];
+            $cbse_auto_print_folder_new_value = intval($_POST['cbse_auto_print_folder']);
             $cbse_auto_print_folder_previous_value = get_term_meta($termId, 'cbse_auto_print_folder', true);
             update_term_meta($termId, 'cbse_auto_print_folder', $cbse_auto_print_folder_new_value, $cbse_auto_print_folder_previous_value);
         }

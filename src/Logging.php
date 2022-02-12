@@ -9,24 +9,33 @@ use CBSE\Helper\PathHelper;
 
 final class Logging
 {
-    public static function init(string $file)
+    public static function init()
     {
-        $folder = self::getFolder($file);
-        $logFile = implode(DIRECTORY_SEPARATOR, array($folder, date('Y-m-d', time()) . '.log'));
-        $folder = dirname($logFile);
-        if (!file_exists($folder))
+        $folder = self::getFolder();
+        $logFile = PathHelper::combine($folder, date('Y-m-d', time()) . '.log');
+        if (!is_dir($folder))
         {
-            mkdir($folder, 0777, true);
+            if (!mkdir($folder, 0777, true))
+            {
+                trigger_error('Could\'t generate folder: ' . $folder, E_USER_WARNING);
+            }
+        }
+        if (!file_exists($logFile))
+        {
+            if (!touch($logFile))
+            {
+                trigger_error('Log file ' . $logFile . ' could\'t be created.', E_USER_ERROR);
+            }
         }
         Analog::handler(Analog\Handler\File::init($logFile));
 
-        LoggingCleanUp::getInstance($file);
+        LoggingCleanUp::getInstance();
     }
 
-    public static function getFolder(string $file): string
+    public static function getFolder(): string
     {
-        $pluginDir = plugin_dir_path($file);
-        $folderPath = implode(DIRECTORY_SEPARATOR, array($pluginDir, 'logs'));
+        $pluginDir = plugin_dir_path(CBSE_PLUGIN_BASE_FILE);
+        $folderPath = PathHelper::combine($pluginDir, '..', '..', 'cbse', 'logs');
         return PathHelper::realPath($folderPath);
     }
 }

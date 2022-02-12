@@ -5,8 +5,6 @@
 
 namespace CBSE\Helper;
 
-use Analog;
-
 class PathHelper
 {
     public static function combine(): string

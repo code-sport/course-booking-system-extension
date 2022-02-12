@@ -81,7 +81,7 @@ class DocumentationMail extends Mail
         $message = str_replace('%course_end%', $this->course->getCourseEndTimeString(), $message);
         $message = str_replace('%course_title%', $this->course->getEvent()->post_title, $message);
         $message = str_replace('%number_of_bookings%', count($this->course->getBookings()), $message);
-        $message = str_replace('%maximum_participants%', $this->course->getEventMeta()->attendance, $message);
+        $message = str_replace('%maximum_participants%', $this->course->getEvent()->attendance, $message);
 
         if (strpos($message, '%booking_names%') !== false)
         {

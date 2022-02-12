@@ -38,7 +38,7 @@ define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 const CBSE_LANGUAGE_DOMAIN = 'course-booking-system-extension';
 const CBSE_PLUGIN_BASE_FILE = __FILE__;
 
-CBSE\Logging::init(__FILE__);
+CBSE\Logging::init();
 
 
 $ajax = new Ajax();
