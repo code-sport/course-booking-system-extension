@@ -31,6 +31,7 @@ use CBSE\Cron\DocumentationCoach;
 use CBSE\Cron\DocumentationPrint;
 use CBSE\Shortcodes\ShortcodeOverviewForCourseHead;
 use CBSE\Shortcodes\ShortcodeUserCovid19Status;
+use CBSE\Shortcodes\ShortcodeUserIcal;
 use CBSE\TemplatesManager;
 
 defined('ABSPATH') || exit;
@@ -45,6 +46,7 @@ $ajax = new Ajax();
 
 ShortcodeOverviewForCourseHead::getInstance();
 ShortcodeUserCovid19Status::getInstance();
+ShortcodeUserIcal::getInstance();
 
 DocumentationCoach::getInstance();
 DocumentationPrint::getInstance();

@@ -39,12 +39,8 @@ class UserApiToken
 
     public function showEditUserProfile($user)
     {
-        $token = get_the_author_meta('cbse-api-token', $user->ID);
-        $icalAddress = '';
-        if (!empty($token))
-        {
-            $icalAddress = home_url("/wp-json/wp/v2/course-booking-system-extension/calender/{$user->ID}/{$token}/calender.ics");
-        }
+        $token = self::getTokenForUser($user->ID);
+        $icalAddress = self::getIcalAddressForUser($user->ID);
 
         ?>
         <h3><?= _e('Course Bookings System Extension API Token', CBSE_LANGUAGE_DOMAIN) ?></h3>
@@ -111,6 +107,22 @@ class UserApiToken
         <?php
     }
 
+    public static function getTokenForUser(int $userId): string
+    {
+        return get_the_author_meta('cbse-api-token', $userId);
+    }
+
+    public static function getIcalAddressForUser(int $userId): string
+    {
+        $icalAddress = '';
+        $token = self::getTokenForUser($userId);
+        if (!empty($token))
+        {
+            $icalAddress = home_url("/wp-json/wp/v2/course-booking-system-extension/calender/{$userId}/{$token}/calender.ics");
+        }
+        return $icalAddress;
+    }
+
     public function saveUserProfile($userId)
     {
         if (empty($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'update-user_' . $userId))
@@ -125,13 +137,26 @@ class UserApiToken
 
         if ($_POST['cbse-renew-token'] == 1)
         {
-            $token = $this->generateToken();
+            self::generateNewTokenForUser($userId);
         }
-
-        update_user_meta($userId, 'cbse-api-token', $token);
     }
 
-    private function generateToken(): string
+    /**
+     *  Generate and save token for user
+     *
+     * @param $userId
+     *
+     * @return void
+     */
+    public static function generateNewTokenForUser(int $userId): string
+    {
+        $token = self::generateToken();
+        update_user_meta($userId, 'cbse-api-token', $token);
+        do_action('qm/debug', "New token for user $userId is generated");
+        return $token;
+    }
+
+    private static function generateToken(): string
     {
         $strength = 60;
         try
@@ -140,6 +165,7 @@ class UserApiToken
         } catch (Exception $e)
         {
             Analog::error($e);
+            do_action('qm/error', $e);
             return '';
         }
     }
