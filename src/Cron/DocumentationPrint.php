@@ -51,11 +51,11 @@ class DocumentationPrint extends CronBase
     protected function work(DateTime $dateLastRun, DateTime $dateNow)
     {
         $options = get_option('cbse_auto_print_options');
-        $hour = is_numeric($options['cron_before_time_hour']) && (int)$options['cron_before_time_hour'] > 0 && (int)$options['cron_before_time_hour'] < 24 ? $options['cron_before_time_hour'] : 0;
-        $minute = is_numeric($options['cron_before_time_minute']) && (int)$options['cron_before_time_minute'] > 0 && (int)$options['cron_before_time_minute'] < 60 ? $options['cron_before_time_minute'] : 20;
 
         try
         {
+            $hour = $this->getTimeFromOption($options, 'cron_before_time_hour', 24, 0);
+            $minute = $this->getTimeFromOption($options, 'cron_before_time_minute', 60, 20);
             $interval = new DateInterval('PT' . $hour . 'H' . $minute . 'M');
         } catch (Exception $e)
         {

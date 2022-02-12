@@ -131,7 +131,7 @@ class ShortcodeUserIcal
     private function getIcalAddess($cbse_atts)
     {
         $address = UserApiToken::getIcalAddressForUser(get_current_user_id());
-        $autoGenerate = boolval($cbse_atts['auto - generate']);
+        $autoGenerate = boolval($cbse_atts['auto-generate']);
         do_action('qm/debug', ['address' => $address, 'address empty' => empty($address), 'autoGenerate' => $autoGenerate]);
         if (empty($address) && $autoGenerate)
         {

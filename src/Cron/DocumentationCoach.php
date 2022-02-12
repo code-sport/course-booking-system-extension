@@ -49,7 +49,7 @@ class DocumentationCoach extends CronBase
 
     protected function work(DateTime $dateLastRun, DateTime $dateNow)
     {
-        $options = get_option('cbse_coach_mail');
+        $options = get_option('cbse_coach_mail_options');
 
         try
         {
