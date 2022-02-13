@@ -147,7 +147,7 @@ class DocumentationPrint extends CronBase
         {
             $emailAddresses[] = array('mail' => get_term_meta($eventTagId, 'cbse_auto_print_mail', true));
         }
-        Analog::debug('getPrinterMailAddresses: ' . implode(',', $emailAddresses));
+        Analog::debug('getPrinterMailAddresses: ' . json_encode($emailAddresses));
         return $emailAddresses;
     }
 
