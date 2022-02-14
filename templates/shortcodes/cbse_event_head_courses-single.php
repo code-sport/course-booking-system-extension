@@ -18,11 +18,11 @@ elseif ($difference > 0)
 }
 ?>
 <div
-        class="cbse-courses-single <?= $time ?> <?= date("Y-m-d", $date) ?> course-<?= $args['timeslot']->course_id ?>">
+        class="cbse-courses-single <?= $time ?> <?= date("Y-m-d", $date) ?> course-<?= $args['timeslot']->courseId ?>">
     <p class="cbse-date"><?= $args['courseInfo']->getColumn()->post_title ?>
-        , <?= date(get_option('date_format'), strtotime($args['timeslot']->date)) ?>
-        <?= date(get_option('time_format'), strtotime($args['timeslot']->event_start)) ?>
-        - <?= date(get_option('time_format'), strtotime($args['timeslot']->event_end)) ?></p>
+        , <?= date_i18n(get_option('date_format'), strtotime($args['timeslot']->date)) ?>
+        <?= date_i18n(get_option('time_format'), strtotime($args['timeslot']->eventStart)) ?>
+        - <?= date_i18n(get_option('time_format'), strtotime($args['timeslot']->eventEnd)) ?></p>
     <h3 class="cbse-course-title"><?= $args['courseInfo']->getEvent()->post_title ?></h3>
     <p><?= __('Bookings', CBSE_LANGUAGE_DOMAIN) ?></p>
     <ol>

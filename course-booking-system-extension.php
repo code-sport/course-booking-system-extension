@@ -3,7 +3,7 @@
  * Plugin Name: Course Booking System Extension
  * Plugin URI: https://github.com/code-sport/course-booking-system-extension
  * Description: Extension for Course Booking System
- * Version: 0.4.1
+ * Version: 0.4.2
  * Author: Code.Sport
  * Author URI: https://github.com/code-sport/
  * Text Domain: course-booking-system-extension
@@ -18,6 +18,7 @@ require_once((plugin_dir_path(__FILE__)) . '/vendor/autoload.php');
 
 //require_once plugin_dir_path(__FILE__) . '../course-booking-system/includes/functions.php';
 
+use CBSE\Admin\MpEventTagAutoGeneration;
 use CBSE\Admin\Plugin;
 use CBSE\Admin\Settings;
 use CBSE\Admin\User\UserApiToken;
@@ -30,6 +31,7 @@ use CBSE\Cron\DocumentationCoach;
 use CBSE\Cron\DocumentationPrint;
 use CBSE\Shortcodes\ShortcodeOverviewForCourseHead;
 use CBSE\Shortcodes\ShortcodeUserCovid19Status;
+use CBSE\Shortcodes\ShortcodeUserIcal;
 use CBSE\TemplatesManager;
 
 defined('ABSPATH') || exit;
@@ -37,13 +39,14 @@ define('CBSE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 const CBSE_LANGUAGE_DOMAIN = 'course-booking-system-extension';
 const CBSE_PLUGIN_BASE_FILE = __FILE__;
 
-CBSE\Logging::init(__FILE__);
+CBSE\Logging::init();
 
 
 $ajax = new Ajax();
 
 ShortcodeOverviewForCourseHead::getInstance();
 ShortcodeUserCovid19Status::getInstance();
+ShortcodeUserIcal::getInstance();
 
 DocumentationCoach::getInstance();
 DocumentationPrint::getInstance();
@@ -60,6 +63,7 @@ if (is_admin())
     $userInfo = new UserInformMethod();
     UserCovid19StatusOverview::getInstance();
     UserApiToken::getInstance();
+    MpEventTagAutoGeneration::getInstance();
 }
 
 // Install and update

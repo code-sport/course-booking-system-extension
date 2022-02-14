@@ -10,14 +10,13 @@ class LoggingCleanUp
 {
     private static ?LoggingCleanUp $instance = null;
     private string $hook;
-    private string $file;
 
     /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
      *
-     * @param string $file*/
-    private function __construct(string $file)
+     */
+    private function __construct()
     {
         $this->hook = 'cbse_cleanup_logs';
         add_filter('cron_schedules', [$this, 'addCronDailyInterval']);
@@ -27,16 +26,16 @@ class LoggingCleanUp
         {
             wp_schedule_event(time(), 'daily', $this->hook);
         }
-        $this->file = $file;}
+    }
 
     /**
      * gets the instance via lazy initialization (created on first usage)
      */
-    public static function getInstance($file): LoggingCleanUp
+    public static function getInstance(): LoggingCleanUp
     {
         if (static::$instance === null)
         {
-            static::$instance = new LoggingCleanUp($file);
+            static::$instance = new LoggingCleanUp();
         }
 
         return static::$instance;
@@ -52,7 +51,7 @@ class LoggingCleanUp
     {
         // 30 Tag
         $deleteTime = 60 * 60 * 24 * 30;
-        $loggingFolder = Logging::getFolder($this->file);
+        $loggingFolder = Logging::getFolder();
         $logFiles = array_diff(scandir($loggingFolder), array('.', '..'));
         $now = time();
 

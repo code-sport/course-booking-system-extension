@@ -13,6 +13,6 @@ final class DateTimeZoneHelper
      */
     public static function fromWordPress(): DateTimeZone
     {
-        return new DateTimeZone(wp_timezone_string());
+        return wp_timezone();
     }
 }

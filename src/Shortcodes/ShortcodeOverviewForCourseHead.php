@@ -71,7 +71,7 @@ final class ShortcodeOverviewForCourseHead
         $atts = array_change_key_case((array)$atts, CASE_LOWER);
 
         // override default attributes with user attributes
-        $cbse_atts = shortcode_atts(array('title' => __('My Events as Coach', CBSE_LANGUAGE_DOMAIN), 'pastdays' => 7, 'futuredays' => 7), $atts, $tag);
+        $cbseAtts = shortcode_atts(array('title' => __('My Events as Coach', CBSE_LANGUAGE_DOMAIN), 'pastdays' => 7, 'futuredays' => 7), $atts, $tag);
 
         wp_enqueue_style('cbse_event_head_courses_style');
 
@@ -87,17 +87,17 @@ final class ShortcodeOverviewForCourseHead
             }
         }
 
-        do_action('qm/debug', $cbse_atts);
+        do_action('qm/debug', $cbseAtts);
 
         // start box
         $o = '<div class="cbse-box">';
 
         if (is_user_logged_in())
         {
-            if (!empty($cbse_atts['title']))
+            if (!empty($cbseAtts['title']))
             {
                 // title
-                $o .= '<h2>' . esc_html__($cbse_atts['title'], CBSE_LANGUAGE_DOMAIN) . '</h2>';
+                $o .= '<h2>' . esc_html__($cbseAtts['title'], CBSE_LANGUAGE_DOMAIN) . '</h2>';
             }
 
 
@@ -134,7 +134,7 @@ final class ShortcodeOverviewForCourseHead
             //list with trainings
             $o .= '<div class="cbse-courses">';
             $o .= '<ul class="cbse_timeslots">';
-            $coursesForHead = new CoursesForHead($userId, intval($cbse_atts['pastdays']), intval($cbse_atts['futuredays']));
+            $coursesForHead = new CoursesForHead($userId, intval($cbseAtts['pastdays']), intval($cbseAtts['futuredays']));
             $timeslots = $coursesForHead->getTimeslots();
             foreach ($timeslots as $timeslot)
             {

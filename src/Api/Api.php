@@ -73,16 +73,16 @@ final class Api extends WP_REST_Controller
 
         /* ---------------------------- */
         $icalApi = new IcalApi('json');
-        register_rest_route($this->namespace, $this->buildRoute('calender/(?P<id>\d+)/(?P<token>[a-z0-9]+)'), array('methods' => WP_REST_Server::READABLE, 'callback' => array($icalApi, 'callback'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        register_rest_route($this->namespace, $this->buildRoute('calender/(?P<id>\d+)/(?P<token>[a-z0-9]+)'), array('methods' => WP_REST_Server::READABLE, 'callback' => array($icalApi, 'callback'), 'permission_callback' => '__return_true', 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
         {
             return is_numeric($param);
         }, 'required' => true), 'token' => array('required' => true))));
 
         $icalApiAsIcs = new IcalApi('ics');
-        register_rest_route($this->namespace, $this->buildRoute('calender/(?P<id>\d+)/(?P<token>[a-z0-9]+)/calender.ics'), array('methods' => WP_REST_Server::READABLE, 'callback' => array($icalApiAsIcs, 'callback'), 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
-            {
-                return is_numeric($param);
-            }, 'required' => true), 'token' => array('required' => true))));
+        register_rest_route($this->namespace, $this->buildRoute('calender/(?P<id>\d+)/(?P<token>[a-z0-9]+)/calender.ics'), array('methods' => WP_REST_Server::READABLE, 'callback' => array($icalApiAsIcs, 'callback'), 'permission_callback' => '__return_true', 'args' => array('id' => array('validate_callback' => function ($param, $request, $key)
+        {
+            return is_numeric($param);
+        }, 'required' => true), 'token' => array('required' => true))));
     }
 
     private function buildRoute(string $address): string
