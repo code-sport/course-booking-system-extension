@@ -39,11 +39,11 @@ class UserApiToken
 
     public function showEditUserProfile($user)
     {
-        $token = self::getTokenForUser($user->ID);
-        $icalAddress = self::getIcalAddressForUser($user->ID);
+        $token = static::getTokenForUser($user->ID);
+        $icalAddress = static::getIcalAddressForUser($user->ID);
 
         ?>
-        <h3><?= _e('Course Bookings System Extension API Token', CBSE_LANGUAGE_DOMAIN) ?></h3>
+        <h3><?= __('Course Bookings System Extension API Token', CBSE_LANGUAGE_DOMAIN) ?></h3>
         <table class="form-table">
             <?php
             if (UserHelper::isUserManager(get_current_user_id())): ?>
@@ -96,9 +96,7 @@ class UserApiToken
                     <br/>
                     <span
                             class="description">
-                        <?php
-                        _e("If activated, the course booking system extenstion token will be renewed and the old token are not valid any more.", CBSE_LANGUAGE_DOMAIN);
-                        ?>
+                        <?= __("If activated, the course booking system extenstion token will be renewed and the old token are not valid any more.", CBSE_LANGUAGE_DOMAIN); ?>
                     </span>
                 </td>
             </tr>
@@ -115,7 +113,7 @@ class UserApiToken
     public static function getIcalAddressForUser(int $userId): string
     {
         $icalAddress = '';
-        $token = self::getTokenForUser($userId);
+        $token = static::getTokenForUser($userId);
         if (!empty($token))
         {
             $icalAddress = home_url("/wp-json/wp/v2/course-booking-system-extension/calender/{$userId}/{$token}/calender.ics");
@@ -137,7 +135,7 @@ class UserApiToken
 
         if ($_POST['cbse-renew-token'] == 1)
         {
-            self::generateNewTokenForUser($userId);
+            return static::generateNewTokenForUser($userId);
         }
     }
 
@@ -150,7 +148,7 @@ class UserApiToken
      */
     public static function generateNewTokenForUser(int $userId): string
     {
-        $token = self::generateToken();
+        $token = static::generateToken();
         update_user_meta($userId, 'cbse-api-token', $token);
         do_action('qm/debug', "New token for user $userId is generated");
         return $token;
