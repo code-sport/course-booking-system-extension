@@ -46,16 +46,16 @@ class MpEventTagAutoGeneration
         do_action('qm/info', 'saveFields');
         if (isset($_POST['cbse_auto_print_mail']))
         {
-            $cbse_auto_print_mail_new_value = $_POST['cbse_auto_print_mail'];
-            $cbse_auto_print_mail_previous_value = get_term_meta($termId, 'cbse_auto_print_mail', true);
-            update_term_meta($termId, 'cbse_auto_print_mail', $cbse_auto_print_mail_new_value, $cbse_auto_print_mail_previous_value);
+            $cbseAutoPrintMailNewValue = $_POST['cbse_auto_print_mail'];
+            $cbseAutoPrintMailPreviousValue = get_term_meta($termId, 'cbse_auto_print_mail', true);
+            update_term_meta($termId, 'cbse_auto_print_mail', $cbseAutoPrintMailNewValue, $cbseAutoPrintMailPreviousValue);
         }
 
         if (isset($_POST['cbse_auto_print_folder']))
         {
-            $cbse_auto_print_folder_new_value = intval($_POST['cbse_auto_print_folder']);
-            $cbse_auto_print_folder_previous_value = get_term_meta($termId, 'cbse_auto_print_folder', true);
-            update_term_meta($termId, 'cbse_auto_print_folder', $cbse_auto_print_folder_new_value, $cbse_auto_print_folder_previous_value);
+            $cbseAutoPrintFolderNewValue = intval($_POST['cbse_auto_print_folder']);
+            $cbseAutoPrintFolderPreviousValue = get_term_meta($termId, 'cbse_auto_print_folder', true);
+            update_term_meta($termId, 'cbse_auto_print_folder', $cbseAutoPrintFolderNewValue, $cbseAutoPrintFolderPreviousValue);
         }
     }
 
@@ -80,13 +80,13 @@ class MpEventTagAutoGeneration
             </td>
         </tr>
 
-        <tr class='form-field'>
-            <th scope='row'>
-                <label for='cbse_auto_print_folder'><?php
+        <tr class="form-field">
+            <th scope="row">
+                <label for="cbse_auto_print_folder"><?php
                     _e('Auto save on folder', CBSE_LANGUAGE_DOMAIN) ?></label>
             </th>
             <td>
-                <input name='cbse_auto_print_folder' id='cbse_auto_print_folder' type="checkbox"
+                <input name="cbse_auto_print_folder" id="cbse_auto_print_folder" type="checkbox"
                        value="1" <?= $cbseAutoPrintFolderValue ? "checked" : "" ?>/>
             </td>
         </tr>
