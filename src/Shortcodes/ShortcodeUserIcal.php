@@ -71,8 +71,8 @@ class ShortcodeUserIcal
         $atts = array_change_key_case((array)$atts, CASE_LOWER);
 
         // override default attributes with user attributes
-        $cbse_atts = shortcode_atts(array('auto-generate' => false), $atts, $tag);
-        do_action('qm/debug', $cbse_atts);
+        $cbseAtts = shortcode_atts(array('auto-generate' => false), $atts, $tag);
+        do_action('qm/debug', $cbseAtts);
 
         wp_enqueue_style('cbse_user_ical_style');
 
@@ -91,7 +91,7 @@ class ShortcodeUserIcal
             // title
             $o .= '<h3>' . __('iCalendar - The training sessions directly in your digital calendar', CBSE_LANGUAGE_DOMAIN) . '</h3>';
 
-            $userIcalAddress = $this->getIcalAddess($cbse_atts);
+            $userIcalAddress = $this->getIcalAddess($cbseAtts);
             if (!empty($userIcalAddress))
             {
                 $o .= '<div class="ical address">';
@@ -128,10 +128,10 @@ class ShortcodeUserIcal
 
     }
 
-    private function getIcalAddess($cbse_atts)
+    private function getIcalAddess($cbseAtts)
     {
         $address = UserApiToken::getIcalAddressForUser(get_current_user_id());
-        $autoGenerate = boolval($cbse_atts['auto-generate']);
+        $autoGenerate = boolval($cbseAtts['auto-generate']);
         do_action('qm/debug', ['address' => $address, 'address empty' => empty($address), 'autoGenerate' => $autoGenerate]);
         if (empty($address) && $autoGenerate)
         {
