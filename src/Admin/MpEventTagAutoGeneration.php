@@ -63,8 +63,8 @@ class MpEventTagAutoGeneration
     {
         if (is_object($tagInput))
         {
-            $cbse_auto_print_mail_value = get_term_meta($tagInput->term_id, 'cbse_auto_print_mail', true);
-            $cbse_auto_print_folder_value = get_term_meta($tagInput->term_id, 'cbse_auto_print_folder', true);
+            $cbseAutoPrintMailValue = get_term_meta($tagInput->term_id, 'cbse_auto_print_mail', true);
+            $cbseAutoPrintFolderValue = get_term_meta($tagInput->term_id, 'cbse_auto_print_folder', true);
         }
 
 
@@ -76,7 +76,7 @@ class MpEventTagAutoGeneration
             </th>
             <td>
                 <input name='cbse_auto_print_mail' id='cbse_auto_print_mail' type="email"
-                       value="<?= $cbse_auto_print_mail_value ?>"/>
+                       value="<?= $cbseAutoPrintMailValue ?>"/>
             </td>
         </tr>
 
@@ -87,7 +87,7 @@ class MpEventTagAutoGeneration
             </th>
             <td>
                 <input name='cbse_auto_print_folder' id='cbse_auto_print_folder' type="checkbox"
-                       value="1" <?= $cbse_auto_print_folder_value ? "checked" : "" ?>/>
+                       value="1" <?= $cbseAutoPrintFolderValue ? "checked" : "" ?>/>
             </td>
         </tr>
 
@@ -96,6 +96,8 @@ class MpEventTagAutoGeneration
 
     /**
      * prevent from being unserialized (which would create a second instance of it)
+     *
+     * @throws Exception
      */
     public function __wakeup()
     {
