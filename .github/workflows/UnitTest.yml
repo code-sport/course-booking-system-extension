@@ -9,8 +9,8 @@ on:
     types: [ opened, synchronize, reopened ]
   workflow_dispatch:
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  unittest:
+    name: UnitTest
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,12 +33,8 @@ jobs:
           bootstrap: vendor/autoload.php
           configuration: test/phpunit.xml
           args: --coverage-text
+          dev: yes
         env:
           XDEBUG_MODE: coverage
           TEST_NAME: Scarlett
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          
