@@ -22,6 +22,8 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "7.4"
+          ssh_key: ${{ secrets.SSH_KEY }}
+          ssh_key_pub: ${{ secrets.SSH_KEY_PUB }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
 
