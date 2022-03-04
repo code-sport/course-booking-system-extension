@@ -13,20 +13,25 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: php-actions/composer@v5
+
+      - name: Install dependencies
+        uses: php-actions/composer@v5
+
       - name: PHPUnit Tests
-          uses: php-actions/phpunit@v3
-          with:
-            php_extensions: xdebug
-            bootstrap: vendor/autoload.php
-            configuration: test/phpunit.xml
-            args: --coverage-text
-          env:
-            XDEBUG_MODE: coverage
-            TEST_NAME: Scarlett
+        uses: php-actions/phpunit@v3
+        with:
+          php_extensions: xdebug
+          bootstrap: vendor/autoload.php
+          configuration: test/phpunit.xml
+          args: --coverage-text
+        env:
+          XDEBUG_MODE: coverage
+          TEST_NAME: Scarlett
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
