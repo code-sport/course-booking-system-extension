@@ -20,6 +20,8 @@ jobs:
 
       - name: Install dependencies
         uses: php-actions/composer@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
 
       - name: PHPUnit Tests
         uses: php-actions/phpunit@v3
