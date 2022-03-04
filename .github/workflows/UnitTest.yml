@@ -18,14 +18,17 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - name: Validate dependencies
+        uses: php-actions/composer@v6
+        with:
+          command: validate
+
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
           php_version: "7.4"
           ssh_key: ${{ secrets.SSH_KEY }}
-          ssh_key_pub: ${{ secrets.SSH_KEY_PUB }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          ssh_key_pub: ${{ secrets.SSH_KEY_PUB }
 
       - name: PHPUnit Tests
         uses: php-actions/phpunit@v3
