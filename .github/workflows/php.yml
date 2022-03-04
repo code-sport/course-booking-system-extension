@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Install dependencies
-        uses: php-actions/composer@v5
+        uses: php-actions/composer@v6
 
       - name: PHPUnit Tests
         uses: php-actions/phpunit@v3
