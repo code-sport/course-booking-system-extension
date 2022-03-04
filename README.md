@@ -47,20 +47,26 @@ with `futuredays` the same for the future.
 # Development
 https://tobier.de/wordpress-plugin-schreiben-mit-composer-und-autoload/
 
-## Dev
+## Dependencies
+Thanks go to the following librarians
+- [TCPDF](https://github.com/tecnickcom/TCPDF)
+- [Analog](https://github.com/jbroadway/analog)
+- [icalendar-generator](https://github.com/spatie/icalendar-generator)
+
+### Dev
 
 - `composer update`
 - `composer install`
 - `composer dump-autoload -o`
 
-## Release
+### Release
 
 - `composer install --no-dev`
 - `composer dump-autoload -o --no-dev`
 
-# Dependencies
+## Unit Test
 
-Thanks go to the following librarians
-- [TCPDF](https://github.com/tecnickcom/TCPDF)
-- [Analog](https://github.com/jbroadway/analog)
-- [icalendar-generator](https://github.com/spatie/icalendar-generator)
+- `./vendor/bin/phpunit tests`
+- `./vendor/bin/phpunit --testdox tests`
+
+
