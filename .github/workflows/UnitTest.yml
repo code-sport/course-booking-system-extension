@@ -1,4 +1,4 @@
-name: Build
+name: UnitTest
 on:
   push:
     branches:
@@ -37,4 +37,3 @@ jobs:
         env:
           XDEBUG_MODE: coverage
           TEST_NAME: Scarlett
-          
